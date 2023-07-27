@@ -1,4 +1,11 @@
 
 <router-outlet>
-    <app-main></app-main>
+    <div style="width: 100%; height: 100%; display: flex;">
+        <div style="width: 20%; height: 100%;">
+            <app-menu></app-menu>
+        </div>
+        <div style="width: 80%; height: 100%;">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
 </router-outlet>

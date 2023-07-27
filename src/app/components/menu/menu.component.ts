@@ -1,11 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent {
+export class MenuComponent implements OnInit{
+
+  constructor(private router: Router){
+
+  }
+
+  ngOnInit(): void {
+    
+  }
+
+  navigateLink(link: string): void {
+    console.log("-- ok ----")
+    this.router.navigate([link])
+  }
   
   /*public sidebar = null
 
