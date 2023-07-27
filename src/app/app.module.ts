@@ -11,6 +11,7 @@ import { ResultsComponent } from './pages/results/results.component';
 import { IndicatorsComponent } from './pages/indicators/indicators.component';
 import { CashFlowComponent } from './pages/cash-flow/cash-flow.component';
 import { CostAnalysisComponent } from './pages/cost-analysis/cost-analysis.component';
+import { ReportsViewComponent } from './reports-view/reports-view.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { CostAnalysisComponent } from './pages/cost-analysis/cost-analysis.compo
     ResultsComponent,
     IndicatorsComponent,
     CashFlowComponent,
-    CostAnalysisComponent
+    CostAnalysisComponent,
+    ReportsViewComponent  
   ],
   imports: [
     BrowserModule,
