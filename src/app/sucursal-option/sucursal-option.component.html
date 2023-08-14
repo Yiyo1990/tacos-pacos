@@ -1,0 +1,28 @@
+<app-alert-message message="{{messageAlert}}" *ngIf="showAlert"></app-alert-message>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="text-center">Hola {{usuario!.nombre}}</h4>
+            <h5 class="text-center">Selecciona la marca/sucursal que desee administrar</h5>
+            <div class="form-group">
+
+                <label for="option">Marca:</label>
+
+                <select  class="form-control" (change)="onChangeMarca($event)">
+                    <option disabled value="0" selected>Selecciona una Marca</option>
+                    <option *ngFor="let marca of marcas" value="{{marca.id}}">{{marca.name}}</option>
+                </select>
+
+                <label for="option">Sucursal:</label>
+                <select class="form-control" ng-disabled="sucursalesPorMarca.length == 0" (change)="onChangeSucursal($event)">
+                    <option value="0" disabled selected>Selecciona una Sucursal</option>
+                    <option *ngFor="let sucursal of sucursalesPorMarca" value="{{sucursal.id}}">{{sucursal.name}}</option>
+                </select>
+
+            </div>
+            <div style="align-items: center;">
+                <button (click)="goDashboard()">Iniciar</button>
+            </div>
+        </div>
+    </div>
+</div>

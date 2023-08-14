@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from 'src/app/auth/auth.service';
 
 
 @Component({
@@ -7,78 +8,35 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent implements OnInit{
+export class MenuComponent {
+  isMenuOpen: boolean = false;
+  usuario: any = {}
+  marcaSeleccionada : any = {}
 
-  constructor(private router: Router){
+  menuList = [
+    {id: 1, nombre: 'Inicio', icon: 'fas fa-home', link: 'dashboard/inicio'},
+    {id: 2, nombre: 'Resultados', icon: 'fas fa-circle-up', link: 'dashboard/resultados'},
+    {id: 3, nombre: 'Indicadores', icon: 'fas fa-chart-simple', link: 'dashboard/indicadores'},
+    {id: 4, nombre: 'Cash Flow', icon: 'fas fa-money-bill-transfer', link: 'dashboard/flujo-efectivo'},
+    {id: 5, nombre: 'Estimaciones Profit %', icon: 'fas fa-money-bill-trend-up', link: 'dashboard/estimaciones-profit'},
+    {id: 6, nombre: 'Análisis', icon: 'fas fa-gauge', link: 'dashboard/analisis-costo'},
+    {id: 7, nombre: 'Inventarios', icon: 'fas fa-layer-group', link: 'dashboard/inventarios'}
+  ]
 
+  constructor(private router: Router, private authService: AuthService) {
+    this.usuario = JSON.parse(authService.getUserLogged())
+    let marcaSeleccionada = sessionStorage.getItem('marcaSeleccionada') 
+    this.marcaSeleccionada = JSON.parse(marcaSeleccionada == null ? '': marcaSeleccionada)
+
+    console.log(this.marcaSeleccionada)
   }
 
-  ngOnInit(): void {
-    
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
-  navigateLink(link: string): void {
-    console.log("-- ok ----")
-    this.router.navigate([link])
+  logout() {
+    this.authService.logout()
+    this.router.navigate(['/login'])
   }
-  
-  /*public sidebar = null
-
-  constructor() {
-    this.sidebar = document.querySelector(".sidebar");
-    sidebarOpenBtn = document.querySelector("#sidebar-open");
-    sidebarCloseBtn = document.querySelector("#sidebar-close");
-    sidebarLockBtn = document.querySelector("#lock-icon");
-  }
-
-  // Selecting the sidebar and buttons
-
-
-// Function to toggle the lock state of the sidebar
-toggleLock() {
-  sidebar.classList.toggle("locked");
-  // If the sidebar is not locked
-  if (!sidebar.classList.contains("locked")) {
-    sidebar.classList.add("hoverable");
-    sidebarLockBtn.classList.replace("bx-lock-alt", "bx-lock-open-alt");
-  } else {
-    sidebar.classList.remove("hoverable");
-    sidebarLockBtn.classList.replace("bx-lock-open-alt", "bx-lock-alt");
-  }
-};
-
-// Function to hide the sidebar when the mouse leaves
-hideSidebar = () => {
-  if (sidebar.classList.contains("hoverable")) {
-    sidebar.classList.add("close");
-  }
-};
-
-// Function to show the sidebar when the mouse enter
-showSidebar = () => {
-  if (sidebar.classList.contains("hoverable")) {
-    sidebar.classList.remove("close");
-  }
-};
-
-// Function to show and hide the sidebar
-toggleSidebar = () => {
-  sidebar.classList.toggle("close");
-};
-
-// If the window width is less than 800px, close the sidebar and remove hoverability and lock
-if (window.innerWidth < 800) {
-  sidebar.classList.add("close");
-  sidebar.classList.remove("locked");
-  sidebar.classList.remove("hoverable");
-}
-
-// Adding event listeners to buttons and sidebar for the corresponding actions
-sidebarLockBtn.addEventListener("click", toggleLock);
-sidebar.addEventListener("mouseleave", hideSidebar);
-sidebar.addEventListener("mouseenter", showSidebar);
-sidebarOpenBtn.addEventListener("click", toggleSidebar);
-sidebarCloseBtn.addEventListener("click", toggleSidebar);
-}*/
-
 }

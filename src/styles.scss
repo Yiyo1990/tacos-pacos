@@ -1,1 +1,47 @@
 /* You can add global styles to this file, and also import other style files */
+$primaryColor: #1d3fd7;
+$primaryColorBlack: #21496b;
+$fontColor: #fff;
+$fontSizeTitle: 19pt;
+$fontSizeSubtitle: 14pt;
+$fontSizeText: 13pt;
+$colorGreen: #6cbb37;
+$colorOrange: rgb(238, 147, 29);
+
+
+button {
+    background-color: $primaryColor;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px !important;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: $primaryColorBlack;
+}
+
+button:active {
+    background-color: $primaryColor;
+}
+
+
+.greenBtn {
+    background-color:  $colorGreen;
+    color: #427a1b !important;
+    font-weight: bold;
+}
+
+.orangeBtn {
+    background-color: $colorOrange;
+    color: #ab6307 !important;
+    font-weight: bold;
+}
+
+.blueBtn {
+    background-color: #5a71d9;
+    color: #102999 !important;
+    font-weight: bold;
+ }
