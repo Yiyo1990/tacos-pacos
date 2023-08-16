@@ -8,11 +8,16 @@ import { CashFlowComponent } from './pages/cash-flow/cash-flow.component';
 import { CostAnalysisComponent } from './pages/cost-analysis/cost-analysis.component';
 import { ProfitEstimatesComponent } from './pages/profit-estimates/profit-estimates.component';
 import { NewBusinessComponent } from './pages/new-business/new-business.component';
+import { LoginComponent } from './login/login.component';
+import { MainComponent } from './main/main.component';
+import { authGuard } from './auth/auth.guard';
+import { SucursalOptionComponent } from './sucursal-option/sucursal-option.component';
+import { InventarioComponent } from './pages/inventario/inventario.component';
 
 const routes: Routes = [
   {
     path: 'dashboard',
-    component: ReportsViewComponent,
+    component: MainComponent,
     children: [
       { path: 'inicio', component: DashboardComponent },
       { path: 'resultados', component: ResultsComponent },
@@ -21,13 +26,26 @@ const routes: Routes = [
       { path: 'analisis-costo', component: CostAnalysisComponent },
       { path: 'estimaciones-profit', component:  ProfitEstimatesComponent},
       { path: 'negocios', component: NewBusinessComponent },
+      { path: 'inventarios', component: InventarioComponent}
     ],
+    canActivate: [authGuard]
+  },
+  {
+    path: 'sucursal',
+    component: SucursalOptionComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'dashboard', redirectTo: '/dashboard/inicio', pathMatch: 'full'
   },
   {
     path: '', redirectTo: '/dashboard/inicio', pathMatch: 'full'
+  },
+  {
+    path: 'login', component: LoginComponent
+  },
+  {
+    path: '**', redirectTo: '/login'
   }
 ];
 

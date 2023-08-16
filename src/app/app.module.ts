@@ -12,6 +12,14 @@ import { CashFlowComponent } from './pages/cash-flow/cash-flow.component';
 import { CostAnalysisComponent } from './pages/cost-analysis/cost-analysis.component';
 import { ReportsViewComponent } from './reports-view/reports-view.component';
 import { NewBusinessComponent } from './pages/new-business/new-business.component';
+import { FormsModule } from '@angular/forms';
+import { MainComponent } from './main/main.component';
+import { AlertMessageComponent } from './components/alert-message/alert-message.component';
+import { SucursalOptionComponent } from './sucursal-option/sucursal-option.component';
+import { HttpClientModule } from '@angular/common/http';
+import { InventarioComponent } from './pages/inventario/inventario.component';
+import { NgChartsModule } from 'ng2-charts';
+import { PrimaryButtonComponent } from './components/primary-button/primary-button.component';
 
 @NgModule({
   declarations: [
@@ -24,11 +32,19 @@ import { NewBusinessComponent } from './pages/new-business/new-business.componen
     CashFlowComponent,
     CostAnalysisComponent,
     ReportsViewComponent,
-    NewBusinessComponent
+    NewBusinessComponent,
+    MainComponent,
+    AlertMessageComponent,
+    SucursalOptionComponent,
+    InventarioComponent,
+    PrimaryButtonComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
+    NgChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
