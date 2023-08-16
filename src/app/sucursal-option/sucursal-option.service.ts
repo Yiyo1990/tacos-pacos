@@ -12,7 +12,7 @@ export class SucursalOptionService {
   constructor(private http: HttpClient) { }
 
   getMarcas(): Observable<any> {
-    let url = this.endPoint.concat('reportes/brands/tree')
+    let url = this.endPoint.concat('report/brands/tree')
     return this.http.get(url)
   }
 
