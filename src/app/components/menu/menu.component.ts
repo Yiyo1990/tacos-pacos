@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/auth/auth.service';
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent {
-  isMenuOpen: boolean = false;
+  isMenuOpen: boolean = true;
   usuario: any = {}
   marcaSeleccionada : any = {}
 
@@ -18,7 +18,7 @@ export class MenuComponent {
     {id: 2, nombre: 'Resultados', icon: 'fas fa-circle-up', link: 'dashboard/resultados'},
     {id: 3, nombre: 'Indicadores', icon: 'fas fa-chart-simple', link: 'dashboard/indicadores'},
     {id: 4, nombre: 'Cash Flow', icon: 'fas fa-money-bill-transfer', link: 'dashboard/flujo-efectivo'},
-    {id: 5, nombre: 'Estimaciones Profit %', icon: 'fas fa-money-bill-trend-up', link: 'dashboard/estimaciones-profit'},
+    {id: 5, nombre: 'Estimaciones', icon: 'fas fa-money-bill-trend-up', link: 'dashboard/estimaciones-profit'},
     {id: 6, nombre: 'Análisis', icon: 'fas fa-gauge', link: 'dashboard/analisis-costo'},
     {id: 7, nombre: 'Inventarios', icon: 'fas fa-layer-group', link: 'dashboard/inventarios'}
   ]
@@ -32,7 +32,7 @@ export class MenuComponent {
   }
 
   toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
+    this.isMenuOpen = true;
   }
 
   logout() {

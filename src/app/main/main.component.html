@@ -1,8 +1,9 @@
 <div style="height: 100vh; width: 100%;">
-    <div style="background-color: #2e5f8b; color: #fff; padding: 1rem; margin: 0;">
-       <app-menu></app-menu>
-    </div>
-    <div>
-       <router-outlet></router-outlet>
-    </div>
-</div>  
+
+   <app-menu style="z-index: 1000; position: absolute;"></app-menu>
+
+   <div style="width: 100%; height: 3.75rem; position: fixed; top: 0; border-bottom: solid 3px #ffca2e; background-color: #fff; margin-bottom: 2px;"></div>
+   <div style="width: 83%; margin-left: 13%; margin-top: 5%;">
+      <router-outlet></router-outlet>
+   </div>
+</div>
