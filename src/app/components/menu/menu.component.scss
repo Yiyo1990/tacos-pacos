@@ -1,124 +1,66 @@
 @import '/src/styles.scss';
 
-.menu-btn {
-  position: absolute;
-  top: 15px;
-  left: 10px;
-  cursor: pointer;
-  width: 4%;
-}
-
-.menu-icon {
-  font-size: 20px;
-  line-height: 1;
-  transition: transform 0.3s;
-}
-
-.menu-text {
-  position: absolute;
-  top: 0;
-  left: 40px;
-  line-height: 40px;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.menu-text.hidden {
-  opacity: 1;
-}
-
 .menu-container {
-  position: fixed;
-  top: 0;
+  position:fixed;
+  top: 4rem;
   left: 0;
   bottom: 0;
-  width: 13%;
-  background-color: #2e5f8b;
+  width: 13rem;
+  background-color: #090661;
   color: $fontColor;
-  padding-top: 60px;
-  transform: translateX(-100%);
+/*   transform: translateX(-100%); */
   transition: transform 0.3s ease-out;
-  border-right: solid 1px #2e5f8b;
+  border-right: solid 1px #090661;
 }
 
-.menu-container.open {
+/* .menu-container.open {
   transform: translateX(0);
-}
+} */
 
-ul {
+.menu-list-content ul {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 1.5rem 0;
 }
 
-li {
-  padding: 10px;
+.list-item {
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0;
+  cursor: pointer;
 }
 
-ul li i {
-  font-size: 11pt;
+.list-item:hover {
+  opacity: 1;
+  background-color: #ffca2e;
+}
+
+.menu-list-content ul li i {
+  font-size: 1.5rem;
   margin-right: 3%;
 }
 
 a {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 1.1rem;
   text-decoration: none;
   color: $fontColor;
-  font-size: $fontSizeText;
 }
 
-.close-btn {
+.footer-content {
   position: absolute;
-  top: 16px;
-  right: 20px;
-  background-color: transparent;
-  border: none;
-  color: $fontColor;
-  cursor: pointer;
-}
-
-.close-btn:focus {
-  outline: none;
-}
-
-.content {
-  padding: 20px;
-}
-
-.top-bar {
-  background-color: #333;
-  color: $fontColor;
-  padding: 10px;
-  text-align: center;
-  position: fixed;
-  top: 0;
-  left: 0;
+  display: flex;
+  justify-content: center;
   width: 100%;
-  z-index: 1;
+  bottom: 2rem;
 }
 
-.top-bar h1 {
-  margin: 0;
-  font-size: 24px;
-}
-
-.line-division {
-  height: 1px; 
-  width: 100%; 
-  background-color: $primaryColor;
-  position: absolute;
-  top: 48px;
+.footer-content i {
+  font-size: 1,5rem;
+  color: #fff;
 }
 
 footer {
-  position: fixed; 
-  bottom: 1%;
-  margin: 5%;
   a {
     cursor: pointer;
   }
-}
-
-.logo {
-  width: 120px;
-  height: 80px;
 }

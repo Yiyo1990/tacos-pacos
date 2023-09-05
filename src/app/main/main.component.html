@@ -1,9 +1,44 @@
-<div style="height: 100vh; width: 100%;">
-
-   <app-menu style="z-index: 1000; position: absolute;"></app-menu>
-
-   <div style="width: 100%; height: 3.75rem; position: fixed; top: 0; border-bottom: solid 3px #ffca2e; background-color: #fff; margin-bottom: 2px;"></div>
-   <div style="width: 83%; margin-left: 13%; margin-top: 5%;">
-      <router-outlet></router-outlet>
-   </div>
+<div class="menu">
+  <app-menu class="menu-content"></app-menu>
+  <div class="menu-header">
+    <div class="menu-header-logo">
+      <div class="row">
+        <div class="col-12 sm-12 md-12">
+          <div class="logo-content">
+            <img src="../../assets/logo.png" alt="" width="70" height="35" />
+            <!-- <img class="logo" src="{{ marcaSeleccionada!.sucursal!.logoUrl }}" /> -->
+          </div>
+        </div>
+        <div class="col-12 sm-12 md-12">
+          <div class="title">
+            <strong>Suc. Bartolome</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="header-title">
+      <!--  <div
+        style="
+          width: 10rem;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <h6>Inicio</h6>
+      </div> -->
+      <div class="row">
+        <!-- <div class="col-2 ml-2" style="background-color: darkolivegreen">
+          COL 1
+        </div>
+        <div class="col-auto" style="background-color: cornflowerblue">
+          COL 2
+        </div> -->
+      </div>
+    </div>
+  </div>
+  <div class="content-body">
+    <router-outlet></router-outlet>
+  </div>
 </div>

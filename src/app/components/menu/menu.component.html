@@ -1,18 +1,24 @@
-
-<!--<div class="menu-btn" (click)="toggleMenu()">
-  <span class="menu-icon" [ngClass]="{'open': isMenuOpen}">&#9776;</span>
-</div>-->
-<div class="menu-container" [ngClass]="{'open': isMenuOpen}">
-  <div style="display: flex; justify-content: center; background-color: #fff; align-content: center; padding: 1rem 0; margin-right: -1px;">
-    <img class="logo" src="{{marcaSeleccionada!.sucursal!.logoUrl}}">
+<div class="menu-container">
+  <div class="menu-list-content">
+    <ul>
+      <li *ngFor="let item of menuList" class="list-item">
+        <a href="{{ item.link }}">
+          <i
+            class="{{ item.icon }}"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Tooltip on top"
+          ></i>
+          {{ item.nombre }}
+        </a>
+      </li>
+    </ul>
   </div>
-  <!--<span class="menu-icon close-btn" (click)="toggleMenu()">&#9776;</span>-->
-
-  <ul >
-    <li *ngFor="let item of menuList"><a href="{{item.link}}"><i class="{{item.icon}}"  data-toggle="tooltip" data-placement="top" title="Tooltip on top"></i> {{item.nombre}}</a></li>
-   
-  </ul>
-  <footer>
-    <a (click)="logout()">Cerrar sesión</a>
-  </footer>
+  <div class="footer-content">
+    <footer>
+      <a (click)="logout()">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      </a>
+    </footer>
+  </div>
 </div>
