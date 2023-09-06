@@ -17,17 +17,23 @@
       </div>
     </div>
     <div class="header-title">
-      <!--  <div
-        style="
-          width: 10rem;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        "
-      >
-        <h6>Inicio</h6>
-      </div> -->
+      <div class="row">
+        <div class="col-3 sm-12 md-3">
+          <div style="padding:20px">
+            <h6>{{currentPage}}</h6>
+          </div>
+        </div>
+        <div class="col-3 sm-12 md-3"></div>
+       
+              <div class="col-1 sm-12 md-1"><div><app-button-c description="ventas"/></div></div>
+              <div class="col-1 sm-12 md-1"><div><app-button-c description="Gastos"  link="dashboard/gastos"/></div></div>
+              <div class="col-1 sm-12 md-1"><div><app-button-c description="Proveedor"/></div></div>
+              <div class="col-1 sm-12 md-1"><div><app-button-c description="2023"/></div></div>
+              <div class="col-1 sm-12 md-1"><div><app-button-c description="Anual"/></div></div>
+              <div class="col-1 sm-12 md-1"><div><app-button-c description="Rango"/></div></div>
+
+      </div>
+       
       <div class="row">
         <!-- <div class="col-2 ml-2" style="background-color: darkolivegreen">
           COL 1
