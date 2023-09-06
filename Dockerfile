@@ -1,23 +1,13 @@
-FROM node
-
-# Create a directory where our app will be placed
-RUN mkdir -p /usr/src/app
-
-# Change directory so that our commands run inside this new directory
+FROM node:8.9-alpine as angular-built
 WORKDIR /usr/src/app
-ENV PATH /usr/src/app/node_modules/.bin:$PATH
+RUN npm i -g @angular/cli
+COPY package.json package.json
+RUN npm install --silent
+COPY . .
+RUN ng build --prod
 
-# Copy dependency definitions
-COPY package.json /usr/src/app
-#RUN npm cache clean --force
-# Install dependecies
-RUN npm install
-
-# Get all the code needed to run the app
-COPY . /usr/src/app
-
-# Expose the port the app runs in
-EXPOSE 4200
-
-# Serve the app
-CMD ["npm", "start"]
+FROM nginx:alpine
+LABEL author="John Papa"
+COPY --from=angular-built /usr/src/app/dist /usr/share/nginx/html
+EXPOSE 80 443
+CMD [ "nginx", "-g", "daemon off;" ]
