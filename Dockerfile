@@ -1,22 +1,13 @@
-FROM node
-
-# Create a directory where our app will be placed
-RUN mkdir -p /usr/src/app
-
-# Change directory so that our commands run inside this new directory
-WORKDIR /usr/src/app
-
-# Copy dependency definitions
-COPY package.json /usr/src/app
-RUN npm cache clean --force
-# Install dependecies
+# Etapa de compilación
+FROM node:14 as build
+WORKDIR /app
+COPY package*.json ./
 RUN npm install
+COPY . .
+RUN npm run build --prod
 
-# Get all the code needed to run the app
-COPY . /usr/src/app
-
-# Expose the port the app runs in
-EXPOSE 4200
-
-# Serve the app
-CMD ["npm", "start"]
+# Etapa de producción
+FROM nginx:latest
+COPY --from=build /app/dist/* /usr/share/nginx/html/
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
