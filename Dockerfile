@@ -1,4 +1,4 @@
-FROM node:8.9-alpine as angular-built
+FROM node
 WORKDIR /usr/src/app
 RUN npm i -g @angular/cli
 COPY package.json package.json
