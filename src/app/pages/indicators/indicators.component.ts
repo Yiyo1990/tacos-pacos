@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MainService } from 'src/app/main/main.service';
 
 @Component({
   selector: 'app-indicators',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./indicators.component.scss']
 })
 export class IndicatorsComponent {
-
+  constructor(private mainService: MainService){
+    mainService.setPageName("Indicadores")
+  }
 }

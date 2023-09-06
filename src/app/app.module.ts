@@ -20,6 +20,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { InventarioComponent } from './pages/inventario/inventario.component';
 import { NgChartsModule } from 'ng2-charts';
 import { PrimaryButtonComponent } from './components/primary-button/primary-button.component';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ButtonCComponent } from './components/button-c/button-c.component';
+import { BillsComponent } from './pages/bills/bills.component';
+
+
 
 @NgModule({
   declarations: [
@@ -37,14 +43,18 @@ import { PrimaryButtonComponent } from './components/primary-button/primary-butt
     AlertMessageComponent,
     SucursalOptionComponent,
     InventarioComponent,
-    PrimaryButtonComponent
+    PrimaryButtonComponent,
+    ButtonCComponent,
+    BillsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    NgChartsModule
+    NgChartsModule,
+    AccordionModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

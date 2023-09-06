@@ -1,6 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { Chart, ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { MainService } from 'src/app/main/main.service';
+
 //import { default as Annotation } from 'chartjs-plugin-annotation';
 
 
@@ -15,8 +17,8 @@ export class DashboardComponent {
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
-  constructor() {
-    
+  constructor(private mainService: MainService){
+    mainService.setPageName("Inicio")
   }
 
   public lineChartData: ChartConfiguration['data'] = {

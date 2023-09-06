@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MainService } from 'src/app/main/main.service';
 
 @Component({
   selector: 'app-inventario',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./inventario.component.scss']
 })
 export class InventarioComponent {
-
+  constructor(private mainService: MainService){
+    mainService.setPageName("Inventario")
+  }
 }

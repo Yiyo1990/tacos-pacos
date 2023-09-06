@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MainService } from 'src/app/main/main.service';
 
 @Component({
   selector: 'app-results',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./results.component.scss']
 })
 export class ResultsComponent {
-
+  constructor(private mainService: MainService){
+    mainService.setPageName("Resultados")
+  }
 }

@@ -13,6 +13,7 @@ import { MainComponent } from './main/main.component';
 import { authGuard } from './auth/auth.guard';
 import { SucursalOptionComponent } from './sucursal-option/sucursal-option.component';
 import { InventarioComponent } from './pages/inventario/inventario.component';
+import { BillsComponent } from './pages/bills/bills.component';
 
 const routes: Routes = [
   {
@@ -26,7 +27,8 @@ const routes: Routes = [
       { path: 'analisis-costo', component: CostAnalysisComponent },
       { path: 'estimaciones-profit', component:  ProfitEstimatesComponent},
       { path: 'negocios', component: NewBusinessComponent },
-      { path: 'inventarios', component: InventarioComponent}
+      { path: 'inventarios', component: InventarioComponent},
+      { path: 'gastos', component: BillsComponent}
     ],
     canActivate: [authGuard]
   },
