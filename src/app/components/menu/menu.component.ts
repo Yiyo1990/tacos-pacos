@@ -14,13 +14,13 @@ export class MenuComponent {
   marcaSeleccionada : any = {}
 
   menuList = [
-    {id: 1, nombre: 'Inicio', icon: 'fas fa-home', link: 'dashboard/inicio'},
-    {id: 2, nombre: 'Resultados', icon: 'fas fa-circle-up', link: 'dashboard/resultados'},
-    {id: 3, nombre: 'Indicadores', icon: 'fas fa-chart-simple', link: 'dashboard/indicadores'},
-    {id: 4, nombre: 'Cash Flow', icon: 'fas fa-money-bill-transfer', link: 'dashboard/flujo-efectivo'},
-    {id: 5, nombre: 'Estimaciones', icon: 'fas fa-money-bill-trend-up', link: 'dashboard/estimaciones-profit'},
-    {id: 6, nombre: 'Análisis', icon: 'fas fa-gauge', link: 'dashboard/analisis-costo'},
-    {id: 7, nombre: 'Inventarios', icon: 'fas fa-layer-group', link: 'dashboard/inventarios'}
+    {id: 1, nombre: 'Inicio', icon: 'fas fa-home', link: 'inicio'},
+    {id: 2, nombre: 'Resultados', icon: 'fas fa-circle-up', link: 'resultados'},
+    {id: 3, nombre: 'Indicadores', icon: 'fas fa-chart-simple', link: 'indicadores'},
+    {id: 4, nombre: 'Cash Flow', icon: 'fas fa-money-bill-transfer', link: 'flujo-efectivo'},
+    {id: 5, nombre: 'Estimaciones', icon: 'fas fa-money-bill-trend-up', link: 'estimaciones-profit'},
+    {id: 6, nombre: 'Análisis', icon: 'fas fa-gauge', link: 'analisis-costo'},
+    {id: 7, nombre: 'Inventarios', icon: 'fas fa-layer-group', link: 'inventarios'}
   ]
 
   constructor(private router: Router, private authService: AuthService) {

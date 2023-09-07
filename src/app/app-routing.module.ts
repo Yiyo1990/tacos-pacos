@@ -13,7 +13,7 @@ import { MainComponent } from './main/main.component';
 import { authGuard } from './auth/auth.guard';
 import { SucursalOptionComponent } from './sucursal-option/sucursal-option.component';
 import { InventarioComponent } from './pages/inventario/inventario.component';
-import { BillsComponent } from './pages/bills/bills.component';
+import { BillsComponent } from './pages/expenses/expenses.component';
 
 const routes: Routes = [
   {
