@@ -22,6 +22,9 @@ export class MainService {
   private operationCategories = new BehaviorSubject(null)
   $operationCategories = this.operationCategories.asObservable();
 
+  private brandSelected = new BehaviorSubject(null)
+   $brandSelected = this.brandSelected.asObservable();
+
 
   constructor(private http: HttpClient) {}
 
@@ -63,5 +66,9 @@ export class MainService {
         this.operationCategories.next(error)
       }
     })
+  }
+
+  setBranSelected(brand: any) {
+    this.brandSelected.next(brand)
   }
 }

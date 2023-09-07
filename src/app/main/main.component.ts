@@ -13,6 +13,7 @@ export class MainComponent {
     service.getFoodCategories()
     service.getProvidersCategories()
     service.getOperationsCategories()
+    service.setBranSelected(sessionStorage.getItem('marcaSeleccionada'))
     service.$pageName.subscribe((name: string) => {
       this.currentPage = name
     })

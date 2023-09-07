@@ -23,7 +23,10 @@ import { PrimaryButtonComponent } from './components/primary-button/primary-butt
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ButtonCComponent } from './components/button-c/button-c.component';
-import { BillsComponent } from './pages/bills/bills.component';
+import { BillsComponent } from './pages/expenses/expenses.component';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { SelectDropDownModule } from 'ngx-select-dropdown';
+
 
 
 
@@ -54,7 +57,10 @@ import { BillsComponent } from './pages/bills/bills.component';
     HttpClientModule,
     NgChartsModule,
     AccordionModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ModalModule,
+    ModalModule.forRoot(),
+    SelectDropDownModule
   ],
   providers: [],
   bootstrap: [AppComponent]

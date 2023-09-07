@@ -1,0 +1,83 @@
+<div class="row" style="padding-bottom: 1rem;">
+   <div class="col-8 sm-12 md-8">
+
+      <div class="row" style="padding-bottom: 1rem;">
+         <div class="col-4 sm-12 md-8">
+            <button (click)="openModal(template)">Registrar Gasto</button>
+         </div>
+      </div>
+
+      <div class="row">
+         <div class="col-12 sm-12 md-12">
+            <table>
+               <thead>
+                  <tr>
+                     <th>Fecha</th>
+                     <th>Día</th>
+                     <th>Categoria</th>
+                     <th>Proveedor</th>
+                     <th>Operación</th>
+                     <th>Monto</th>
+                     <th>Facturación</th>
+                     <th></th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr *ngFor="let ex of expensesList">
+                     <td></td>
+                     <td></td>
+                     <td>{{ex.foodCategories.name}}</td>
+                     <td>{{ex.providerCategories.name}}</td>
+                     <td>{{ex.operationType.name}}</td>
+                     <td>${{ex.amount}}</td>
+                     <td>{{ex.billing}}</td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+
+   <div class="col-4 sm-12 md-4">
+      <div class="row">
+         <div class="col-10 sm-12 md-10" style="align-items: center; text-align: center;">
+            <label>FACTURACION</label>
+            <canvas style="margin-left: 26%;" baseChart class="chart" [data]="facturationChartData"
+               [type]="'doughnut'">
+            </canvas>
+         </div>
+      </div>
+   </div>
+
+   <ng-template #template>
+      <div class="modal-header">
+         <h4 class="modal-title pull-left">Registrar Gasto</h4>
+         <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+         </button>
+      </div>
+      <div class="modal-body">
+         <label>Proveedor</label>
+         <ngx-select-dropdown [config]="config" [options]="providerCategories"
+            [(ngModel)]="billRegister!.providerSelected"></ngx-select-dropdown>
+         <br>
+         <label>Categoria</label>
+         <ngx-select-dropdown [config]="config" [options]="foodCategories"
+            [(ngModel)]="billRegister!.categorySelected"></ngx-select-dropdown>
+         <br>
+         <label>Tipo de Operación</label>
+         <ngx-select-dropdown [config]="config" [options]="operationCategories"
+            [(ngModel)]="billRegister!.operationSelected"></ngx-select-dropdown>
+         <br>
+         <label>Monto</label>
+         <br>
+         <input type="text" class="form-control" [ngModel]="billRegister!.monto">
+         <br>
+         Factura:
+         <input type="checkbox" [ngModel]="billRegister!.factura">
+         <br><br>
+         <button>Guardar</button>
+      </div>
+   </ng-template>
+
+</div>

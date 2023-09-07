@@ -22,6 +22,8 @@
     "chart.js": "^3.6.0",
     "ng2-charts": "^4.1.1",
     "ngx-bootstrap": "^11.0.2",
+    "ngx-currency": "^4.0.0",
+    "ngx-select-dropdown": "^3.3.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"
