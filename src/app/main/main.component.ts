@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MainService } from './main.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-main',
@@ -8,6 +9,8 @@ import { MainService } from './main.service';
 })
 export class MainComponent {
   currentPage: string = ""
+  messageAlert: string = ""
+  showAlert: boolean = true
 
   constructor(private service: MainService) {
     service.getFoodCategories()

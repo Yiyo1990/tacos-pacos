@@ -23,10 +23,16 @@ export class MainService {
   $operationCategories = this.operationCategories.asObservable();
 
   private brandSelected = new BehaviorSubject(null)
-   $brandSelected = this.brandSelected.asObservable();
+  $brandSelected = this.brandSelected.asObservable();
+
+  private successMessage = new BehaviorSubject({})
+  $successMessage = this.successMessage.asObservable()
+
+  private errorMessage = new BehaviorSubject({})
+  $errorMessage = this.errorMessage.asObservable()
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   setPageName(name: string) {
     this.pageName.next(name)
@@ -70,5 +76,13 @@ export class MainService {
 
   setBranSelected(brand: any) {
     this.brandSelected.next(brand)
+  }
+
+  showMessageSuccess(message: string, title: string) {
+    this.successMessage.next({ message: message, title: title })
+  }
+
+  showErrorMessage(message: string, title: string) {
+    this.errorMessage.next({ message: message, title: title })
   }
 }

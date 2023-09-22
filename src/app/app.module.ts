@@ -14,7 +14,6 @@ import { ReportsViewComponent } from './reports-view/reports-view.component';
 import { NewBusinessComponent } from './pages/new-business/new-business.component';
 import { FormsModule } from '@angular/forms';
 import { MainComponent } from './main/main.component';
-import { AlertMessageComponent } from './components/alert-message/alert-message.component';
 import { SucursalOptionComponent } from './sucursal-option/sucursal-option.component';
 import { HttpClientModule } from '@angular/common/http';
 import { InventarioComponent } from './pages/inventario/inventario.component';
@@ -26,6 +25,15 @@ import { ButtonCComponent } from './components/button-c/button-c.component';
 import { BillsComponent } from './pages/expenses/expenses.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { SelectDropDownModule } from 'ngx-select-dropdown';
+import { ToastrModule } from 'ngx-toastr';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { BsDatepickerModule, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { FormatoMonedaDirective } from './directivas/formato-moneda.directive';
+import { NgxCurrencyDirective } from 'ngx-currency';
+import { SupplierComponent } from './pages/supplier/supplier.component';
 
 
 
@@ -43,12 +51,13 @@ import { SelectDropDownModule } from 'ngx-select-dropdown';
     ReportsViewComponent,
     NewBusinessComponent,
     MainComponent,
-    AlertMessageComponent,
     SucursalOptionComponent,
     InventarioComponent,
     PrimaryButtonComponent,
     ButtonCComponent,
-    BillsComponent
+    BillsComponent,
+    FormatoMonedaDirective,
+    SupplierComponent
   ],
   imports: [
     BrowserModule,
@@ -60,9 +69,19 @@ import { SelectDropDownModule } from 'ngx-select-dropdown';
     BrowserAnimationsModule,
     ModalModule,
     ModalModule.forRoot(),
-    SelectDropDownModule
+    SelectDropDownModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-top-right'
+    }),
+    MatInputModule,
+    MatButtonModule,
+    MatTableModule,
+    MatPaginatorModule,
+    BsDatepickerModule,
+    BsDatepickerModule.forRoot()
   ],
-  providers: [],
+  providers: [BsLocaleService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

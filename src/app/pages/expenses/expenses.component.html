@@ -9,31 +9,59 @@
 
       <div class="row">
          <div class="col-12 sm-12 md-12">
-            <table>
-               <thead>
-                  <tr>
-                     <th>Fecha</th>
-                     <th>Día</th>
-                     <th>Categoria</th>
-                     <th>Proveedor</th>
-                     <th>Operación</th>
-                     <th>Monto</th>
-                     <th>Facturación</th>
-                     <th></th>
-                  </tr>
-               </thead>
-               <tbody>
-                  <tr *ngFor="let ex of expensesList">
-                     <td></td>
-                     <td></td>
-                     <td>{{ex.foodCategories.name}}</td>
-                     <td>{{ex.providerCategories.name}}</td>
-                     <td>{{ex.operationType.name}}</td>
-                     <td>${{ex.amount}}</td>
-                     <td>{{ex.billing}}</td>
-                  </tr>
-               </tbody>
-            </table>
+            <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+               <ng-container matColumnDef="Fecha">
+                  <mat-header-cell *matHeaderCellDef> Fecha </mat-header-cell>
+                  <mat-cell *matCellDef="let item">{{ item.date }} </mat-cell>
+               </ng-container>
+
+               <ng-container matColumnDef="Dia">
+                  <mat-header-cell *matHeaderCellDef> Dia </mat-header-cell>
+                  <mat-cell *matCellDef="let item">{{ item.weekDay }} </mat-cell>
+               </ng-container>
+
+               <ng-container matColumnDef="Categoria">
+                  <mat-header-cell *matHeaderCellDef> Categoria </mat-header-cell>
+                  <mat-cell *matCellDef="let item"> {{ item.foodCategories?.name }} </mat-cell>
+               </ng-container>
+
+               <ng-container matColumnDef="Proveedor">
+                  <mat-header-cell *matHeaderCellDef> Proveedor </mat-header-cell>
+                  <mat-cell *matCellDef="let item"> {{ item.providerCategories?.name }} </mat-cell>
+               </ng-container>
+
+               <ng-container matColumnDef="Operación">
+                  <mat-header-cell *matHeaderCellDef> Operación </mat-header-cell>
+                  <mat-cell *matCellDef="let item"> {{ item.operationType?.name }} </mat-cell>
+               </ng-container>
+
+               <ng-container matColumnDef="Monto">
+                  <mat-header-cell *matHeaderCellDef> Monto </mat-header-cell>
+                  <mat-cell *matCellDef="let item"> ${{ item.amount }} </mat-cell>
+               </ng-container>
+
+               <ng-container matColumnDef="Facturación">
+                  <mat-header-cell *matHeaderCellDef> Factura </mat-header-cell>
+                  <mat-cell *matCellDef="let item"> {{ item.billing }} </mat-cell>
+               </ng-container>
+
+               <ng-container matColumnDef="Acciones">
+                  <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+                  <mat-cell *matCellDef="let item">
+                     <div style="display: inline-block;">
+                        <i style="font-size: 16pt; cursor: pointer; margin-right: 1rem; color: rgb(151, 219, 137);"
+                           class="fa-solid fa-pen-to-square" (click)="onEditExpense(item, template)"></i>
+                        <i style="font-size: 16pt; cursor: pointer; color: rgb(255, 145, 145);"
+                           class="fa-solid fa-trash" (click)="onDeleteExpense(item)"></i>
+                     </div>
+                  </mat-cell>
+               </ng-container>
+
+               <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+               <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
+            </mat-table>
+            <mat-paginator [pageSizeOptions]="[10, 20]" showFirstLastButtons></mat-paginator>
+
          </div>
       </div>
    </div>
@@ -42,8 +70,7 @@
       <div class="row">
          <div class="col-10 sm-12 md-10" style="align-items: center; text-align: center;">
             <label>FACTURACION</label>
-            <canvas style="margin-left: 26%;" baseChart class="chart" [data]="facturationChartData"
-               [type]="'doughnut'">
+            <canvas style="margin-left: 26%;" baseChart class="chart" [data]="facturationChartData" [type]="'doughnut'">
             </canvas>
          </div>
       </div>
@@ -52,31 +79,63 @@
    <ng-template #template>
       <div class="modal-header">
          <h4 class="modal-title pull-left">Registrar Gasto</h4>
-         <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+         <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="closeModal()">
             <span aria-hidden="true" class="visually-hidden">&times;</span>
          </button>
       </div>
       <div class="modal-body">
-         <label>Proveedor</label>
-         <ngx-select-dropdown [config]="config" [options]="providerCategories"
-            [(ngModel)]="billRegister!.providerSelected"></ngx-select-dropdown>
-         <br>
-         <label>Categoria</label>
-         <ngx-select-dropdown [config]="config" [options]="foodCategories"
-            [(ngModel)]="billRegister!.categorySelected"></ngx-select-dropdown>
-         <br>
-         <label>Tipo de Operación</label>
-         <ngx-select-dropdown [config]="config" [options]="operationCategories"
-            [(ngModel)]="billRegister!.operationSelected"></ngx-select-dropdown>
-         <br>
-         <label>Monto</label>
-         <br>
-         <input type="text" class="form-control" [ngModel]="billRegister!.monto">
+         <div class="row">
+            <div class="col-6 md-6 sm-12">
+               <label>Fecha</label>
+               <input type="text" class="form-control" bsDatepicker [(bsValue)]="billRegister!.date"
+                  [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" [maxDate]=""/>
+            </div>
+         </div>
+
+         <div class="row">
+            <div class="col-6 md-6 sm-12">
+               <label>Titulo</label>
+               <br>
+               <input type="text" class="form-control" placeholder="Ingrese un titulo para el gasto" value=""
+                  [(ngModel)]="billRegister!.name">
+            </div>
+            <div class="col-6 md-6 sm-12">
+               <label>Descripción</label>
+               <br>
+               <input type="text" class="form-control" placeholder="Ingrese una descripción" value=""
+                  [(ngModel)]="billRegister!.description">
+            </div>
+
+         </div>
+         <div class="row">
+            <div class="col-6 md-6 sm-12"><label>Categoria</label>
+               <ngx-select-dropdown [config]="config" [options]="foodCategories"
+                  [(ngModel)]="billRegister!.foodCategories" (change)="onChangeCategory($event)"></ngx-select-dropdown>
+            </div>
+            <div class="col-6 md-6 sm-12"><label>Proveedor</label>
+               <ngx-select-dropdown [config]="config" [options]="providerCategories"
+                  [(ngModel)]="billRegister!.providerCategories"></ngx-select-dropdown>
+            </div>
+         </div>
+
+         <div class="row">
+            <div class="col-6 md-6 sm-12"><label>Tipo de Operación</label>
+               <ngx-select-dropdown [config]="config" [options]="operationCategories"
+                  [(ngModel)]="billRegister!.operationType"></ngx-select-dropdown>
+            </div>
+            <div class="col-6 md-6 sm-12">
+               <label>Monto</label>
+               <br>
+               <input type="text" class="form-control" value="" [(ngModel)]="billRegister!.amount" formatoMoneda>
+            </div>
+
+         </div>
          <br>
          Factura:
-         <input type="checkbox" [ngModel]="billRegister!.factura">
+         <input class="form-check-input" type="checkbox" [checked]="billRegister!.selected"
+            (change)="onCheckedBilling($event)">
          <br><br>
-         <button>Guardar</button>
+         <button (click)="saveExpense()">Guardar</button>
       </div>
    </ng-template>
 
