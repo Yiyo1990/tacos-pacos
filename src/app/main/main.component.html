@@ -1,40 +1,52 @@
-<div class="menu">
-  <app-menu class="menu-content"></app-menu>
-  <div class="menu-header">
-    <div class="menu-header-logo">
-      <div class="row">
-        <div class="col-12 sm-12 md-12">
-          <div class="logo-content">
-            <img src="../../assets/logo.png" alt="" width="70" height="35" />
-            <!-- <img class="logo" src="{{ marcaSeleccionada!.sucursal!.logoUrl }}" /> -->
-          </div>
-        </div>
-        <div class="col-12 sm-12 md-12">
-          <div class="title">
-            <strong>Suc. Bartolome</strong>
-          </div>
-        </div>
+<div class="main-content">
+  <div class="header">
+    <div class="menu-content">
+      <div class="dashboard-menu">
+        <app-menu class="menu-content"></app-menu>
       </div>
     </div>
+    <div class="header-remains">
+      <div class="col-3 sm-3 md-3 lg-3">
+        <div class="title-currency">
+          <h6>{{ currentPage }}</h6>
+        </div>
+      </div>
+      <div class="col-9 sm-9 md-9 lg-9 sections">FILTROS</div>
+    </div>
+  </div>
+</div>
+<!--  <div class="menu-header">
     <div class="header-section">
       <div class="row">
         <div class="col-4 sm-4 md-4 header-section-title">
-          <h6>{{currentPage}}</h6>
+          <h6>{{ currentPage }}</h6>
         </div>
         <div class="col-8 sm-8 md-8 header-section-button">
-          <div class="d-grid gap-2 d-md-block justify-content-md-end">
-            <button class="btn btn-outline-primary me-md-4 btn-lg" type="button">2023</button>
-            <!--<button class="btn btn-outline-danger me-md-4 btn-lg" type="button">Anual</button>-->
-            <select  class="btn-outline-danger me-md-4 btn-lg"  (change)="onChangeMonth($event)">
-              <option *ngFor="let month of months"value="{{month.id}}">{{month.name}}</option>
-          </select>
-            <button class="btn btn-outline-warning btn-lg" type="button">Rango</button>
+          < class="d-grid gap-2 d-md-block justify-content-md-end">
+            <button
+              class="btn btn-outline-primary me-md-4 btn-lg"
+              type="button"
+            >
+              2023
+            </button>
+            <!--<button class="btn btn-outline-danger me-md-4 btn-lg" type="button">Anual</button>
+            <select
+              class="btn-outline-danger me-md-4 btn-lg"
+              (change)="onChangeMonth($event)"
+            >
+              <option *ngFor="let month of months" value="{{ month.id }}">
+                {{ month.name }}
+              </option>
+            </select>
+            <button class="btn btn-outline-warning btn-lg" type="button">
+              Rango
+            </button>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="content-body">
+  </div> -->
+
+<!-- <div class="content-body">
     <router-outlet></router-outlet>
-  </div>
-</div>
+  </div> -->

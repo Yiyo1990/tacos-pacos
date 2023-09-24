@@ -1,4 +1,19 @@
 <div class="menu-container">
+  <div class="menu-header-logo">
+    <div class="row">
+      <div class="col-12 sm-12 md-12">
+        <div class="logo-content">
+          <img src="../../assets/logo.png" alt="" width="70" height="35" />
+          <!-- <img class="logo" src="{{ marcaSeleccionada!.sucursal!.logoUrl }}" /> --->
+        </div>
+      </div>
+      <div class="col-12 sm-12 md-12">
+        <div class="content-current-title">
+          <strong>Suc. Bartolome</strong>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="menu-list-content">
     <ul>
       <li *ngFor="let item of menuList" class="list-item">
@@ -13,16 +28,12 @@
         </a>
       </li>
     </ul>
-    <a routerLink="gastos" style="text-align: center; width: 100%;">
-      <i
-        class=""
-        data-toggle="tooltip"
-        data-placement="top"
-        title="Gastos"
-      ></i>
+    <!--     <a routerLink="gastos" style="text-align: center; width: 100%">
+      <i class="" data-toggle="tooltip" data-placement="top" title="Gastos"></i>
       Gastos
-    </a> <br>
-    <a routerLink="proveedores" style="text-align: center; width: 100%;">
+    </a>
+    <br />
+    <a routerLink="proveedores" style="text-align: center; width: 100%">
       <i
         class=""
         data-toggle="tooltip"
@@ -30,13 +41,13 @@
         title="Proveedores"
       ></i>
       Proveedores
-    </a>
-  </div>
-  <div class="footer-content">
-    <footer>
-      <a (click)="logout()">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-      </a>
-    </footer>
+    </a> -->
+    <div class="footer-content">
+      <footer>
+        <a (click)="logout()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </a>
+      </footer>
+    </div>
   </div>
 </div>

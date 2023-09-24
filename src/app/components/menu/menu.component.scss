@@ -2,10 +2,6 @@
 
 .menu-container {
   position:fixed;
-/*   top: 4rem; */
-/*   left: 0;
-  bottom: 0; */
-/*   position: relative; */
   width: 13rem;
   height: 100%;
   background-color: #090661;
@@ -26,7 +22,6 @@
   padding: 0.2rem 0;
   background-color: #090661;
 }
-
 .content-current-title {
   width: 13rem;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -35,36 +30,30 @@
   text-align: center;
   background-color: #ffca2e;
 }
-
 .menu-list-content ul {
   list-style: none;
   padding: 0;
   margin: 1.5rem 0;
 }
-
 .list-item {
   padding: 0.5rem 1rem;
   margin: 0.5rem 0;
   cursor: pointer;
 }
-
 .list-item:hover {
   opacity: 1;
   background-color: #ffca2e;
 }
-
 .menu-list-content ul li i {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   margin-right: 3%;
 }
-
 a {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 0.9rem;
   text-decoration: none;
   color: $fontColor;
 }
-
 .footer-content {
   position: absolute;
   display: flex;
