@@ -13,5 +13,21 @@ const configDropdown = {
     clearOnSelection: true,
     inputDirection: 'ltr'
   }
+  
+  const firstUpperCase = (str: string) => {
+    if (str === '') return str;
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 
-  export {configDropdown}
+  enum PageName {
+    INICIO = 'INICIO',
+    GASTOS = 'GASTOS',
+    RESULTADOS = 'RESULTADOS',
+    INDICADORES = 'INDICADORES',
+    CASH_FLOW = 'CASH FLOW',
+    ESTIMACIONES = 'ESTIMACIONES',
+    ANALISIS = 'ANALISIS'
+  }
+  
+
+  export {configDropdown, firstUpperCase}

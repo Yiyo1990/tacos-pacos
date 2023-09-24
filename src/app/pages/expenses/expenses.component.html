@@ -84,29 +84,15 @@
          </button>
       </div>
       <div class="modal-body">
+
          <div class="row">
             <div class="col-6 md-6 sm-12">
                <label>Fecha</label>
-               <input type="text" class="form-control" bsDatepicker [(bsValue)]="billRegister!.date"
-                  [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" [maxDate]=""/>
+               <input type="text" class="form-control" bsDatepicker [(bsValue)]="billRegister!.date" noText
+                  [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" [maxDate]="billRegister!.maxDate"/>
             </div>
          </div>
 
-         <div class="row">
-            <div class="col-6 md-6 sm-12">
-               <label>Titulo</label>
-               <br>
-               <input type="text" class="form-control" placeholder="Ingrese un titulo para el gasto" value=""
-                  [(ngModel)]="billRegister!.name">
-            </div>
-            <div class="col-6 md-6 sm-12">
-               <label>Descripción</label>
-               <br>
-               <input type="text" class="form-control" placeholder="Ingrese una descripción" value=""
-                  [(ngModel)]="billRegister!.description">
-            </div>
-
-         </div>
          <div class="row">
             <div class="col-6 md-6 sm-12"><label>Categoria</label>
                <ngx-select-dropdown [config]="config" [options]="foodCategories"
@@ -128,6 +114,21 @@
                <br>
                <input type="text" class="form-control" value="" [(ngModel)]="billRegister!.amount" formatoMoneda>
             </div>
+
+         </div>
+         <div class="row">
+            <div class="col-12 md-12 sm-12">
+               <label>Comentarios</label>
+               <br>
+               <textarea type="text" rows="2" cols="50" class="form-control" value=""
+                  [(ngModel)]="billRegister!.name"> </textarea>
+            </div>
+            <!--<div class="col-6 md-6 sm-12">
+               <label>Descripción</label>
+               <br>
+               <input type="text" class="form-control" placeholder="Ingrese una descripción" value=""
+                  [(ngModel)]="billRegister!.description">
+            </div>-->
 
          </div>
          <br>

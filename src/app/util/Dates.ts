@@ -1,4 +1,5 @@
 import * as moment from 'moment'
+import { firstUpperCase } from './util'
 
 export class Dates {
 
@@ -10,7 +11,7 @@ export class Dates {
         try {
             const dateM = moment(date, 'DD-MM-yyyy HH:mm:ss')
             return dateM.format('dddd')
-        } catch(e) {
+        } catch (e) {
             return ''
         }
     }
@@ -25,9 +26,12 @@ export class Dates {
         return dateM.toDate()
     }
 
-    isDate(fecha: any) {
-        fecha = new Date(fecha)
-        console.log("valida", fecha)
-        return Object.prototype.toString.call(fecha) === '[object Date]' && !isNaN(fecha.getTime())
+    getMonths(): any {
+        const meses = [];
+        for (let i = 0; i < 12; i++) {
+            const mes = moment().month(i).format('MMMM'); 
+            meses.push({id: i+1, name: firstUpperCase(mes)});
+        }
+        return meses
     }
 }

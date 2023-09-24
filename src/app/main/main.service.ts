@@ -25,17 +25,19 @@ export class MainService {
   private brandSelected = new BehaviorSubject(null)
   $brandSelected = this.brandSelected.asObservable();
 
-  private successMessage = new BehaviorSubject({})
-  $successMessage = this.successMessage.asObservable()
+  private filterMonth = new BehaviorSubject(null)
+  $filterMonth = this.filterMonth.asObservable();
 
-  private errorMessage = new BehaviorSubject({})
-  $errorMessage = this.errorMessage.asObservable()
 
 
   constructor(private http: HttpClient) { }
 
   setPageName(name: string) {
     this.pageName.next(name)
+  }
+
+  getPageName() {
+    return this.pageName.value
   }
 
   async getProvidersCategories() {
@@ -78,11 +80,8 @@ export class MainService {
     this.brandSelected.next(brand)
   }
 
-  showMessageSuccess(message: string, title: string) {
-    this.successMessage.next({ message: message, title: title })
+  onChangeFilterMonth(month: any){
+    this.filterMonth.next(month)
   }
 
-  showErrorMessage(message: string, title: string) {
-    this.errorMessage.next({ message: message, title: title })
-  }
 }

@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Chart, ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { MainService } from 'src/app/main/main.service';
@@ -17,8 +18,20 @@ export class DashboardComponent {
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
-  constructor(private mainService: MainService){
-    mainService.setPageName("Inicio")
+  constructor(private mainService: MainService, private activeRouter: ActivatedRoute){
+    
+    this.activeRouter.queryParams.subscribe((params: any) => {
+      mainService.setPageName(params.nombre)
+    })
+
+    if(mainService.getPageName() == "Inicio") {
+      console.log("pageName",mainService.getPageName())
+      mainService.$filterMonth.subscribe((month: any) => {
+        if(month) {
+          console.log("mes seleccionado",month)
+        }
+      })
+    }
   }
 
   public lineChartData: ChartConfiguration['data'] = {

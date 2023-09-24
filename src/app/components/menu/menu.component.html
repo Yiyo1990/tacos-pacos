@@ -2,7 +2,7 @@
   <div class="menu-list-content">
     <ul>
       <li *ngFor="let item of menuList" class="list-item">
-        <a routerLink="{{ item.link }}">
+        <a routerLink="{{ item.link }}" [queryParams]="item">
           <i
             class="{{ item.icon }}"
             data-toggle="tooltip"

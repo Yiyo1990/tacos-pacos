@@ -34,6 +34,7 @@ import { BsDatepickerModule, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { FormatoMonedaDirective } from './directivas/formato-moneda.directive';
 import { NgxCurrencyDirective } from 'ngx-currency';
 import { SupplierComponent } from './pages/supplier/supplier.component';
+import { NoTextInputDirective } from './directivas/no-text-input.directive';
 
 
 
@@ -57,7 +58,8 @@ import { SupplierComponent } from './pages/supplier/supplier.component';
     ButtonCComponent,
     BillsComponent,
     FormatoMonedaDirective,
-    SupplierComponent
+    SupplierComponent,
+    NoTextInputDirective
   ],
   imports: [
     BrowserModule,
