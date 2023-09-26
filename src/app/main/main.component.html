@@ -11,9 +11,43 @@
           <h6>{{ currentPage }}</h6>
         </div>
       </div>
-      <div class="col-9 sm-9 md-9 lg-9 sections">FILTROS</div>
+      <div class="col-9 sm-9 md-9 lg-9 sections">
+        <div class="filters">
+          <div class="btn-group dropstart">
+            <button
+              type="button"
+              class="btn"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="fa-solid fa-filter"></i>
+            </button>
+            <div class="dropdown-menu mx-0 my-0 px-0 py-0">
+              <div class="card card-filter">
+                <div class="card-header text-center card-title">
+                  <h5>Filtros</h5>
+                </div>
+                <div class="card-body">Body...</div>
+                <div class="card-footer">
+                  <button type="button" class="btn btn-outline-primary">
+                    Filtrar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- filters -->
+      </div>
     </div>
   </div>
+  <div class="content-body">
+    <div class="body-main">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+  <!-- dialog -->
+  <!-- dialog -->
 </div>
 <!--  <div class="menu-header">
     <div class="header-section">
@@ -45,8 +79,4 @@
         </div>
       </div>
     </div>
-  </div> -->
-
-<!-- <div class="content-body">
-    <router-outlet></router-outlet>
   </div> -->

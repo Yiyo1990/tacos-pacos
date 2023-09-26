@@ -40,9 +40,9 @@
   margin: 0.5rem 0;
   cursor: pointer;
 }
-.list-item:hover {
+.list-item a:hover {
   opacity: 1;
-  background-color: #ffca2e;
+  color: #ffca2e;
 }
 .menu-list-content ul li i {
   font-size: 1.2rem;
