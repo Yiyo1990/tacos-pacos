@@ -1,6 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+
+
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { Params } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -29,5 +32,16 @@ export class ExpenseService {
   deleteExpense(branchId: number, expenseId: number) {
     let url = this.endPoint.concat(`expense?branchId=${branchId}&id=${expenseId}`)
     return this.httpClient.delete(url)
+  }
+
+  searchExpense(brachId: number, startDate: string, endDate: string, search: string) {
+    let params: Params = {
+      'startDate': startDate,
+      'endDate': endDate,
+      'search': search,
+      'branchId': brachId
+    }
+    let url = this.endPoint.concat(`expense/search`)
+    return this.httpClient.get(url, { params: params })
   }
 }

@@ -5,16 +5,21 @@
          <div class="col-4 sm-12 md-8">
             <button (click)="openModal(template)">Registrar Gasto</button>
          </div>
+         <div class="col-4 sm-12 md-8"></div>
+         <div class="col-4 sm-12 md-8">
+            <input type="text" class="form-control" (keyup)="onSearchExpense($event)" placeholder="Buscar...">
+         </div>
       </div>
 
       <div class="row">
          <div class="col-12 sm-12 md-12">
             <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
                <ng-container matColumnDef="Fecha">
                   <mat-header-cell *matHeaderCellDef> Fecha </mat-header-cell>
                   <mat-cell *matCellDef="let item">{{ item.date }} </mat-cell>
                </ng-container>
-
+              
                <ng-container matColumnDef="Dia">
                   <mat-header-cell *matHeaderCellDef> Dia </mat-header-cell>
                   <mat-cell *matCellDef="let item">{{ item.weekDay }} </mat-cell>
@@ -56,7 +61,7 @@
                      </div>
                   </mat-cell>
                </ng-container>
-
+               
                <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
                <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
             </mat-table>
@@ -68,11 +73,28 @@
 
    <div class="col-4 sm-12 md-4">
       <div class="row">
-         <div class="col-10 sm-12 md-10" style="align-items: center; text-align: center;">
-            <label>FACTURACION</label>
-            <canvas style="margin-left: 26%;" baseChart class="chart" [data]="facturationChartData" [type]="'doughnut'">
+         <div class="col-12 sm-12 md-12" style="text-align: center;">
+            <label>TOTAL GASTOS</label><br>
+            <h3>${{sumaGastosTotales}}</h3>
+         </div>
+      </div>
+      <br>
+      <div class="row">
+         <div class="col-12 sm-12 md-12" style="text-align: center;">
+            <label>CATEGORIAS</label>
+            <canvas baseChart class="chart" [data]="barChartData"  [options]="barChartOptions"   [type]="'bar'">
             </canvas>
          </div>
+      </div>
+      <br>
+      <div class="row">
+         <div class="col-2"></div>
+         <div class="col-8 sm-10 md-8" style="text-align: center;">
+            <label>FACTURACION</label>
+            <canvas baseChart class="chart" [data]="facturationChartData" [options]="donutChartOptions" [type]="'doughnut'">
+            </canvas>
+         </div>
+         <div class="col-2"></div>
       </div>
    </div>
 
@@ -89,28 +111,28 @@
             <div class="col-6 md-6 sm-12">
                <label>Fecha</label>
                <input type="text" class="form-control" bsDatepicker [(bsValue)]="billRegister!.date" noText
-                  [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" [maxDate]="billRegister!.maxDate"/>
+                  [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" [maxDate]="billRegister!.maxDate" />
             </div>
          </div>
 
          <div class="row">
-            <div class="col-6 md-6 sm-12"><label>Categoria</label>
+            <div class="col-6 md-6 sm-12"><label>*Categoria</label>
                <ngx-select-dropdown [config]="config" [options]="foodCategories"
                   [(ngModel)]="billRegister!.foodCategories" (change)="onChangeCategory($event)"></ngx-select-dropdown>
             </div>
-            <div class="col-6 md-6 sm-12"><label>Proveedor</label>
+            <div class="col-6 md-6 sm-12"><label>*Proveedor</label>
                <ngx-select-dropdown [config]="config" [options]="providerCategories"
                   [(ngModel)]="billRegister!.providerCategories"></ngx-select-dropdown>
             </div>
          </div>
 
          <div class="row">
-            <div class="col-6 md-6 sm-12"><label>Tipo de Operación</label>
+            <div class="col-6 md-6 sm-12"><label>*Tipo de Operación</label>
                <ngx-select-dropdown [config]="config" [options]="operationCategories"
                   [(ngModel)]="billRegister!.operationType"></ngx-select-dropdown>
             </div>
             <div class="col-6 md-6 sm-12">
-               <label>Monto</label>
+               <label>*Monto</label>
                <br>
                <input type="text" class="form-control" value="" [(ngModel)]="billRegister!.amount" formatoMoneda>
             </div>

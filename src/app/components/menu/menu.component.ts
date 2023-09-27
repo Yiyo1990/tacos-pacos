@@ -20,7 +20,9 @@ export class MenuComponent {
     {id: 4, nombre: 'Cash Flow', icon: 'fas fa-money-bill-transfer', link: 'flujo-efectivo'},
     {id: 5, nombre: 'Estimaciones', icon: 'fas fa-money-bill-trend-up', link: 'estimaciones-profit'},
     {id: 6, nombre: 'Análisis', icon: 'fas fa-gauge', link: 'analisis-costo'},
-    {id: 7, nombre: 'Inventarios', icon: 'fas fa-layer-group', link: 'inventarios'}
+    {id: 7, nombre: 'Inventarios', icon: 'fas fa-layer-group', link: 'inventarios'},
+    {id: 8, nombre: 'Gastos', icon: 'fas fa-layer-group', link: 'gastos'},
+    {id: 9, nombre: 'Proveedores', icon: 'fas fa-layer-group', link: 'proveedores'}
   ]
 
   constructor(private router: Router, private authService: AuthService) {

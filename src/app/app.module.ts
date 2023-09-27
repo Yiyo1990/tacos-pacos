@@ -58,7 +58,6 @@ import { NoTextInputDirective } from './directivas/no-text-input.directive';
     ButtonCComponent,
     BillsComponent,
     FormatoMonedaDirective,
-    SupplierComponent,
     NoTextInputDirective
   ],
   imports: [
@@ -81,7 +80,8 @@ import { NoTextInputDirective } from './directivas/no-text-input.directive';
     MatTableModule,
     MatPaginatorModule,
     BsDatepickerModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    SupplierComponent
   ],
   providers: [BsLocaleService],
   bootstrap: [AppComponent]

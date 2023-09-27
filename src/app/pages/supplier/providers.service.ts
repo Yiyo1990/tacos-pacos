@@ -15,4 +15,14 @@ export class ProvidersService {
     let url = this.url.concat('expense/provider-categories')
     return this.httpClient.get(url)
   }
+
+  saveProvider(data: any, branchId: number) {
+    let url = this.url.concat(`expense/provider?branchId=${branchId}`)
+    return this.httpClient.post(url, data)
+  }
+
+  deleteProvider(branchId: number, id: number){
+    let url = this.url.concat(`expense/provider?branchId=${branchId}&id=${id}`)
+    return this.httpClient.delete(url)
+  }
 }

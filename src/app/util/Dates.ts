@@ -10,7 +10,7 @@ export class Dates {
     public getWeekDay(date: string) {
         try {
             const dateM = moment(date, 'DD-MM-yyyy HH:mm:ss')
-            return dateM.format('dddd')
+            return firstUpperCase(dateM.format('dddd'))
         } catch (e) {
             return ''
         }

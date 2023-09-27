@@ -1,18 +1,18 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ChartData, ChartType } from 'chart.js';
+import { ChartConfiguration, ChartData, ChartEvent, ChartOptions, ChartType } from 'chart.js';
 import { MainService } from 'src/app/main/main.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { configDropdown } from 'src/app/util/util';
+import { barChartOptions, configDropdown, donutChartOptions } from 'src/app/util/util';
 import { ExpenseService } from './expenses.service';
 import { Charts } from 'src/app/util/Charts';
 import { ToastrService } from 'ngx-toastr';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { NgxCurrencyDirective } from 'ngx-currency/public-api';
 import { Dates } from 'src/app/util/Dates';
 import { ActivatedRoute } from '@angular/router';
-
-
+import { BaseChartDirective } from 'ng2-charts';
+//import * as pluginDataLabels from 'chartjs-plugin-datalabels';
+//import { default as ChartDataLabels  } from 'chartjs-plugin-datalabels';
 
 @Component({
    selector: 'app-expenses',
@@ -23,10 +23,12 @@ export class BillsComponent implements OnInit {
    brandSelected: any
    expensesList: any = []
    private dates: Dates = new Dates()
+   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
    modalRef?: BsModalRef;
    readonly config = configDropdown
 
+   sumaGastosTotales: number = 0
    billRegister: any = {}
 
    foodCategories: any = []
@@ -39,15 +41,24 @@ export class BillsComponent implements OnInit {
    columnas: string[] = ['Fecha', 'Dia', 'Categoria', 'Proveedor', 'Operación', 'Monto', 'Facturación', 'Acciones'];
    @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
+    barChartOptions: ChartOptions = barChartOptions
+   public barChartLegend = true;
+   public barChartType: ChartType = 'bar';
+   //public barChartPlugins = [pluginDataLabels];
+   public donutChartOptions: ChartConfiguration['options'] = donutChartOptions
+
+   public barChartData: ChartData<'bar'> = { labels: [], datasets: [ { data: [], label: 'Series A' }]};
+
    constructor(private service: ExpenseService, private mainService: MainService,
       private modalService: BsModalService, private toastr: ToastrService, private activeRouter: ActivatedRoute) {
+        
       this.activeRouter.queryParams.subscribe((params: any) => {
          mainService.setPageName(params.nombre)
       })
 
       this.resetModalData()
       this.getCatalogs()
-
+      
       mainService.$filterMonth.subscribe((month: any) => {
          if (month) {
             if (mainService.getPageName() === 'Gastos') {
@@ -72,13 +83,13 @@ export class BillsComponent implements OnInit {
    getCatalogs() {
       this.mainService.$foodCategories.subscribe((result: any) => {
          if (result) {
-            this.foodCategories = result //result.map((s: any) => { return { id: s.id, description: s.name } })
+            this.foodCategories = result
          }
       })
 
       this.mainService.$operationCategories.subscribe((result: any) => {
          if (result) {
-            this.operationCategories = result//result.map((s: any) => { return { id: s.id, description: s.name } })
+            this.operationCategories = result
          }
       })
 
@@ -92,20 +103,42 @@ export class BillsComponent implements OnInit {
       if (this.brandSelected) {
          this.service.getExpenses(this.brandSelected.id).subscribe({
             next: (result) => {
-               if (Array.isArray(result)) {
-                  this.expensesList = result.map((r: any) => {
-                     let strDate = this.dates.getWeekDay(r.expenseDate)
-                     let date = this.dates.formatDate(r.expenseDate)
-                     return { ...r, weekDay: strDate, date: date }
-                  })
-
-                  this.fillFacturationChart(result)
-                  this.dataSource = new MatTableDataSource(this.expensesList); // Inicializa la propiedad en el constructor
-                  this.dataSource.paginator = this.paginator;
-               }
+               this.fillTblExpenses(result)
             },
             error: () => { this.toastr.error("Ha ocurrido un error", "Error") }
          })
+      }
+   }
+
+   onSearchExpense(e: any) {
+      if(!e.target.value) {
+         this.getExpenses()
+      } else {
+         this.service.searchExpense(this.brandSelected.id, '01/09/2023', '26/09/2023', e.target.value).subscribe({
+            next: (res: any) => {
+               this.fillTblExpenses(res)
+            },
+            error: (e) => {
+               this.toastr.error("Ha ocurrido un error", "Error")
+            }
+         })
+      }
+   }
+
+   fillTblExpenses(result: any) {
+      if (Array.isArray(result)) {
+         this.expensesList = result.map((r: any) => {
+            let strDate = this.dates.getWeekDay(r.expenseDate)
+            let date = this.dates.formatDate(r.expenseDate)
+            return { ...r, weekDay: strDate, date: date }
+         })
+
+         this.fillFacturationChart(result)
+         this.getCategories(result)
+         this.dataSource = new MatTableDataSource(this.expensesList);
+         this.dataSource.paginator = this.paginator;
+      } else {
+         this.toastr.error("Ha ocurrido un error")
       }
    }
 
@@ -125,27 +158,32 @@ export class BillsComponent implements OnInit {
    }
 
    saveExpense() {
-      this.billRegister.amount = Number(String(this.billRegister.amount).replace('$', ''))
-      this.billRegister.billing = this.billRegister.selected ? 'SI' : 'NO'
-      this.billRegister.branch.id = this.brandSelected.id
-      this.billRegister.expenseDate = this.dates.convertToDate(this.billRegister.date)
+      if (this.validData()) {
+         this.billRegister.amount = Number(String(this.billRegister.amount).replace('$', ''))
+         this.billRegister.billing = this.billRegister.selected ? 'SI' : 'NO'
+         this.billRegister.branch.id = this.brandSelected.id
+         this.billRegister.expenseDate = this.dates.convertToDate(this.billRegister.date)
 
-      this.service.saveExpense(this.billRegister).subscribe({
-         next: (res: any) => {
-            if (res.acknowledge) {
-               this.toastr.success("El gasto se ha guardado correctamente", "Success")
-               this.modalRef?.hide()
-               this.resetModalData()
-               this.getExpenses()
-            } else {
+         this.service.saveExpense(this.billRegister).subscribe({
+            next: (res: any) => {
+               if (res.acknowledge) {
+                  this.toastr.success("El gasto se ha guardado correctamente", "Success")
+                  this.modalRef?.hide()
+                  this.resetModalData()
+                  this.getExpenses()
+               } else {
+                  this.toastr.error("Ha ocurrido un error", "Error")
+               }
+            },
+            error: (error) => {
                this.toastr.error("Ha ocurrido un error", "Error")
+               console.error(error)
             }
-         },
-         error: (error) => {
-            this.toastr.error("Ha ocurrido un error", "Error")
-            console.error(error)
-         }
-      })
+         })
+      } else {
+         this.toastr.error("Favor de ingresar los campos requeridos")
+      }
+
    }
 
    onDeleteExpense(item: any) {
@@ -202,7 +240,7 @@ export class BillsComponent implements OnInit {
          foodCategories: {},
          providerCategories: {},
          operationType: {},
-         amount: 0,
+         amount: "$0.00",
          selected: true,
          billing: 'SI',
          branch: { id: 0 },
@@ -216,7 +254,49 @@ export class BillsComponent implements OnInit {
    }
 
    validData() {
+      let propertiesToValid = ['foodCategories', 'providerCategories', 'operationType', 'amount']
+      let isValid = false
 
+      for (let key of propertiesToValid) {
+         let type = typeof this.billRegister[key]
+         if (type == 'object') {
+            isValid = Object.keys(this.billRegister[key]).length == 0 ? false : true
+            if (!isValid) break
+         } else if (type == 'string' && key == 'amount' && this.billRegister[key] == '$0.00') {
+            isValid = false
+            break
+         }
+      }
+      return isValid
    }
+
+   async getCategories(expenses: any) {
+      let totalSum = expenses.reduce((total: any, value: any) => total + value.amount, 0)
+      this.sumaGastosTotales = totalSum
+      let categoriesName :any = []
+      let amountCategories: any = []
+      let categories = this.foodCategories.map((category: any) => {
+         let expCategories = expenses.filter((e:any) => e.foodCategories.id == category.id)
+         let sum = expCategories.reduce((total: any, value:any) => total + value.amount, 0)
+         let percent = (sum / totalSum) * 100 
+         categoriesName.push(category.name)
+         amountCategories.push(sum)
+         return {id: category.id, name: category.name, amount: sum.toFixed(2), percent: percent.toFixed(2)}
+      })
+      this.barChartData.labels = categoriesName
+      this.barChartData.datasets[0].data = amountCategories
+      this.chart?.update()
+   }
+
+   /*
+   public chartHovered({ event, active }: { event?: ChartEvent; active?: object[] }): void {
+      console.log(event, active);
+   }
+
+   public chartClicked({ event, active }: { event?: ChartEvent; active?: object[] }): void {
+      console.log(event, active);
+   } */
+
+
 
 }

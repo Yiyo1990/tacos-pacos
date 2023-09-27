@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { MainService } from 'src/app/main/main.service';
 
 @Component({
@@ -7,7 +8,10 @@ import { MainService } from 'src/app/main/main.service';
   styleUrls: ['./profit-estimates.component.scss']
 })
 export class ProfitEstimatesComponent {
-  constructor(private mainService: MainService){
-    mainService.setPageName("Estimaciones")
+  constructor(private mainService: MainService, private activeRouter: ActivatedRoute){
+    
+    this.activeRouter.queryParams.subscribe((params: any) => {
+      mainService.setPageName(params.nombre)
+    })
   }
 }

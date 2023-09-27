@@ -1,32 +1,70 @@
 <div class="content-body">
-  <table mat-table [dataSource]="dataTable" class="mat-elevation-z8">
-    <!-- Position Column -->
-    <ng-container [matColumnDef]="column" *ngFor="let column of columnsName">
-      <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element[column] }}
-        <mat-button-toggle-group
-          appearance="legacy"
-          *ngIf="column === 'Acciones'"
-          style="font-size: 0.5rem"
-        >
-          <button mat-icon-button matTooltip="Editar">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button matTooltip="Eliminar">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-button-toggle-group>
-      </td>
-    </ng-container>
+  <div class="row" style="padding-bottom: 1rem;">
+    <div class="col-1"></div>
+    <div class="col-4 sm-12 md-4">
+      <button (click)="openModal(template)">Registrar Proveedor</button>
+    </div>
+  </div>
 
-    <tr mat-header-row *matHeaderRowDef="columnsTable"></tr>
-    <tr mat-row *matRowDef="let row; columns: columnsTable"></tr>
+  <div class="row">
+    <div class="col-1"></div>
+    <div class="col-10 md-10 sm-10">
+      <table mat-table [dataSource]="dataTable" class="mat-elevation-z8">
+        <!-- Position Column -->
+        <ng-container [matColumnDef]="column" *ngFor="let column of columnsName">
+          <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element[column] }}
+            <mat-button-toggle-group appearance="legacy" *ngIf="column === 'Acciones'" style="font-size: 0.5rem">
+              <button mat-icon-button matTooltip="Editar" (click)="editProvider(element, template)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Eliminar" (click)="deleteProvider(element)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-button-toggle-group>
+          </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="columnsTable"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnsTable"></tr>
+    
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">Sin datos registrados</td>
+        </tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
 
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="4">Sin datos registrados</td>
-    </tr>
-  </table>
+    </div>
+  </div>
+  
 
-  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+  <ng-template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Registrar Proveedor</h4>
+      <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-12 md-12 sm-12"><label>*Categoria</label>
+          <ngx-select-dropdown [config]="configDrodown" [options]="foodCategories"
+            (change)="onChangeCategory($event)"  [(ngModel)]="provider!.foodCategories"></ngx-select-dropdown>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-12 md-12 sm-12">
+          <label>*Nombre Proveedor</label>
+          <br>
+          <input type="text"  [(ngModel)]="provider!.name" class="form-control" value="">
+        </div>
+      </div>
+      <br>
+      <br><br>
+      <button (click)="saveSupplier()">Guardar</button>
+    </div>
+  </ng-template>
 </div>
