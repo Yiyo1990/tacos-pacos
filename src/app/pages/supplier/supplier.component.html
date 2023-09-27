@@ -1,1 +1,32 @@
-<p>supplier works!</p>
+<div class="content-body">
+  <table mat-table [dataSource]="dataTable" class="mat-elevation-z8">
+    <!-- Position Column -->
+    <ng-container [matColumnDef]="column" *ngFor="let column of columnsName">
+      <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element[column] }}
+        <mat-button-toggle-group
+          appearance="legacy"
+          *ngIf="column === 'Acciones'"
+          style="font-size: 0.5rem"
+        >
+          <button mat-icon-button matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Eliminar">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-button-toggle-group>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsTable"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnsTable"></tr>
+
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4">Sin datos registrados</td>
+    </tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>

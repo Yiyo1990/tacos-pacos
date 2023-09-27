@@ -56,7 +56,6 @@
 .card-footer{
   display: flex;
   justify-content: end;
-  border: 1px solid grey;
 }
 .card-filter button {
   width: 5rem;
@@ -64,6 +63,11 @@
   // background-color: #090661;
   border: 0.1rem #090661 solid;
   color: #090661;
+}
+.option-filter {
+  background-color: darksalmon;
+  display: flex;
+  justify-content: center;
 }
 .menu-content {
   width: 13rem;
