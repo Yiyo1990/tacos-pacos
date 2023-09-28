@@ -60,11 +60,12 @@ export class BillsComponent implements OnInit {
 
       this.resetModalData()
       this.getCatalogs()
+      this.dateFilter = this.dates.getStartAndEndYear(0)
 
       mainService.$filterMonth.subscribe((month: any) => {
          if (month) {
             this.dateFilter = month.id == 0 ? this.dates.getStartAndEndYear(0) : this.dates.getStartAndEndDayMonth(month.id)
-           this.callServiceSearchExpenses('')
+            this.callServiceSearchExpenses('')
          }
       })
    }
