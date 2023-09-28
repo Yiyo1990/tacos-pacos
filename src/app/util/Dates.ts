@@ -16,9 +16,9 @@ export class Dates {
         }
     }
 
-    formatDate(date: any) {
+    formatDate(date: any, format: string = 'DD-MM-yyyy') {
         const dateM = moment(date, 'DD-MM-yyyy HH:mm:ss')
-        return dateM.format('DD-MM-yyyy')
+        return dateM.format(format)
     }
 
     convertToDate(date: any) {
@@ -30,6 +30,7 @@ export class Dates {
         const meses = [];
         for (let i = 0; i < 12; i++) {
             const mes = moment().month(i).format('MMMM');
+            
             meses.push({id: i+1, name: firstUpperCase(mes)});
         }
         return meses
@@ -38,5 +39,13 @@ export class Dates {
     getFormatDate(date: any, format: string = 'YYYY-MM-DDTHH:mm:ss.SSSS') {
         const dateM = moment(date, format)
         return dateM.format('DD-MM-yyyy')
+    }
+
+    getStartAndEndDayMonth(month: number) {
+        let year = moment(new Date()).year()
+        let monthDate = moment(new Date(year, month-1))
+        const startOfMonth = monthDate.startOf('month').format('DD-MM-YYYY');
+        const endOfMonth   = monthDate.endOf('month').format('DD-MM-YYYY');
+        return {start: startOfMonth, end: endOfMonth}
     }
 }
