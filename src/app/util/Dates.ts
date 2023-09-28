@@ -48,4 +48,12 @@ export class Dates {
         const endOfMonth   = monthDate.endOf('month').format('DD-MM-YYYY');
         return {start: startOfMonth, end: endOfMonth}
     }
+
+    getStartAndEndYear(year: number) {
+        year = year == 0 ? moment().year() : year
+        console.log(year)
+        const startOfYear = moment(new Date(year, 0)).format('DD-MM-YYYY');
+        const endOfYear   = moment(new Date(year, 11)).format('DD-MM-YYYY');
+        return {start: startOfYear, end: endOfYear} 
+    }
 }

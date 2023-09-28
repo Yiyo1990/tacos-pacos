@@ -11,6 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Dates } from 'src/app/util/Dates';
 import { ActivatedRoute } from '@angular/router';
 import { BaseChartDirective } from 'ng2-charts';
+import * as moment from 'moment';
 //import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 //import { default as ChartDataLabels  } from 'chartjs-plugin-datalabels';
 
@@ -62,16 +63,8 @@ export class BillsComponent implements OnInit {
 
       mainService.$filterMonth.subscribe((month: any) => {
          if (month) {
-           let data = this.dates.getStartAndEndDayMonth(month.id)
-           this.dateFilter = data
-           this.service.searchExpense(this.brandSelected.id, data.start, data.end, '').subscribe({
-            next: (res: any) => {
-               this.fillTblExpenses(res)
-            },
-            error: (e) => {
-               this.toastr.error("Ha ocurrido un error", "Error")
-            }
-         })
+            this.dateFilter = month.id == 0 ? this.dates.getStartAndEndYear(0) : this.dates.getStartAndEndDayMonth(month.id)
+           this.callServiceSearchExpenses('')
          }
       })
    }
@@ -122,15 +115,19 @@ export class BillsComponent implements OnInit {
       if (!e.target.value) {
          this.getExpenses()
       } else {
-         this.service.searchExpense(this.brandSelected.id, this.dateFilter.start, this.dateFilter.end, e.target.value).subscribe({
-            next: (res: any) => {
-               this.fillTblExpenses(res)
-            },
-            error: (e) => {
-               this.toastr.error("Ha ocurrido un error", "Error")
-            }
-         })
+         this.callServiceSearchExpenses(e.target.value)
       }
+   }
+
+   callServiceSearchExpenses(search: string) {
+      this.service.searchExpense(this.brandSelected.id, this.dateFilter.start, this.dateFilter.end, search).subscribe({
+         next: (res: any) => {
+            this.fillTblExpenses(res)
+         },
+         error: (e) => {
+            this.toastr.error("Ha ocurrido un error", "Error")
+         }
+      })
    }
 
    fillTblExpenses(result: any) {
@@ -191,7 +188,7 @@ export class BillsComponent implements OnInit {
       } else {
          this.toastr.error("Favor de ingresar los campos requeridos")
       }
-      
+
    }
 
    onDeleteExpense(item: any) {
