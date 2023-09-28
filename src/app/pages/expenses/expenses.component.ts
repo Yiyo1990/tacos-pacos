@@ -22,6 +22,7 @@ import { BaseChartDirective } from 'ng2-charts';
 export class BillsComponent implements OnInit {
    brandSelected: any
    expensesList: any = []
+   dateFilter: any
    private dates: Dates = new Dates()
    @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
@@ -41,29 +42,36 @@ export class BillsComponent implements OnInit {
    columnas: string[] = ['Fecha', 'Dia', 'Categoria', 'Proveedor', 'Operación', 'Monto', 'Facturación', 'Acciones'];
    @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
-    barChartOptions: ChartOptions = barChartOptions
+   barChartOptions: ChartOptions = barChartOptions
    public barChartLegend = true;
    public barChartType: ChartType = 'bar';
    //public barChartPlugins = [pluginDataLabels];
    public donutChartOptions: ChartConfiguration['options'] = donutChartOptions
 
-   public barChartData: ChartData<'bar'> = { labels: [], datasets: [ { data: [], label: 'Series A' }]};
+   public barChartData: ChartData<'bar'> = { labels: [], datasets: [{ data: [], label: 'Series A' }] };
 
    constructor(private service: ExpenseService, private mainService: MainService,
       private modalService: BsModalService, private toastr: ToastrService, private activeRouter: ActivatedRoute) {
-        
+
       this.activeRouter.queryParams.subscribe((params: any) => {
          mainService.setPageName(params.nombre)
       })
 
       this.resetModalData()
       this.getCatalogs()
-      
+
       mainService.$filterMonth.subscribe((month: any) => {
          if (month) {
-            if (mainService.getPageName() === 'Gastos') {
-               console.log("mes seleccionado", month)
+           let data = this.dates.getStartAndEndDayMonth(month.id)
+           this.dateFilter = data
+           this.service.searchExpense(this.brandSelected.id, data.start, data.end, '').subscribe({
+            next: (res: any) => {
+               this.fillTblExpenses(res)
+            },
+            error: (e) => {
+               this.toastr.error("Ha ocurrido un error", "Error")
             }
+         })
          }
       })
    }
@@ -111,10 +119,10 @@ export class BillsComponent implements OnInit {
    }
 
    onSearchExpense(e: any) {
-      if(!e.target.value) {
+      if (!e.target.value) {
          this.getExpenses()
       } else {
-         this.service.searchExpense(this.brandSelected.id, '01/09/2023', '26/09/2023', e.target.value).subscribe({
+         this.service.searchExpense(this.brandSelected.id, this.dateFilter.start, this.dateFilter.end, e.target.value).subscribe({
             next: (res: any) => {
                this.fillTblExpenses(res)
             },
@@ -162,7 +170,7 @@ export class BillsComponent implements OnInit {
          this.billRegister.amount = Number(String(this.billRegister.amount).replace('$', ''))
          this.billRegister.billing = this.billRegister.selected ? 'SI' : 'NO'
          this.billRegister.branch.id = this.brandSelected.id
-         this.billRegister.expenseDate = this.dates.convertToDate(this.billRegister.date)
+         this.billRegister.expenseDate = this.dates.formatDate(this.billRegister.date, 'yyyy-MM-DD')
 
          this.service.saveExpense(this.billRegister).subscribe({
             next: (res: any) => {
@@ -183,7 +191,7 @@ export class BillsComponent implements OnInit {
       } else {
          this.toastr.error("Favor de ingresar los campos requeridos")
       }
-
+      
    }
 
    onDeleteExpense(item: any) {
@@ -272,16 +280,16 @@ export class BillsComponent implements OnInit {
 
    async getCategories(expenses: any) {
       let totalSum = expenses.reduce((total: any, value: any) => total + value.amount, 0)
-      this.sumaGastosTotales = totalSum
-      let categoriesName :any = []
+      this.sumaGastosTotales = totalSum.toFixed(2)
+      let categoriesName: any = []
       let amountCategories: any = []
       let categories = this.foodCategories.map((category: any) => {
-         let expCategories = expenses.filter((e:any) => e.foodCategories.id == category.id)
-         let sum = expCategories.reduce((total: any, value:any) => total + value.amount, 0)
-         let percent = (sum / totalSum) * 100 
+         let expCategories = expenses.filter((e: any) => e.foodCategories.id == category.id)
+         let sum = expCategories.reduce((total: any, value: any) => total + value.amount, 0)
+         let percent = (sum / totalSum) * 100
          categoriesName.push(category.name)
          amountCategories.push(sum)
-         return {id: category.id, name: category.name, amount: sum.toFixed(2), percent: percent.toFixed(2)}
+         return { id: category.id, name: category.name, amount: sum.toFixed(2), percent: percent.toFixed(2) }
       })
       this.barChartData.labels = categoriesName
       this.barChartData.datasets[0].data = amountCategories
