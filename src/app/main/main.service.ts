@@ -23,13 +23,21 @@ export class MainService {
   $operationCategories = this.operationCategories.asObservable();
 
   private brandSelected = new BehaviorSubject(null)
-   $brandSelected = this.brandSelected.asObservable();
+  $brandSelected = this.brandSelected.asObservable();
+
+  private filterMonth = new BehaviorSubject(null)
+  $filterMonth = this.filterMonth.asObservable();
 
 
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) { }
 
   setPageName(name: string) {
     this.pageName.next(name)
+  }
+
+  getPageName() {
+    return this.pageName.value
   }
 
   async getProvidersCategories() {
@@ -71,4 +79,9 @@ export class MainService {
   setBranSelected(brand: any) {
     this.brandSelected.next(brand)
   }
+
+  onChangeFilterMonth(month: any){
+    this.filterMonth.next(month)
+  }
+
 }

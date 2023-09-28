@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Chart, ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { MainService } from 'src/app/main/main.service';
@@ -12,13 +13,25 @@ import { MainService } from 'src/app/main/main.service';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
-  private newLabel? = 'New label';
+  private newLabel?= 'New label';
   public lineChartType: ChartType = 'line';
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
-  constructor(private mainService: MainService){
-    mainService.setPageName("Inicio")
+  constructor(private mainService: MainService, private activeRouter: ActivatedRoute) {
+
+    this.activeRouter.queryParams.subscribe((params: any) => {
+      mainService.setPageName(params.nombre)
+    })
+
+    if (mainService.getPageName() == "Inicio") {
+      console.log("pageName", mainService.getPageName())
+      mainService.$filterMonth.subscribe((month: any) => {
+        if (month) {
+          console.log("mes seleccionado", month)
+        }
+      })
+    }
   }
 
   public lineChartData: ChartConfiguration['data'] = {
@@ -26,7 +39,7 @@ export class DashboardComponent {
       {
         data: [65, 59, 80, 81, 56, 55, 40],
         label: 'Series A',
-        backgroundColor:'rgba(0,0,0,0)',
+        backgroundColor: 'rgba(0,0,0,0)',
         borderColor: 'rgb(108, 187, 55)',
         pointBackgroundColor: 'rgba(148,159,177,1)',
         pointBorderColor: '#fff',
@@ -89,11 +102,11 @@ export class DashboardComponent {
   };
 
 
-  public chartHovered({event, active}: { event?: ChartEvent; active?: object[]}): void {
+  public chartHovered({ event, active }: { event?: ChartEvent; active?: object[] }): void {
     console.log(event, active);
   }
 
-  public chartClicked({event, active}: { event?: ChartEvent; active?: object[]}): void {
+  public chartClicked({ event, active }: { event?: ChartEvent; active?: object[] }): void {
     console.log(event, active);
   }
 

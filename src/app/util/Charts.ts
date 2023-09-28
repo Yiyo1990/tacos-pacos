@@ -1,7 +1,7 @@
 
 export class Charts {
 
-    public static Donut(labels: string[], data: number[]) : any {
+    public static Donut(labels: string[], data: any[]) : any {
         
         return {
             labels: labels,

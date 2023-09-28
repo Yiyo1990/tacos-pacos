@@ -14,6 +14,7 @@ import { authGuard } from './auth/auth.guard';
 import { SucursalOptionComponent } from './sucursal-option/sucursal-option.component';
 import { InventarioComponent } from './pages/inventario/inventario.component';
 import { BillsComponent } from './pages/expenses/expenses.component';
+import { SupplierComponent } from './pages/supplier/supplier.component';
 
 const routes: Routes = [
   {
@@ -28,7 +29,8 @@ const routes: Routes = [
       { path: 'estimaciones-profit', component:  ProfitEstimatesComponent},
       { path: 'negocios', component: NewBusinessComponent },
       { path: 'inventarios', component: InventarioComponent},
-      { path: 'gastos', component: BillsComponent}
+      { path: 'gastos', component: BillsComponent},
+      { path: 'proveedores', component: SupplierComponent}
     ],
     canActivate: [authGuard]
   },
