@@ -24,6 +24,7 @@ export class BillsComponent implements OnInit {
    brandSelected: any
    expensesList: any = []
    dateFilter: any
+   currentYear: number = new Dates().getCurrentYear()
    private dates: Dates = new Dates()
    @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
@@ -49,7 +50,7 @@ export class BillsComponent implements OnInit {
    //public barChartPlugins = [pluginDataLabels];
    public donutChartOptions: ChartConfiguration['options'] = donutChartOptions
 
-   public barChartData: ChartData<'bar'> = { labels: [], datasets: [{ data: [], label: 'Series A' }] };
+   public barChartData: ChartData<'bar'> = { labels: [], datasets: [{ data: [], label: '' }] };
 
    constructor(private service: ExpenseService, private mainService: MainService,
       private modalService: BsModalService, private toastr: ToastrService, private activeRouter: ActivatedRoute) {
@@ -60,13 +61,19 @@ export class BillsComponent implements OnInit {
 
       this.resetModalData()
       this.getCatalogs()
-      this.dateFilter = this.dates.getStartAndEndYear(0)
 
       mainService.$filterMonth.subscribe((month: any) => {
          if (month) {
-            this.dateFilter = month.id == 0 ? this.dates.getStartAndEndYear(0) : this.dates.getStartAndEndDayMonth(month.id)
+            this.dateFilter = month.id == 0 ? this.dates.getStartAndEndYear(this.currentYear) : this.dates.getStartAndEndDayMonth(month.id, this.currentYear)
             this.callServiceSearchExpenses('')
          }
+      })
+
+      mainService.$yearsFilter.subscribe((year: number) => {
+         year = year == 0 ? this.currentYear : year
+         this.currentYear = year
+         this.dateFilter = this.dates.getStartAndEndYear(year)
+         this.callServiceSearchExpenses('')
       })
    }
 

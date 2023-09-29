@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
 import { MainService } from './main.service';
 import { Dates } from '../util/Dates';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-main',
@@ -11,10 +12,16 @@ export class MainComponent {
   currentPage: string = ""
   messageAlert: string = ""
   showAlert: boolean = true
+  dates = new Dates()
 
   months: [any] = new Dates().getMonths()
+  years: number[] = new Dates().getYears()
+  currentYear: number = new Dates().getCurrentYear()
+  dateRange: any
 
-  constructor(private service: MainService) {
+  modalRef?: BsModalRef
+
+  constructor(private service: MainService, private modalService: BsModalService) {
     service.getFoodCategories()
     service.getProvidersCategories()
     service.getOperationsCategories()
@@ -24,11 +31,31 @@ export class MainComponent {
     })
 
     this.months.unshift({id: 0, name: 'Anual'})
-    
+
   }
 
   onChangeMonth(e: any) {
     let month = this.months.find((month: any) => month.id == e.target.value)
     this.service.onChangeFilterMonth(month)
   }
+
+  onChangeYear(e: any) {
+    this.currentYear = e.target.value
+    this.service.onChangeYear(this.currentYear)
+  }
+
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template)
+ }
+
+ closeModal() {
+    this.modalRef?.hide()
+ }
+
+ filterByDateRange(){
+  console.log(this.dateRange)
+  let start = this.dates.formatDate(this.dateRange[0])
+  let end = this.dates.formatDate(this.dateRange[1])
+  console.log(start, end)
+ }
 }

@@ -28,6 +28,8 @@ export class MainService {
   private filterMonth = new BehaviorSubject(null)
   $filterMonth = this.filterMonth.asObservable();
 
+  private yearsFilter = new BehaviorSubject(0)
+  $yearsFilter = this.yearsFilter.asObservable();
 
 
   constructor(private http: HttpClient) { }
@@ -82,6 +84,10 @@ export class MainService {
 
   onChangeFilterMonth(month: any){
     this.filterMonth.next(month)
+  }
+
+  onChangeYear(year: number) {
+    this.yearsFilter.next(year)
   }
 
 }

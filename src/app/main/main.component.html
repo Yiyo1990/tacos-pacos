@@ -12,25 +12,25 @@
         </div>
       </div>
       <div class="col-9 sm-9 md-9 lg-9 sections">
-        <!-- filters -->
-        <!--  <app-secondary-button /> -->
-        <button class="btn btn-outline-primary me-md-4 btn-lg" type="button">
-          2023
-        </button>
-        <button class="btn btn-outline-danger me-md-4 btn-lg" type="button">
-          Anual
-        </button>
-        <select
-          class="btn-outline-danger me-md-4 btn-lg"
-          (change)="onChangeMonth($event)"
-        >
-          <option *ngFor="let month of months" value="{{ month.id }}">
-            {{ month.name }}
-          </option>
-        </select>
-        <button class="btn btn-outline-warning btn-lg" type="button">
-          Rango
-        </button>
+        <div class="row">
+          <div class="col-4 sm-12 md-4">
+            <select class="form-control" [(ngModel)]="currentYear" (change)="onChangeYear($event)">
+              <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
+            </select>
+          </div>
+          <div class="col-4 sm-12 md-4">
+            <select class="form-control" (change)="onChangeMonth($event)">
+              <option *ngFor="let month of months" value="{{ month.id }}">
+                {{ month.name }}
+              </option>
+            </select>
+          </div>
+          <div class="col-4 sm-12 md-4">
+            <button class="btn btn-outline-warning btn-lg" (click)="openModal(template)" type="button">
+              Rango
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -38,41 +38,32 @@
     <div class="body-main">
       <router-outlet></router-outlet>
     </div>
-    
+
   </div>
-</div>
-<!--  <div class="menu-header">
-    <div class="header-section">
+
+  <ng-template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Filtro Fechas</h4>
+      <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
       <div class="row">
-        <div class="col-4 sm-4 md-4 header-section-title">
-          <h6>{{ currentPage }}</h6>
-        </div>
-        <div class="col-8 sm-8 md-8 header-section-button">
-          < class="d-grid gap-2 d-md-block justify-content-md-end">
-            <button
-              class="btn btn-outline-primary me-md-4 btn-lg"
-              type="button"
-            >
-              2023
-            </button>
-            <button class="btn btn-outline-danger me-md-4 btn-lg" type="button">Anual</button>
-            <select
-              class="btn-outline-danger me-md-4 btn-lg"
-              (change)="onChangeMonth($event)"
-            >
-              <option *ngFor="let month of months" value="{{ month.id }}">
-                {{ month.name }}
-              </option>
-            </select>
-            <button class="btn btn-outline-warning btn-lg" type="button">
-              Rango
-            </button>
-          </div>
+        <div class="col-12">
+          <label>Fechas
+          </label>
+          <input type="text" placeholder="Rango fechas" [bsConfig]="{ rangeInputFormat: 'DD-MM-YYYY' }"  
+          class="form-control" bsDaterangepicker
+          [(bsValue)]="dateRange">
         </div>
       </div>
+      <br>
+      <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4"></div>
+        <div class="col-4"><button style="width: 100%;" (click)="filterByDateRange()">Filtrar</button></div>
+      </div>
     </div>
-  </div> -->
-
-<!-- <div class="content-body">
-    <router-outlet></router-outlet>
-  </div> -->
+  </ng-template>
+</div>
