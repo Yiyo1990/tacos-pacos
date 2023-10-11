@@ -13,11 +13,14 @@ export class MainComponent {
   messageAlert: string = ""
   showAlert: boolean = true
   dates = new Dates()
+  isLoading = false
 
   months: [any] = new Dates().getMonths()
   years: number[] = new Dates().getYears()
   currentYear: number = new Dates().getCurrentYear()
   dateRange: any
+  minDate = new Date()
+  maxDate = new Date()
 
   modalRef?: BsModalRef
 
@@ -30,7 +33,16 @@ export class MainComponent {
       this.currentPage = name
     })
 
-    this.months.unshift({id: 0, name: 'Anual'})
+    this.months.unshift({ id: 0, name: 'Anual' })
+
+    let minMaxDate = this.dates.getStartAndEndYear(this.dates.getCurrentYear())
+    this.minDate = this.dates.convertToDate(minMaxDate.start)
+    this.maxDate = this.dates.convertToDate(minMaxDate.end)
+
+
+    service.$loading.subscribe((isLoading: boolean) => {
+      this.isLoading = isLoading
+    })
 
   }
 
@@ -42,20 +54,22 @@ export class MainComponent {
   onChangeYear(e: any) {
     this.currentYear = e.target.value
     this.service.onChangeYear(this.currentYear)
+    let minMaxDate = this.dates.getStartAndEndYear(this.currentYear)
+    this.minDate = this.dates.convertToDate(minMaxDate.start)
+    this.maxDate = this.dates.convertToDate(minMaxDate.end)
   }
 
   openModal(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template)
- }
+  }
 
- closeModal() {
+  closeModal() {
     this.modalRef?.hide()
- }
+  }
 
- filterByDateRange(){
-  console.log(this.dateRange)
-  let start = this.dates.formatDate(this.dateRange[0])
-  let end = this.dates.formatDate(this.dateRange[1])
-  console.log(start, end)
- }
+  filterByDateRange() {
+    let start = this.dates.formatDate(this.dateRange[0])
+    let end = this.dates.formatDate(this.dateRange[1])
+    this.service.onChangeFilterRange({ start: start, end: end })
+  }
 }

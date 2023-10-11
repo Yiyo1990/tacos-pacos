@@ -11,7 +11,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Dates } from 'src/app/util/Dates';
 import { ActivatedRoute } from '@angular/router';
 import { BaseChartDirective } from 'ng2-charts';
-import * as moment from 'moment';
 //import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 //import { default as ChartDataLabels  } from 'chartjs-plugin-datalabels';
 
@@ -27,7 +26,7 @@ export class BillsComponent implements OnInit {
    currentYear: number = new Dates().getCurrentYear()
    private dates: Dates = new Dates()
    @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
-
+   
    modalRef?: BsModalRef;
    readonly config = configDropdown
 
@@ -50,7 +49,7 @@ export class BillsComponent implements OnInit {
    //public barChartPlugins = [pluginDataLabels];
    public donutChartOptions: ChartConfiguration['options'] = donutChartOptions
 
-   public barChartData: ChartData<'bar'> = { labels: [], datasets: [{ data: [], label: '' }] };
+   public barChartData: ChartData<'bar'> = { labels: [], datasets: [{ data: [], label: '', backgroundColor: '#F06D2C' }] };
 
    constructor(private service: ExpenseService, private mainService: MainService,
       private modalService: BsModalService, private toastr: ToastrService, private activeRouter: ActivatedRoute) {
@@ -61,7 +60,7 @@ export class BillsComponent implements OnInit {
 
       this.resetModalData()
       this.getCatalogs()
-
+      
       mainService.$filterMonth.subscribe((month: any) => {
          if (month) {
             this.dateFilter = month.id == 0 ? this.dates.getStartAndEndYear(this.currentYear) : this.dates.getStartAndEndDayMonth(month.id, this.currentYear)
@@ -74,6 +73,13 @@ export class BillsComponent implements OnInit {
          this.currentYear = year
          this.dateFilter = this.dates.getStartAndEndYear(year)
          this.callServiceSearchExpenses('')
+      })
+
+      this.mainService.$filterRange.subscribe((dates: any) => {
+         if (dates) {
+            this.dateFilter = dates
+            this.callServiceSearchExpenses('')
+         }
       })
    }
 
@@ -104,7 +110,7 @@ export class BillsComponent implements OnInit {
 
       this.mainService.$brandSelected.subscribe((result: any) => {
          this.brandSelected = JSON.parse(result)
-         this.getExpenses()
+         this.callServiceSearchExpenses('')
       })
    }
 
@@ -121,19 +127,23 @@ export class BillsComponent implements OnInit {
 
    onSearchExpense(e: any) {
       if (!e.target.value) {
-         this.getExpenses()
+         this.callServiceSearchExpenses('')
       } else {
          this.callServiceSearchExpenses(e.target.value)
       }
    }
 
    callServiceSearchExpenses(search: string) {
+      this.mainService.isLoading(true)
       this.service.searchExpense(this.brandSelected.id, this.dateFilter.start, this.dateFilter.end, search).subscribe({
          next: (res: any) => {
             this.fillTblExpenses(res)
          },
          error: (e) => {
             this.toastr.error("Ha ocurrido un error", "Error")
+         },
+         complete:() => {
+            this.mainService.isLoading(false)
          }
       })
    }
@@ -158,7 +168,7 @@ export class BillsComponent implements OnInit {
    async fillFacturationChart(data: any[]) {
       let countYes = data.filter(r => r.billing == 'SI').length
       let countNot = data.filter(r => r.billing == 'NO').length
-      this.facturationChartData = Charts.Donut(['SI', 'NO'], [countYes, countNot])
+      this.facturationChartData = Charts.Donut(['SI', 'NO'], [countYes, countNot], ['#8EC948','#F71313'])
    }
 
    onChangeCategory(e: any) {
@@ -177,13 +187,14 @@ export class BillsComponent implements OnInit {
          this.billRegister.branch.id = this.brandSelected.id
          this.billRegister.expenseDate = this.dates.formatDate(this.billRegister.date, 'yyyy-MM-DD')
 
+         this.mainService.isLoading(true)
          this.service.saveExpense(this.billRegister).subscribe({
             next: (res: any) => {
                if (res.acknowledge) {
                   this.toastr.success("El gasto se ha guardado correctamente", "Success")
                   this.modalRef?.hide()
                   this.resetModalData()
-                  this.getExpenses()
+                  this.callServiceSearchExpenses('')
                } else {
                   this.toastr.error("Ha ocurrido un error", "Error")
                }
@@ -191,6 +202,9 @@ export class BillsComponent implements OnInit {
             error: (error) => {
                this.toastr.error("Ha ocurrido un error", "Error")
                console.error(error)
+            },
+            complete: () => {
+               this.mainService.isLoading(false)
             }
          })
       } else {
@@ -202,6 +216,7 @@ export class BillsComponent implements OnInit {
    onDeleteExpense(item: any) {
       let resp = confirm(`¿Esta seguro de eliminar el gasto por la cantidad de $${item.amount}?`)
       if (resp) {
+         this.mainService.isLoading(true)
          this.service.deleteExpense(this.brandSelected.id, item.id).subscribe({
             next: (res: any) => {
                if (res.acknowledge) {
@@ -213,6 +228,9 @@ export class BillsComponent implements OnInit {
             },
             error: () => {
                this.toastr.error("Ha ocurrido un error", "Error")
+            },
+            complete: () => {
+               this.mainService.isLoading(false)
             }
          })
       }
@@ -309,7 +327,4 @@ export class BillsComponent implements OnInit {
    public chartClicked({ event, active }: { event?: ChartEvent; active?: object[] }): void {
       console.log(event, active);
    } */
-
-
-
 }

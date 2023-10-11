@@ -51,8 +51,8 @@ export class Dates {
 
     getStartAndEndYear(year: number) {
         year = year == 0 ? moment().year() : year
-        const startOfYear = moment(new Date(year, 0)).format('DD-MM-YYYY');
-        const endOfYear   = moment(new Date(year, 11)).format('DD-MM-YYYY');
+        const startOfYear = moment(new Date(year, 0, 1)).format('DD-MM-YYYY');
+        const endOfYear   = moment(new Date(year, 11, 31)).format('DD-MM-YYYY');
         return {start: startOfYear, end: endOfYear} 
     }
 
@@ -68,5 +68,9 @@ export class Dates {
 
     getCurrentYear(){
         return moment().year()
+    }
+
+    getCurrentMonth() {
+        return moment().month()
     }
 }

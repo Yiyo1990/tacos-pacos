@@ -45,6 +45,7 @@ $colorGreen: #6cbb37;
 $colorOrange: rgb(238, 147, 29);
 
 
+
 button {
     background-color: $primaryColor;
     color: white;
@@ -89,3 +90,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 bs-datepicker-container { z-index: 3000 !important;}
 
+
+.subtitle {
+    font-size: 14pt;
+    font-weight: bold;
+}

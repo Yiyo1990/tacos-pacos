@@ -31,6 +31,12 @@ export class MainService {
   private yearsFilter = new BehaviorSubject(0)
   $yearsFilter = this.yearsFilter.asObservable();
 
+  private filterRage = new BehaviorSubject(null)
+  $filterRange = this.filterRage.asObservable();
+
+  private loading = new BehaviorSubject(false)
+  $loading = this.loading.asObservable()
+
 
   constructor(private http: HttpClient) { }
 
@@ -88,6 +94,14 @@ export class MainService {
 
   onChangeYear(year: number) {
     this.yearsFilter.next(year)
+  }
+
+  onChangeFilterRange(dates: any) {
+    this.filterRage.next(dates)
+  }
+
+  isLoading(loading: boolean) {
+    this.loading.next(loading)
   }
 
 }

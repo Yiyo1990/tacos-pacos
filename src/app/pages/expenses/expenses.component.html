@@ -54,9 +54,9 @@
                   <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
                   <mat-cell *matCellDef="let item">
                      <div style="display: inline-block;">
-                        <i style="font-size: 16pt; cursor: pointer; margin-right: 1rem; color: rgb(151, 219, 137);"
+                        <i style="font-size: 16pt; cursor: pointer; margin-right: 1rem; color: rgb(33, 197, 0);"
                            class="fa-solid fa-pen-to-square" (click)="onEditExpense(item, template)"></i>
-                        <i style="font-size: 16pt; cursor: pointer; color: rgb(255, 145, 145);"
+                        <i style="font-size: 16pt; cursor: pointer; color: rgb(230, 28, 28);"
                            class="fa-solid fa-trash" (click)="onDeleteExpense(item)"></i>
                      </div>
                   </mat-cell>
@@ -81,7 +81,7 @@
       <br>
       <div class="row">
          <div class="col-12 sm-12 md-12" style="text-align: center;">
-            <label>CATEGORIAS</label>
+            <label class="subtitle">CATEGORIAS</label>
             <canvas baseChart class="chart" [data]="barChartData"  [options]="barChartOptions"   [type]="'bar'">
             </canvas>
          </div>
@@ -90,7 +90,7 @@
       <div class="row">
          <div class="col-2"></div>
          <div class="col-8 sm-10 md-8" style="text-align: center;">
-            <label>FACTURACION</label>
+            <label class="subtitle">FACTURACION</label>
             <canvas baseChart class="chart" [data]="facturationChartData" [options]="donutChartOptions" [type]="'doughnut'">
             </canvas>
          </div>
