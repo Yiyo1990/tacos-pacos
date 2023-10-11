@@ -28,6 +28,14 @@ export class MainService {
   private filterMonth = new BehaviorSubject(null)
   $filterMonth = this.filterMonth.asObservable();
 
+  private yearsFilter = new BehaviorSubject(0)
+  $yearsFilter = this.yearsFilter.asObservable();
+
+  private filterRage = new BehaviorSubject(null)
+  $filterRange = this.filterRage.asObservable();
+
+  private loading = new BehaviorSubject(false)
+  $loading = this.loading.asObservable()
 
 
   constructor(private http: HttpClient) { }
@@ -82,6 +90,18 @@ export class MainService {
 
   onChangeFilterMonth(month: any){
     this.filterMonth.next(month)
+  }
+
+  onChangeYear(year: number) {
+    this.yearsFilter.next(year)
+  }
+
+  onChangeFilterRange(dates: any) {
+    this.filterRage.next(dates)
+  }
+
+  isLoading(loading: boolean) {
+    this.loading.next(loading)
   }
 
 }

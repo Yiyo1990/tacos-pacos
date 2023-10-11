@@ -35,8 +35,7 @@ import { FormatoMonedaDirective } from './directivas/formato-moneda.directive';
 import { NgxCurrencyDirective } from 'ngx-currency';
 import { SupplierComponent } from './pages/supplier/supplier.component';
 import { NoTextInputDirective } from './directivas/no-text-input.directive';
-
-
+import { LoadingComponent } from './components/loading/loading.component';
 
 
 @NgModule({
@@ -58,7 +57,8 @@ import { NoTextInputDirective } from './directivas/no-text-input.directive';
     ButtonCComponent,
     BillsComponent,
     FormatoMonedaDirective,
-    NoTextInputDirective
+    NoTextInputDirective,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,

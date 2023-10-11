@@ -2,6 +2,7 @@ import * as moment from 'moment'
 import { firstUpperCase } from './util'
 
 export class Dates {
+    private startYear: number = 2023;
 
     constructor() {
         moment.locale('es')
@@ -41,8 +42,7 @@ export class Dates {
         return dateM.format('DD-MM-yyyy')
     }
 
-    getStartAndEndDayMonth(month: number) {
-        let year = moment(new Date()).year()
+    getStartAndEndDayMonth(month: number, year: number) {
         let monthDate = moment(new Date(year, month-1))
         const startOfMonth = monthDate.startOf('month').format('DD-MM-YYYY');
         const endOfMonth   = monthDate.endOf('month').format('DD-MM-YYYY');
@@ -51,9 +51,26 @@ export class Dates {
 
     getStartAndEndYear(year: number) {
         year = year == 0 ? moment().year() : year
-        console.log(year)
-        const startOfYear = moment(new Date(year, 0)).format('DD-MM-YYYY');
-        const endOfYear   = moment(new Date(year, 11)).format('DD-MM-YYYY');
+        const startOfYear = moment(new Date(year, 0, 1)).format('DD-MM-YYYY');
+        const endOfYear   = moment(new Date(year, 11, 31)).format('DD-MM-YYYY');
         return {start: startOfYear, end: endOfYear} 
+    }
+
+    getYears() : number[] {
+        let years: number[] = []
+        let year = moment().year()
+        while(this.startYear <= year) {
+            years.push(this.startYear)
+            this.startYear += 1
+        }
+        return years.sort((a,b) => { return b - a})
+    }
+
+    getCurrentYear(){
+        return moment().year()
+    }
+
+    getCurrentMonth() {
+        return moment().month()
     }
 }
