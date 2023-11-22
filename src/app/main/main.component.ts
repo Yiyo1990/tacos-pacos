@@ -1,4 +1,4 @@
-import { Component, TemplateRef } from '@angular/core';
+import { AfterViewInit, Component, OnChanges, SimpleChanges, TemplateRef } from '@angular/core';
 import { MainService } from './main.service';
 import { Dates } from '../util/Dates';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -8,16 +8,17 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
-export class MainComponent {
+export class MainComponent implements AfterViewInit {
   currentPage: string = ""
   messageAlert: string = ""
   showAlert: boolean = true
   dates = new Dates()
-  isLoading = false
+  isLoading!: boolean
 
   months: [any] = new Dates().getMonths()
   years: number[] = new Dates().getYears()
   currentYear: number = new Dates().getCurrentYear()
+  currentMonth: any = this.months[0]
   dateRange: any
   minDate = new Date()
   maxDate = new Date()
@@ -29,21 +30,35 @@ export class MainComponent {
     service.getProvidersCategories()
     service.getOperationsCategories()
     service.setBranSelected(sessionStorage.getItem('marcaSeleccionada'))
-    service.$pageName.subscribe((name: string) => {
-      this.currentPage = name
-    })
+
 
     this.months.unshift({ id: 0, name: 'Anual' })
 
     let minMaxDate = this.dates.getStartAndEndYear(this.dates.getCurrentYear())
     this.minDate = this.dates.convertToDate(minMaxDate.start)
     this.maxDate = this.dates.convertToDate(minMaxDate.end)
-
+    
 
     service.$loading.subscribe((isLoading: boolean) => {
       this.isLoading = isLoading
     })
 
+    this.service.$pageName.subscribe((name: string) => {
+      this.currentPage = name
+    })
+
+    let currenNumbertMonth = (this.dates.getCurrentMonth() + 1)
+    let month = this.months.find((month: any) => month.id == currenNumbertMonth)
+    this.currentMonth = month
+    this.service.onChangeFilterMonth(month)
+
+    this.service.onChangeYear(this.currentYear)
+   
+  }
+
+  ngAfterViewInit(): void {
+    this.isLoading = false
+    
   }
 
   onChangeMonth(e: any) {
@@ -71,5 +86,6 @@ export class MainComponent {
     let start = this.dates.formatDate(this.dateRange[0])
     let end = this.dates.formatDate(this.dateRange[1])
     this.service.onChangeFilterRange({ start: start, end: end })
+    this.closeModal()
   }
 }

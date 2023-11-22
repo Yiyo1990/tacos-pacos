@@ -10,7 +10,7 @@ export class MainService {
 
   private endPoint: string = environment.apiUrl
 
-  private pageName = new BehaviorSubject("Inicio")
+  private pageName = new BehaviorSubject("")
   $pageName = this.pageName.asObservable()
 
   private providersCategories = new BehaviorSubject(null)

@@ -9,8 +9,9 @@ import { ToastrService } from 'ngx-toastr';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Dates } from 'src/app/util/Dates';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BaseChartDirective } from 'ng2-charts';
+import { Location } from '@angular/common';
 //import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 //import { default as ChartDataLabels  } from 'chartjs-plugin-datalabels';
 
@@ -24,6 +25,7 @@ export class BillsComponent implements OnInit {
    expensesList: any = []
    dateFilter: any
    currentYear: number = new Dates().getCurrentYear()
+   currentMonth: any = {id: 0, name: 'Anual'}
    private dates: Dates = new Dates()
    @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
    
@@ -51,19 +53,17 @@ export class BillsComponent implements OnInit {
 
    public barChartData: ChartData<'bar'> = { labels: [], datasets: [{ data: [], label: '', backgroundColor: '#F06D2C' }] };
 
-   constructor(private service: ExpenseService, private mainService: MainService,
-      private modalService: BsModalService, private toastr: ToastrService, private activeRouter: ActivatedRoute) {
-
-      this.activeRouter.queryParams.subscribe((params: any) => {
-         mainService.setPageName(params.nombre)
-      })
+   constructor(private service: ExpenseService, private mainService: MainService, private modalService: BsModalService, private toastr: ToastrService) {
+      this.mainService.setPageName('Gastos')
 
       this.resetModalData()
       this.getCatalogs()
       
       mainService.$filterMonth.subscribe((month: any) => {
          if (month) {
+            this.currentMonth = month
             this.dateFilter = month.id == 0 ? this.dates.getStartAndEndYear(this.currentYear) : this.dates.getStartAndEndDayMonth(month.id, this.currentYear)
+            console.log("dateFilter Month", this.dateFilter)
             this.callServiceSearchExpenses('')
          }
       })
@@ -71,13 +71,17 @@ export class BillsComponent implements OnInit {
       mainService.$yearsFilter.subscribe((year: number) => {
          year = year == 0 ? this.currentYear : year
          this.currentYear = year
-         this.dateFilter = this.dates.getStartAndEndYear(year)
-         this.callServiceSearchExpenses('')
+         if(this.currentMonth.id == 0) {
+            this.dateFilter = this.dates.getStartAndEndYear(year)
+            console.log("dateFilter Year", this.dateFilter)
+            this.callServiceSearchExpenses('')
+         }
       })
 
       this.mainService.$filterRange.subscribe((dates: any) => {
          if (dates) {
             this.dateFilter = dates
+            console.log("dateFilter Range", this.dateFilter)
             this.callServiceSearchExpenses('')
          }
       })
@@ -109,8 +113,10 @@ export class BillsComponent implements OnInit {
       })
 
       this.mainService.$brandSelected.subscribe((result: any) => {
-         this.brandSelected = JSON.parse(result)
-         this.callServiceSearchExpenses('')
+         if(result) {
+            this.brandSelected = JSON.parse(result)
+            //this.callServiceSearchExpenses('')
+         }
       })
    }
 
@@ -306,7 +312,7 @@ export class BillsComponent implements OnInit {
       this.sumaGastosTotales = totalSum.toFixed(2)
       let categoriesName: any = []
       let amountCategories: any = []
-      let categories = this.foodCategories.map((category: any) => {
+      this.foodCategories.map((category: any) => {
          let expCategories = expenses.filter((e: any) => e.foodCategories.id == category.id)
          let sum = expCategories.reduce((total: any, value: any) => total + value.amount, 0)
          let percent = (sum / totalSum) * 100
