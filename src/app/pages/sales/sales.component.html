@@ -28,7 +28,7 @@
                             <tr style="text-align: center;">
                                 <th class="sticky-col" style="background-color: #fff; color:#000">Fecha</th>
                                 <th class="sticky-col2" style="background-color: #fff; color:#000">Día</th>
-                                <th style="background-color: #0072c2; color: #fff;">Venta Comedor</th>
+                                <th style="background-color: #0072c2; color: #fff;">Venta Total</th>
                                 <th>Comedor</th>
                                 <th>Para Llevar</th>
                                 <th>Recoger</th>
@@ -63,18 +63,18 @@
                             <tr *ngFor="let sale of sales; let i = index;" [ngClass]="{'row-background':i%2==1}">
                                 <td class="sticky-col">{{sale.dateSale}}</td>
                                 <td class="sticky-col2">{{sale.day}}</td>
-                                <td>${{sale.diningRoom}}</td>
-                                <td>{{sale?.comedor}}</td>
-                                <td>${{sale.takeout}}</td>
-                                <td>${{sale.pickUp}}</td>
+                                <td>${{sale?.totalDinnigRoom}}</td>
+                                <td>${{sale?.diningRoom}}</td>
+                                <td>${{sale?.takeout}}</td>
+                                <td>${{sale?.pickUp}}</td>
                                 <td></td>
-                                <td>{{sale?.domicilio}}</td>
+                                <td>${{sale?.delivery}}</td>
                                 <td>{{sale?.efectivo}}</td>
                                 <td><input type="text" value="{{sale?.pay}}"></td>
                                 <td>{{sale?.comision}}</td>
                                 <td><option-pay /></td>
                                 <td></td>
-                                <td>{{sale?.ventaApps}}</td>
+                                <td>${{'0.00'}}</td>
                                 <td></td>
                                 <td>{{sale?.ventaUber}}</td>
                                 <td> <input type="text" value="{{sale?.ingresoUber}}"></td>
