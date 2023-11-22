@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MainService } from 'src/app/main/main.service';
 import { SalesService } from './sales-service.service';
-import { groupArrayByKey } from 'src/app/util/util';
+import { firstUpperCase, groupArrayByKey } from 'src/app/util/util';
 import { ToastrService } from 'ngx-toastr';
 import { Dates } from 'src/app/util/Dates';
 
@@ -81,14 +81,14 @@ export class SalesComponent implements OnInit {
 
       this.salesService.uploadFileSales(formData).subscribe({
         next: (response: any) => {
-          console.log(response)
+          //console.log(response)
           if(response.acknowledge) {
             this.toast.success("El archivo se ha subido correctamente")
             this.getReportSalesByDateRange(response.createdAt, response.createdAt)
           }
         },
         error: (e) => {
-          console.error(e)
+          //console.error(e)
           this.toast.error(`Ocurrio un error al subir el archivo: ${e.error.message}`)
           this.mainService.isLoading(false)
         }, complete: () => {
@@ -158,11 +158,14 @@ export class SalesComponent implements OnInit {
       next: (data: any) => {
         if (Array.isArray(data)) {
           let sales = data.map((s: any) => {
-            let totalSale = s.totalSale.toFixed(2)
             let diningRoom = s.diningRoom.toFixed(2)
             let pickUp = s.pickUp.toFixed(2)
             let takeout = s.takeout.toFixed(2)
-            return { ...s, totalSale: totalSale, diningRoom: diningRoom, pickUp: pickUp, takeout: takeout }
+            let delivery = s.delivery.toFixed(2)
+            let totalDinnigRoom = s.diningRoom + s.pickUp + s.takeout + s.delivery
+            let totalSale = (totalDinnigRoom + 0)
+            let day = firstUpperCase(s.day)
+            return { ...s, totalSale: totalSale.toFixed(2), diningRoom: diningRoom, pickUp: pickUp, takeout: takeout, delivery: delivery, totalDinnigRoom: totalDinnigRoom.toFixed(2), day: day }
           })
           this.sales = sales
           console.log("dataSales", sales)
