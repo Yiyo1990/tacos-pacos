@@ -82,8 +82,10 @@ export class SalesComponent implements OnInit {
       this.salesService.uploadFileSales(formData).subscribe({
         next: (response: any) => {
           console.log(response)
-          this.toast.success("El archivo se ha subido correctamente")
-          this.getSales()
+          if(response.acknowledge) {
+            this.toast.success("El archivo se ha subido correctamente")
+            this.getReportSalesByDateRange(response.createdAt, response.createdAt)
+          }
         },
         error: (e) => {
           console.error(e)
