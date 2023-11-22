@@ -1,0 +1,103 @@
+<div class="row" style="margin: 1%;">
+    <div class="col-12 sm-12 md-12">
+        <div class="row">
+            <div class="col-3 md-3">
+                <form (ngSubmit)="onFileUpload()" #fileUploadForm="ngForm">
+                    <input type="file" (change)="handleFileInput($event)" #fileInput>
+                    <button type="submit">Subir archivo</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="table-body">
+                <div class="row-body">
+                    <table>
+                        <thead>
+                            <tr style="text-align: center;">
+                                <th colspan="2" style="background-color: #fff;"></th>
+                                <th colspan="10" style="background-color: #fff; border: 2px solid #000;">Comedor</th>
+                                <th style="width: 10px; background-color: white;"></th>
+                                <th colspan="16" style="background-color: #fff; border: 2px solid #000;">Aplicaciones
+                                </th>
+                                <th style="width: 10px; background-color: white;"></th>
+                                <th style="background-color: #fff; border: 2px solid #000;">Total</th>
+                            </tr>
+                            <tr>
+                                <th colspan="31" style="background-color: #fff;"></th>
+                            </tr>
+                            <tr style="text-align: center;">
+                                <th class="sticky-col" style="background-color: #fff; color:#000">Fecha</th>
+                                <th class="sticky-col2" style="background-color: #fff; color:#000">Día</th>
+                                <th style="background-color: #0072c2; color: #fff;">Venta Comedor</th>
+                                <th>Comedor</th>
+                                <th>Para Llevar</th>
+                                <th>Recoger</th>
+                                <th style="width: 10px; background-color: white;"></th>
+                                <th>Domicilio</th>
+                                <th>Efectivo</th>
+                                <th style="background-color: #fff1ce;">Pay</th>
+                                <th style="background-color: #f8ccac;">Comisión</th>
+                                <th style="background-color: #90d04d;">Pago</th>
+                                <th style="width: 10px; background-color: white;"></th>
+                                <th style="background-color: #0072c2; color: #fff;">Venta Apps</th>
+                                <th style="width: 10px; background-color:  #fff"></th>
+                                <th style="background-color:#000200; color: #128a55;">Venta Uber</th>
+                                <th>Ingreso</th>
+                                <th>%</th>
+                                <th style="background-color: #90d04d;">Pago</th>
+                                <th style="width: 10px; background-color: white;"></th>
+                                <th style="background-color: #fe0066; color: #fff;">Venta Rappi</th>
+                                <th>Ingreso</th>
+                                <th>%</th>
+                                <th style="background-color: #90d04d;">Pago</th>
+                                <th style="width: 10px; background-color: white;"></th>
+                                <th style="background-color: #ee7e31; color: #fff;">Venta Didi</th>
+                                <th>Ingreso</th>
+                                <th>%</th>
+                                <th style="background-color: #90d04d;">Pago</th>
+                                <th style="width: 10px; background-color: white;"></th>
+                                <th style="background-color: #00b253; color: #fff; width: 200px;">Venta Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let sale of sales; let i = index;" [ngClass]="{'row-background':i%2==1}">
+                                <td class="sticky-col">{{sale.dateSale}}</td>
+                                <td class="sticky-col2">{{sale.day}}</td>
+                                <td>${{sale.diningRoom}}</td>
+                                <td>{{sale?.comedor}}</td>
+                                <td>${{sale.takeout}}</td>
+                                <td>${{sale.pickUp}}</td>
+                                <td></td>
+                                <td>{{sale?.domicilio}}</td>
+                                <td>{{sale?.efectivo}}</td>
+                                <td><input type="text" value="{{sale?.pay}}"></td>
+                                <td>{{sale?.comision}}</td>
+                                <td><option-pay /></td>
+                                <td></td>
+                                <td>{{sale?.ventaApps}}</td>
+                                <td></td>
+                                <td>{{sale?.ventaUber}}</td>
+                                <td> <input type="text" value="{{sale?.ingresoUber}}"></td>
+                                <td>{{sale?.comisionUber}}</td>
+                                <td><option-pay /></td>
+                                <td></td>
+                                <td>{{sale?.ventaRappi}}</td>
+                                <td><input type="text" value="{{sale?.ingresoRappi}}"></td>
+                                <td>{{sale?.comisionRappi}}</td>
+                                <td><option-pay /></td>
+                                <td></td>
+                                <td>{{sale?.ventaDidi}}</td>
+                                <td><input type="text" value="{{sale?.ingresoDidi}}"></td>
+                                <td>{{sale?.comisionDidi}}</td>
+                                <td><option-pay [isSelected]="sale.pagoDidi" /></td>
+                                <td></td>
+                                <td>${{sale?.totalSale}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+</div>

@@ -2,7 +2,7 @@ import * as moment from 'moment'
 import { firstUpperCase } from './util'
 
 export class Dates {
-    private startYear: number = 2023;
+    private startYear: number = 2022;
 
     constructor() {
         moment.locale('es')
@@ -74,3 +74,4 @@ export class Dates {
         return moment().month()
     }
 }
+

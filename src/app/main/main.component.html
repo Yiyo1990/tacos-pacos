@@ -21,7 +21,7 @@
           </div>
           <div class="col-4 sm-12 md-4">
             <select class="form-control" (change)="onChangeMonth($event)">
-              <option *ngFor="let month of months" value="{{ month.id }}">
+              <option *ngFor="let month of months" value="{{ month.id }}" [selected]="currentMonth.id == month.id">
                 {{ month.name }}
               </option>
             </select>

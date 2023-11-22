@@ -20,6 +20,18 @@ const firstUpperCase = (str: string) => {
 }
 
 
+const groupArrayByKey = (sales: Array<any>, keyName: string): Array<any>  => {
+  const grouped = sales.reduce((result, item) => {
+    let key = item[keyName]
+    if (!result[key]) {
+      result[key] = []
+    }
+    result[key].push(item)
+    return result
+  }, {})
+  return grouped
+}
+
 const barChartOptions = {
   responsive: true,
   scales: {
@@ -55,4 +67,4 @@ const donutChartOptions = {
 };
 
 
-export { configDropdown, firstUpperCase, barChartOptions, donutChartOptions }
+export { configDropdown, firstUpperCase, barChartOptions, donutChartOptions, groupArrayByKey }
