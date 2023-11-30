@@ -49,28 +49,10 @@ table {
     background-color: #fff;
 }
 
-/*
-th.sticky-col,
-th.sticky-col2,
-td.sticky-col,
-td.sticky-col2 {
-    position: sticky;
-    z-index: 1;
-    background-color: #fff;
+.point {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 5px;
+    margin-left: 10px;
 }
-
-th.sticky-col,
-td.sticky-col {
-    left: 0;
-}
-
-th.sticky-col2,
-td.sticky-col2 {
-    left: 80px;
-}
-
-tbody tr:nth-child(even) td.sticky-col,
-tbody tr:nth-child(even) td.sticky-col2 {
-    background-color: #f0f0f0;
-}
-*/
