@@ -9,6 +9,35 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-4 md-4 sm-12"></div>
+            <div class="col-4 md-4 sm-12" style="align-items: center;">
+
+                <div style="display: inline-flex;">
+                    <div class="point" style="background-color: #3889EB;"></div><label>Comedor</label>
+                    <div class="point" style="background-color: #31B968;"></div><label>Uber</label>
+                    <div class="point" style="background-color: #F31A86;"></div><label>Rappi</label>
+                    <div class="point" style="background-color: #F37D1A;"></div><label>Didi</label>
+                </div>
+
+            </div>
+            <div class="col-4 md-4 sm-12"><label></label></div>
+        </div>
+        <div class="row">
+            <div class="col-6 md-6 sm-12">
+                <canvas baseChart class="chart" [data]="barChartData" [options]="barChartOptions"
+                    [type]="'bar'"></canvas>
+            </div>
+            <div class="col-3 md-3 sm-12"></div>
+            <div class="col-3 md-3 sm-12">
+                <canvas baseChart class="chart" [data]="salesDonutChartData" [options]="donutChartOptions"
+                    [type]="'doughnut'"></canvas>
+
+                <!--<canvas baseChart class="chart" [data]="pieChartData" [type]="'pieChartType'" [options]="pieChartOptions"
+                    [plugins]="pieChartPlugins">
+                </canvas>-->
+            </div>
+        </div>
+        <div class="row">
             <div class="table-body">
                 <div class="row-body">
                     <table>
@@ -69,27 +98,27 @@
                                 <td>${{sale?.pickUp}}</td>
                                 <td></td>
                                 <td>${{sale?.delivery}}</td>
-                                <td>{{sale?.efectivo}}</td>
-                                <td><input type="text" value="{{sale?.pay}}"></td>
-                                <td>{{sale?.comision}}</td>
-                                <td><option-pay /></td>
+                                <td>${{sale?.apps.parrot.sale}}</td>
+                                <td><input type="text" value="{{sale?.apps.parrot.income}}"></td>
+                                <td>{{sale?.apps.parrot.commission}}</td>
+                                <td><option-pay [isSelected]="sale?.apps.parrot.isPay"/></td>
                                 <td></td>
-                                <td>${{'0.00'}}</td>
+                                <td>${{sale?.totalApps}}</td>
                                 <td></td>
-                                <td>{{sale?.ventaUber}}</td>
-                                <td> <input type="text" value="{{sale?.ingresoUber}}"></td>
-                                <td>{{sale?.comisionUber}}</td>
-                                <td><option-pay /></td>
+                                <td>${{sale?.apps.uber.sale}}</td>
+                                <td> <input type="text" value="{{sale?.apps.uber.income}}"></td>
+                                <td>{{sale?.apps.uber.tax}}%</td>
+                                <td><option-pay [isSelected]="sale?.apps.uber.isPay"/></td>
                                 <td></td>
-                                <td>{{sale?.ventaRappi}}</td>
-                                <td><input type="text" value="{{sale?.ingresoRappi}}"></td>
-                                <td>{{sale?.comisionRappi}}</td>
-                                <td><option-pay /></td>
+                                <td>${{sale?.apps.rappi.sale}}</td>
+                                <td><input type="text" value="{{sale?.apps.rappi.income}}"></td>
+                                <td>{{sale?.apps.rappi.tax}}%</td>
+                                <td><option-pay [isSelected]="sale?.apps.rappi.isPay"/></td>
                                 <td></td>
-                                <td>{{sale?.ventaDidi}}</td>
-                                <td><input type="text" value="{{sale?.ingresoDidi}}"></td>
-                                <td>{{sale?.comisionDidi}}</td>
-                                <td><option-pay [isSelected]="sale.pagoDidi" /></td>
+                                <td>${{sale?.apps.didi.sale}}</td>
+                                <td><input type="text" value="{{sale?.apps.didi.income}}"></td>
+                                <td>{{sale?.apps.didi.tax}}%</td>
+                                <td><option-pay [isSelected]="sale?.apps.didi.isPay" /></td>
                                 <td></td>
                                 <td>${{sale?.totalSale}}</td>
                             </tr>

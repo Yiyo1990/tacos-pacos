@@ -73,7 +73,7 @@ export class BillsComponent implements OnInit {
          this.currentYear = year
          if(this.currentMonth.id == 0) {
             this.dateFilter = this.dates.getStartAndEndYear(year)
-            console.log("dateFilter Year", this.dateFilter)
+            //console.log("dateFilter Year", this.dateFilter)
             this.callServiceSearchExpenses('')
          }
       })
@@ -81,7 +81,7 @@ export class BillsComponent implements OnInit {
       this.mainService.$filterRange.subscribe((dates: any) => {
          if (dates) {
             this.dateFilter = dates
-            console.log("dateFilter Range", this.dateFilter)
+            //console.log("dateFilter Range", this.dateFilter)
             this.callServiceSearchExpenses('')
          }
       })

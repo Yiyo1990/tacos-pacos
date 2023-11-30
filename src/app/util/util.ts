@@ -66,5 +66,21 @@ const donutChartOptions = {
   },
 };
 
+const pieChartOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      display: true
+    },
+    datalabels: {
+      formatter: (value: any, ctx: any) => {
+        if (ctx.chart.data.labels) {
+          return ctx.chart.data.labels[ctx.dataIndex];
+        }
+      },
+    },
+  },
+};
 
-export { configDropdown, firstUpperCase, barChartOptions, donutChartOptions, groupArrayByKey }
+
+export { configDropdown, firstUpperCase, barChartOptions, donutChartOptions, pieChartOptions, groupArrayByKey }

@@ -3,9 +3,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MainService } from 'src/app/main/main.service';
 import { SalesService } from './sales-service.service';
-import { firstUpperCase, groupArrayByKey } from 'src/app/util/util';
+import { firstUpperCase, groupArrayByKey, barChartOptions, donutChartOptions, pieChartOptions } from 'src/app/util/util';
 import { ToastrService } from 'ngx-toastr';
 import { Dates } from 'src/app/util/Dates';
+import { ChartConfiguration, ChartData, ChartOptions } from 'chart.js';
+import { Charts } from 'src/app/util/Charts';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-sales',
@@ -14,8 +17,6 @@ import { Dates } from 'src/app/util/Dates';
 })
 export class SalesComponent implements OnInit {
   dataSource!: MatTableDataSource<any>;
-  columnasTblVentas: string[] = ['Fecha', 'Dia', 'Venta Total', 'Comedor', 'Para Llevar', 'Recoger', 'Domicilio', 'Efectivo', 'Pay', 'Comisión', 'Pago'];
-  columnasTblPlataformas: string[] = ['Fecha', 'Dia', 'Venta Total', 'Ingreso', '%', 'Pago'];
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild('fileInput') fileInput: any;
   selectedFile: any;
@@ -24,23 +25,32 @@ export class SalesComponent implements OnInit {
   sales: any[] = []
   currentYear: number = this.dates.getCurrentYear()
   currentMonthSelected: any = { id: 0, name: 'Anual' }
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
+  donutChartOptions: ChartConfiguration['options'] = donutChartOptions
+
+  barChartData: ChartData<'bar'> = { labels: [], datasets: [] };
+  barChartOptions: ChartOptions = barChartOptions
+
+  pieChartOptions: ChartOptions = pieChartOptions
+
+
+  
+  applicationsDataChart: any
+  salesDonutChartData: any
+  chartColors = {dinningRoom:"#3889EB", uber: "#31B968", rappi: "#F31A86", didi:"#F37D1A"}
+
 
 
   constructor(private mainService: MainService, private salesService: SalesService, private toast: ToastrService) {
     mainService.setPageName("Ventas")
-    this.sales = this.getJsonExample()
-
-
   }
 
   ngOnInit(): void {
-    // this.dataSource.paginator = this.paginator;
 
     this.mainService.$brandSelected.subscribe((result: any) => {
       if (result) {
         this.brandSelected = JSON.parse(result)
         this.onFilterDates()
-        //  this.getSales()
       }
     })
   }
@@ -49,7 +59,7 @@ export class SalesComponent implements OnInit {
     this.mainService.$filterMonth.subscribe((month: any) => {
       this.currentMonthSelected = month
       console.log(month)
-      let dates = month.id == 0 ? this.dates.getStartAndEndYear(this.currentYear) :  this.dates.getStartAndEndDayMonth(month.id, this.currentYear)
+      let dates = month.id == 0 ? this.dates.getStartAndEndYear(this.currentYear) : this.dates.getStartAndEndDayMonth(month.id, this.currentYear)
       console.log(dates)
       this.getReportSalesByDateRange(dates.start, dates.end)
     })
@@ -63,7 +73,7 @@ export class SalesComponent implements OnInit {
     this.mainService.$yearsFilter.subscribe((year: any) => {
       this.currentYear = year;
       let months = this.currentMonthSelected.id == 0 ? this.dates.getStartAndEndYear(year) : this.dates.getStartAndEndDayMonth(this.currentMonthSelected.id, year)
-      console.log("anual", months)
+      //console.log("anual", months)
       this.getReportSalesByDateRange(months.start, months.end)
     })
   }
@@ -82,9 +92,11 @@ export class SalesComponent implements OnInit {
       this.salesService.uploadFileSales(formData).subscribe({
         next: (response: any) => {
           //console.log(response)
-          if(response.acknowledge) {
+          if (response.acknowledge) {
             this.toast.success("El archivo se ha subido correctamente")
             this.getReportSalesByDateRange(response.createdAt, response.createdAt)
+          } else {
+            this.toast.info("El reporte ya existe", "Info")
           }
         },
         error: (e) => {
@@ -100,16 +112,16 @@ export class SalesComponent implements OnInit {
     }
   }
 
-
   getSales() {
     this.mainService.isLoading(true)
     this.salesService.getSales(this.brandSelected.id).subscribe({
       next: (res) => {
-        console.log("ventas", res)
+       // console.log("ventas", res)
         if (Array.isArray(res)) {
           let sales = res.map(s => {
             return { ...s, date: s.createdAt.substring(0, 10) }
           })
+
           this.sumDataSales(groupArrayByKey(sales, 'date'))
         }
       },
@@ -163,12 +175,20 @@ export class SalesComponent implements OnInit {
             let takeout = s.takeout.toFixed(2)
             let delivery = s.delivery.toFixed(2)
             let totalDinnigRoom = s.diningRoom + s.pickUp + s.takeout + s.delivery
-            let totalSale = (totalDinnigRoom + 0)
+           
             let day = firstUpperCase(s.day)
-            return { ...s, totalSale: totalSale.toFixed(2), diningRoom: diningRoom, pickUp: pickUp, takeout: takeout, delivery: delivery, totalDinnigRoom: totalDinnigRoom.toFixed(2), day: day }
+            
+            let apps = this.fillSalesTbl(s)
+
+            let totalApps = (Number(apps.uber.sale) + Number(apps.didi.sale) + Number(apps.rappi.sale))
+            let totalSale = (totalDinnigRoom + totalApps)
+
+            return { ...s, totalSale: totalSale.toFixed(2), diningRoom: diningRoom, pickUp: pickUp, takeout: takeout, delivery: delivery, totalDinnigRoom: totalDinnigRoom.toFixed(2), day: day, apps: apps, totalApps: totalApps.toFixed(2) }
           })
           this.sales = sales
-          console.log("dataSales", sales)
+         
+          this.fillBarChart(sales)
+          this.fillDonughtChart(sales)
         }
 
       },
@@ -181,307 +201,93 @@ export class SalesComponent implements OnInit {
     })
   }
 
-  getJsonExample() {
-    return [{
-      id: 1,
-      fecha: '01/09/2023',
-      dia: 'Viernes',
-      ventaComedor: '$20,000.00',
-      comedor: '$5,000.00',
-      llevar: '$5,000.00',
-      recoger: '$5,000.00',
-      domicilio: '$5,000.00',
-      efectivo: '$15,000.00',
-      pay: '$5,000.00',
-      comision: '$150.00',
-      pagoComedor: 'SI',
-      ventaApps: '$5,000.00',
-      ventaUber: '$5,000.00',
-      ingresoUber: '$5,000.00',
-      comisionUber: '60%',
-      pagoUber: '$5,000.00',
-      ventaRappi: '$5,000.00',
-      ingresoRappi: '$5,000.00',
-      comisionRappi: '60%',
-      pagoRappi: '$5,000.00',
-      ventaDidi: '$5,000.00',
-      ingresoDidi: '$5,000.00',
-      comisionDidi: '60%',
-      pagoDidi: 'NO',
-      ventaTotal: '$5,000.00'
-    },
-    {
-      id: 1,
-      fecha: '01/09/2023',
-      dia: 'Viernes',
-      ventaComedor: '$20,000.00',
-      comedor: '$5,000.00',
-      llevar: '$5,000.00',
-      recoger: '$5,000.00',
-      domicilio: '$5,000.00',
-      efectivo: '$15,000.00',
-      pay: '$5,000.00',
-      comision: '$150.00',
-      pagoComedor: 'SI',
-      ventaApps: '$5,000.00',
-      ventaUber: '$5,000.00',
-      ingresoUber: '$5,000.00',
-      comisionUber: '60%',
-      pagoUber: '$5,000.00',
-      ventaRappi: '$5,000.00',
-      ingresoRappi: '$5,000.00',
-      comisionRappi: '60%',
-      pagoRappi: '$5,000.00',
-      ventaDidi: '$5,000.00',
-      ingresoDidi: '$5,000.00',
-      comisionDidi: '60%',
-      pagoDidi: 'NO',
-      ventaTotal: '$5,000.00'
-    },
-    {
-      id: 1,
-      fecha: '01/09/2023',
-      dia: 'Viernes',
-      ventaComedor: '$20,000.00',
-      comedor: '$5,000.00',
-      llevar: '$5,000.00',
-      recoger: '$5,000.00',
-      domicilio: '$5,000.00',
-      efectivo: '$15,000.00',
-      pay: '$5,000.00',
-      comision: '$150.00',
-      pagoComedor: 'SI',
-      ventaApps: '$5,000.00',
-      ventaUber: '$5,000.00',
-      ingresoUber: '$5,000.00',
-      comisionUber: '60%',
-      pagoUber: '$5,000.00',
-      ventaRappi: '$5,000.00',
-      ingresoRappi: '$5,000.00',
-      comisionRappi: '60%',
-      pagoRappi: '$5,000.00',
-      ventaDidi: '$5,000.00',
-      ingresoDidi: '$5,000.00',
-      comisionDidi: '60%',
-      pagoDidi: 'NO',
-      ventaTotal: '$5,000.00'
-    }, {
-      id: 1,
-      fecha: '01/09/2023',
-      dia: 'Viernes',
-      ventaComedor: '$20,000.00',
-      comedor: '$5,000.00',
-      llevar: '$5,000.00',
-      recoger: '$5,000.00',
-      domicilio: '$5,000.00',
-      efectivo: '$15,000.00',
-      pay: '$5,000.00',
-      comision: '$150.00',
-      pagoComedor: 'SI',
-      ventaApps: '$5,000.00',
-      ventaUber: '$5,000.00',
-      ingresoUber: '$5,000.00',
-      comisionUber: '60%',
-      pagoUber: '$5,000.00',
-      ventaRappi: '$5,000.00',
-      ingresoRappi: '$5,000.00',
-      comisionRappi: '60%',
-      pagoRappi: '$5,000.00',
-      ventaDidi: '$5,000.00',
-      ingresoDidi: '$5,000.00',
-      comisionDidi: '60%',
-      pagoDidi: 'NO',
-      ventaTotal: '$5,000.00'
-    }, {
-      id: 1,
-      fecha: '01/09/2023',
-      dia: 'Viernes',
-      ventaComedor: '$20,000.00',
-      comedor: '$5,000.00',
-      llevar: '$5,000.00',
-      recoger: '$5,000.00',
-      domicilio: '$5,000.00',
-      efectivo: '$15,000.00',
-      pay: '$5,000.00',
-      comision: '$150.00',
-      pagoComedor: 'SI',
-      ventaApps: '$5,000.00',
-      ventaUber: '$5,000.00',
-      ingresoUber: '$5,000.00',
-      comisionUber: '60%',
-      pagoUber: '$5,000.00',
-      ventaRappi: '$5,000.00',
-      ingresoRappi: '$5,000.00',
-      comisionRappi: '60%',
-      pagoRappi: '$5,000.00',
-      ventaDidi: '$5,000.00',
-      ingresoDidi: '$5,000.00',
-      comisionDidi: '60%',
-      pagoDidi: 'SI',
-      ventaTotal: '$5,000.00'
-    }, {
-      id: 1,
-      fecha: '01/09/2023',
-      dia: 'Viernes',
-      ventaComedor: '$20,000.00',
-      comedor: '$5,000.00',
-      llevar: '$5,000.00',
-      recoger: '$5,000.00',
-      domicilio: '$5,000.00',
-      efectivo: '$15,000.00',
-      pay: '$5,000.00',
-      comision: '$150.00',
-      pagoComedor: 'SI',
-      ventaApps: '$5,000.00',
-      ventaUber: '$5,000.00',
-      ingresoUber: '$5,000.00',
-      comisionUber: '60%',
-      pagoUber: '$5,000.00',
-      ventaRappi: '$5,000.00',
-      ingresoRappi: '$5,000.00',
-      comisionRappi: '60%',
-      pagoRappi: '$5,000.00',
-      ventaDidi: '$5,000.00',
-      ingresoDidi: '$5,000.00',
-      comisionDidi: '60%',
-      pagoDidi: 'NO',
-      ventaTotal: '$5,000.00'
-    }, {
-      id: 1,
-      fecha: '01/09/2023',
-      dia: 'Viernes',
-      ventaComedor: '$20,000.00',
-      comedor: '$5,000.00',
-      llevar: '$5,000.00',
-      recoger: '$5,000.00',
-      domicilio: '$5,000.00',
-      efectivo: '$15,000.00',
-      pay: '$5,000.00',
-      comision: '$150.00',
-      pagoComedor: 'SI',
-      ventaApps: '$5,000.00',
-      ventaUber: '$5,000.00',
-      ingresoUber: '$5,000.00',
-      comisionUber: '60%',
-      pagoUber: '$5,000.00',
-      ventaRappi: '$5,000.00',
-      ingresoRappi: '$5,000.00',
-      comisionRappi: '60%',
-      pagoRappi: '$5,000.00',
-      ventaDidi: '$5,000.00',
-      ingresoDidi: '$5,000.00',
-      comisionDidi: '60%',
-      pagoDidi: 'SI',
-      ventaTotal: '$5,000.00'
-    }, {
-      id: 1,
-      fecha: '01/09/2023',
-      dia: 'Viernes',
-      ventaComedor: '$20,000.00',
-      comedor: '$5,000.00',
-      llevar: '$5,000.00',
-      recoger: '$5,000.00',
-      domicilio: '$5,000.00',
-      efectivo: '$15,000.00',
-      pay: '$5,000.00',
-      comision: '$150.00',
-      pagoComedor: 'SI',
-      ventaApps: '$5,000.00',
-      ventaUber: '$5,000.00',
-      ingresoUber: '$5,000.00',
-      comisionUber: '60%',
-      pagoUber: '$5,000.00',
-      ventaRappi: '$5,000.00',
-      ingresoRappi: '$5,000.00',
-      comisionRappi: '60%',
-      pagoRappi: '$5,000.00',
-      ventaDidi: '$5,000.00',
-      ingresoDidi: '$5,000.00',
-      comisionDidi: '60%',
-      pagoDidi: 'SI',
-      ventaTotal: '$5,000.00'
-    }, {
-      id: 1,
-      fecha: '01/09/2023',
-      dia: 'Viernes',
-      ventaComedor: '$20,000.00',
-      comedor: '$5,000.00',
-      llevar: '$5,000.00',
-      recoger: '$5,000.00',
-      domicilio: '$5,000.00',
-      efectivo: '$15,000.00',
-      pay: '$5,000.00',
-      comision: '$150.00',
-      pagoComedor: 'SI',
-      ventaApps: '$5,000.00',
-      ventaUber: '$5,000.00',
-      ingresoUber: '$5,000.00',
-      comisionUber: '60%',
-      pagoUber: '$5,000.00',
-      ventaRappi: '$5,000.00',
-      ingresoRappi: '$5,000.00',
-      comisionRappi: '60%',
-      pagoRappi: '$5,000.00',
-      ventaDidi: '$5,000.00',
-      ingresoDidi: '$5,000.00',
-      comisionDidi: '60%',
-      pagoDidi: 'SI',
-      ventaTotal: '$5,000.00'
-    }, {
-      id: 1,
-      fecha: '01/09/2023',
-      dia: 'Viernes',
-      ventaComedor: '$20,000.00',
-      comedor: '$5,000.00',
-      llevar: '$5,000.00',
-      recoger: '$5,000.00',
-      domicilio: '$5,000.00',
-      efectivo: '$15,000.00',
-      pay: '$5,000.00',
-      comision: '$150.00',
-      pagoComedor: 'SI',
-      ventaApps: '$5,000.00',
-      ventaUber: '$5,000.00',
-      ingresoUber: '$5,000.00',
-      comisionUber: '60%',
-      pagoUber: '$5,000.00',
-      ventaRappi: '$5,000.00',
-      ingresoRappi: '$5,000.00',
-      comisionRappi: '60%',
-      pagoRappi: '$5,000.00',
-      ventaDidi: '$5,000.00',
-      ingresoDidi: '$5,000.00',
-      comisionDidi: '60%',
-      pagoDidi: '$5,000.00',
-      ventaTotal: '$5,000.00'
-    }, {
-      id: 1,
-      fecha: '01/09/2023',
-      dia: 'Viernes',
-      ventaComedor: '$20,000.00',
-      comedor: '$5,000.00',
-      llevar: '$5,000.00',
-      recoger: '$5,000.00',
-      domicilio: '$5,000.00',
-      efectivo: '$15,000.00',
-      pay: '$5,000.00',
-      comision: '$150.00',
-      pagoComedor: 'SI',
-      ventaApps: '$5,000.00',
-      ventaUber: '$5,000.00',
-      ingresoUber: '$5,000.00',
-      comisionUber: '60%',
-      pagoUber: '$5,000.00',
-      ventaRappi: '$5,000.00',
-      ingresoRappi: '$5,000.00',
-      comisionRappi: '60%',
-      pagoRappi: '$5,000.00',
-      ventaDidi: '$5,000.00',
-      ingresoDidi: '$5,000.00',
-      comisionDidi: '60%',
-      pagoDidi: 'NO',
-      ventaTotal: '$5,000.00'
-    }]
+  fillSalesTbl(data: any) {
+    let parrot = data.reportChannel.find((s: any) => s.channel == 'PARROT')
+    let uber = data.reportChannel.find((s: any) => s.channel == 'UBER_EATS')
+    let didi = data.reportChannel.find((s: any) => s.channel == 'DIDI_FOOD')
+    let rappi = data.reportChannel.find((s: any) => s.channel == 'RAPPI')
+
+    return {parrot: this.fixedData(parrot), uber: this.fixedData(uber), didi: this.fixedData(didi), rappi: this.fixedData(rappi)}
   }
+
+  fixedData(data: any) {
+    data.commission = data.commission.toFixed(2)
+    data.income = data.income.toFixed(2)
+    data.sale = data.sale.toFixed(2)
+    data.tax = data.tax * 100
+
+    return data
+  }
+
+  fillBarChart(data: Array<any>) {
+    this.barChartData.datasets = []
+    this.barChartData.labels = []
+
+    let grouped = groupArrayByKey(data, 'day')
+   
+    let barchartLabels = Object.keys(grouped)
+
+    let listTotalDinningRoom: any = []
+    let listTotalDidi: any = []
+    let listTotalUber: any = []
+    let listTotalRappi: any = []
+
+    barchartLabels.map((day: any) => {
+      let dataDay = grouped[day]
+      let totalDinnigRoom = 0
+      let totalDidi = 0
+      let totalUber = 0
+      let totalRappi = 0
+
+      dataDay.map((d: any) => {
+        totalDinnigRoom += Number(d.totalDinnigRoom)
+        totalDidi += Number(d.apps.didi.sale)
+        totalUber += Number(d.apps.uber.sale)
+        totalRappi += Number(d.apps.rappi.sale)
+      })
+
+      listTotalDinningRoom.push(totalDinnigRoom)
+      listTotalDidi.push(totalDidi)
+      listTotalUber.push(totalUber)
+      listTotalRappi.push(totalRappi)
+
+      this.barChartData.labels?.push(day)
+    })
+
+    this.barChartData.datasets.push({ data: listTotalDinningRoom, label: '', backgroundColor: this.chartColors.dinningRoom, stack: 'a' })
+    this.barChartData.datasets.push({ data: listTotalDidi, label: '', backgroundColor: this.chartColors.didi, stack: 'a' })
+    this.barChartData.datasets.push({ data: listTotalUber, label: '', backgroundColor: this.chartColors.uber, stack: 'a' })
+    this.barChartData.datasets.push({ data: listTotalRappi, label: '', backgroundColor: this.chartColors.rappi, stack: 'a' })
+
+    this.chart?.update()
+  }
+
+  fillDonughtChart(data: Array<any>) {
+
+    let totalDinnigRoom = data.reduce((total, sale) => total + Number(sale.diningRoom) ,0)
+    let totalUber= data.reduce((total, sale) => total + Number(sale.apps.uber.sale) ,0)
+    let totalDidi = data.reduce((total, sale) => total + Number(sale.apps.didi.sale) ,0)
+    let totalRappi = data.reduce((total, sale) => total + Number(sale.apps.rappi.sale) ,0)
+
+    let total = totalDinnigRoom + totalDidi + totalUber + totalRappi
+    let percentDinningRoom =  Math.round((totalDinnigRoom * 100 ) / total)
+    let percentDidi = Math.round((totalDidi * 100) / total)
+    let percentUber = Math.round((totalUber * 100) / total)
+    let percentRappi = Math.round((totalRappi * 100) / total)
+
+    this.salesDonutChartData = Charts.Donut(['Comedor', 'Uber', 'Didi', 'Rappi'], [percentDinningRoom, percentUber, percentDidi, percentRappi], [this.chartColors.dinningRoom, this.chartColors.uber, this.chartColors.didi, this.chartColors.rappi])
+
+
+
+    
+   // this.applicationsDataChart = Charts.Donut(['SI', 'NO'], [countYes, countNot], ['#8EC948','#F71313'])
+    /** 
+     * let countYes = data.filter(r => r.billing == 'SI').length
+      let countNot = data.filter(r => r.billing == 'NO').length
+      this.facturationChartData = Charts.Donut(['SI', 'NO'], [countYes, countNot], ['#8EC948','#F71313'])
+     * 
+    */
+  }
+
 }
 

@@ -7,5 +7,6 @@ import { Component, Input } from '@angular/core';
 })
 export class OptionPayComponent {
 
-  @Input() isSelected: string = "NO"
+  //@Input() isSelected: string = "NO"
+  @Input() isSelected: boolean = false
 }
