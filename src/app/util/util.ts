@@ -70,7 +70,7 @@ const pieChartOptions = {
   responsive: true,
   plugins: {
     legend: {
-      display: true
+      display: false
     },
     datalabels: {
       formatter: (value: any, ctx: any) => {

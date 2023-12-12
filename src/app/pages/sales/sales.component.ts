@@ -32,11 +32,16 @@ export class SalesComponent implements OnInit {
   barChartOptions: ChartOptions = barChartOptions
 
   pieChartOptions: ChartOptions = pieChartOptions
+  public pieChartPlugins = [];
 
   applicationsDataChart: any
   salesDonutChartData: any
   chartColors = { dinningRoom: "#3889EB", uber: "#31B968", rappi: "#F31A86", didi: "#F37D1A" }
   filterDate: any = {}
+
+  channelSales: any = {}
+
+ 
 
   constructor(private mainService: MainService, private salesService: SalesService, private toast: ToastrService) {
     mainService.setPageName("Ventas")
@@ -203,7 +208,6 @@ export class SalesComponent implements OnInit {
   fillSalesTbl(data: any) {
     let parrot = data.reportChannel.find((s: any) => s.channel == ReportChannel.PARROT)
     let uber = data.reportChannel.find((s: any) => s.channel == ReportChannel.UBER_EATS)
-   // uber.income = uber.sale * uber.tax
 
     let didi = data.reportChannel.find((s: any) => s.channel == ReportChannel.DIDI_FOOD)
     let rappi = data.reportChannel.find((s: any) => s.channel == ReportChannel.RAPPI)
@@ -265,21 +269,33 @@ export class SalesComponent implements OnInit {
   }
 
   fillDonughtChart(data: Array<any>) {
-    let totalDinnigRoom = data.reduce((total, sale) => total + Number(sale.totalDinnigRoom), 0)
+    let totalDinnigRoom = data.reduce((total, sale) => total + Number(sale.diningRoom), 0)
+    let totalDelivery = data.reduce((total,sale) => total + Number(sale.delivery), 0)
+    let totalPickUp = data.reduce((total,sale) => total + Number(sale.pickUp), 0)
+    let totalTakeout = data.reduce((total,sale) => total + Number(sale.takeout), 0)
+
     let totalUber = data.reduce((total, sale) => total + Number(sale.apps.uber.sale), 0)
     let totalDidi = data.reduce((total, sale) => total + Number(sale.apps.didi.sale), 0)
     let totalRappi = data.reduce((total, sale) => total + Number(sale.apps.rappi.sale), 0)
 
-    let total = totalDinnigRoom + totalDidi + totalUber + totalRappi
+    let total = totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout + totalDidi + totalUber + totalRappi
     let percentDinningRoom = Math.round(((totalDinnigRoom) * 100) / total)
+    let percentDelivery = Math.round(((totalDelivery) * 100) / total)
+    let percentPickUp = Math.round(((totalPickUp) * 100) / total)
+    let percentTakeOut = Math.round(((totalTakeout) * 100) / total)
+
     let percentDidi = Math.round((totalDidi * 100) / total)
     let percentUber = Math.round((totalUber * 100) / total)
     let percentRappi = Math.round((totalRappi * 100) / total)
 
-    this.salesDonutChartData = Charts.Donut(['Comedor', 'Uber', 'Didi', 'Rappi'], [percentDinningRoom, percentUber, percentDidi, percentRappi], [this.chartColors.dinningRoom, this.chartColors.uber, this.chartColors.didi, this.chartColors.rappi])
+    this.channelSales = {
+      totalDinnigRoom: (totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout),
+      totalUber: totalUber,
+      totalDidi: totalDidi,
+      totalRappi: totalRappi
+    }
 
-
-
+    this.salesDonutChartData = Charts.Donut(['Comedor', 'ParaLlevar', 'Recoger', 'Domicilio', 'Uber', 'Didi', 'Rappi'], [percentDinningRoom, percentTakeOut, percentPickUp , percentDelivery, percentUber, percentDidi, percentRappi], [this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.uber, this.chartColors.didi, this.chartColors.rappi])
 
     // this.applicationsDataChart = Charts.Donut(['SI', 'NO'], [countYes, countNot], ['#8EC948','#F71313'])
     /** 
