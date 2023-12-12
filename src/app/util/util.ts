@@ -82,5 +82,11 @@ const pieChartOptions = {
   },
 };
 
+enum ReportChannel {
+  PARROT = 'PARROT',
+  UBER_EATS = 'UBER_EATS',
+  RAPPI = 'RAPPI',
+  DIDI_FOOD = 'DIDI_FOOD'
+}
 
-export { configDropdown, firstUpperCase, barChartOptions, donutChartOptions, pieChartOptions, groupArrayByKey }
+export { configDropdown, firstUpperCase, barChartOptions, donutChartOptions, pieChartOptions, groupArrayByKey, ReportChannel }

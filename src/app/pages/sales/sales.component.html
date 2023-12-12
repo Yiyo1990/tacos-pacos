@@ -99,24 +99,24 @@
                                 <td></td>
                                 <td>${{sale?.delivery}}</td>
                                 <td>${{sale?.apps.parrot.sale}}</td>
-                                <td><input type="text" value="{{sale?.apps.parrot.income}}"></td>
+                                <td><input type="text" value="${{sale?.apps.parrot.income}}" (blur)="setValueIncome(sale.apps.parrot, sale.dateSale, $any($event.target).value)" formatoMoneda></td>
                                 <td>{{sale?.apps.parrot.commission}}</td>
                                 <td><option-pay [isSelected]="sale?.apps.parrot.isPay"/></td>
                                 <td></td>
                                 <td>${{sale?.totalApps}}</td>
                                 <td></td>
                                 <td>${{sale?.apps.uber.sale}}</td>
-                                <td> <input type="text" value="{{sale?.apps.uber.income}}"></td>
+                                <td> <input type="text" value="${{sale?.apps.uber.income}}"  (blur)="setIncomePlatforms(sale.apps.uber, sale.dateSale, $any($event.target).value, 1)" formatoMoneda></td>
                                 <td>{{sale?.apps.uber.tax}}%</td>
                                 <td><option-pay [isSelected]="sale?.apps.uber.isPay"/></td>
                                 <td></td>
                                 <td>${{sale?.apps.rappi.sale}}</td>
-                                <td><input type="text" value="{{sale?.apps.rappi.income}}"></td>
+                                <td><input type="text" value="{{sale?.apps.rappi.income}}" (blur)="setIncomePlatforms(sale.apps.rappi, sale.dateSale, $any($event.target).value, 3)"></td>
                                 <td>{{sale?.apps.rappi.tax}}%</td>
                                 <td><option-pay [isSelected]="sale?.apps.rappi.isPay"/></td>
                                 <td></td>
                                 <td>${{sale?.apps.didi.sale}}</td>
-                                <td><input type="text" value="{{sale?.apps.didi.income}}"></td>
+                                <td><input type="text" value="{{sale?.apps.didi.income}}" (blur)="setIncomePlatforms(sale.apps.didi, sale.dateSale, $any($event.target).value, 2)"></td>
                                 <td>{{sale?.apps.didi.tax}}%</td>
                                 <td><option-pay [isSelected]="sale?.apps.didi.isPay" /></td>
                                 <td></td>
