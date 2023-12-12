@@ -9,16 +9,16 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-4 md-4 sm-12"></div>
-            <div class="col-4 md-4 sm-12" style="align-items: center;">
-
+            <div class="col-4 md-4 sm-12" style="margin-top: 20px;">
                 <div style="display: inline-flex;">
                     <div class="point" style="background-color: #3889EB;"></div><label>Comedor</label>
                     <div class="point" style="background-color: #31B968;"></div><label>Uber</label>
                     <div class="point" style="background-color: #F31A86;"></div><label>Rappi</label>
                     <div class="point" style="background-color: #F37D1A;"></div><label>Didi</label>
                 </div>
-
+            </div>
+            <div class="col-4 md-4 sm-12">
+                
             </div>
             <div class="col-4 md-4 sm-12"><label></label></div>
         </div>
@@ -27,14 +27,22 @@
                 <canvas baseChart class="chart" [data]="barChartData" [options]="barChartOptions"
                     [type]="'bar'"></canvas>
             </div>
-            <div class="col-3 md-3 sm-12"></div>
             <div class="col-3 md-3 sm-12">
-                <canvas baseChart class="chart" [data]="salesDonutChartData" [options]="donutChartOptions"
-                    [type]="'doughnut'"></canvas>
-
-                <!--<canvas baseChart class="chart" [data]="pieChartData" [type]="'pieChartType'" [options]="pieChartOptions"
+                <div style="display: list-item; align-items: center; width: 200px; margin: auto; float: right;">
+                    <div style="display: flex; padding: 10px;"><div class="point" style="background-color: #3889EB;"></div><label>Comedor</label></div>
+                    <label style="font-weight: bold; font-size: 17pt; padding-left: 25px;">{{channelSales?.totalDinnigRoom | currency}}</label>
+                    <div style="display: flex; padding: 10px;"><div class="point" style="background-color: #31B968;"></div><label>Uber</label></div>
+                    <label style="font-weight: bold; font-size: 17pt; padding-left: 25px;">{{channelSales?.totalUber | currency}}</label>
+                    <div style="display: flex; padding: 10px;"><div class="point" style="background-color: #F31A86;"></div><label>Rappi</label></div>
+                    <label style="font-weight: bold; font-size: 17pt; padding-left: 25px;">{{channelSales?.totalRappi | currency}}</label>
+                    <div style="display: flex; padding: 10px;"><div class="point" style="background-color: #F37D1A;"></div><label>Didi</label></div>
+                    <label style="font-weight: bold; font-size: 17pt; padding-left: 25px;">{{channelSales?.totalDidi | currency}}</label>
+                </div>
+            </div>
+            <div class="col-3 md-3 sm-12">
+                <canvas baseChart class="chart" [data]="salesDonutChartData" [type]="'pie'" [options]="pieChartOptions"
                     [plugins]="pieChartPlugins">
-                </canvas>-->
+                </canvas>
             </div>
         </div>
         <div class="row">
@@ -92,35 +100,35 @@
                             <tr *ngFor="let sale of sales; let i = index;" [ngClass]="{'row-background':i%2==1}">
                                 <td class="sticky-col">{{sale.dateSale}}</td>
                                 <td class="sticky-col2">{{sale.day}}</td>
-                                <td>${{sale?.totalDinnigRoom}}</td>
-                                <td>${{sale?.diningRoom}}</td>
-                                <td>${{sale?.takeout}}</td>
-                                <td>${{sale?.pickUp}}</td>
+                                <td>{{sale?.totalDinnigRoom | currency}}</td>
+                                <td>{{sale?.diningRoom | currency}}</td>
+                                <td>{{sale?.takeout | currency}}</td>
+                                <td>{{sale?.pickUp | currency}}</td>
                                 <td></td>
-                                <td>${{sale?.delivery}}</td>
-                                <td>${{sale?.apps.parrot.sale}}</td>
+                                <td>{{sale?.delivery | currency}}</td>
+                                <td>{{sale?.apps.parrot.sale | currency}}</td>
                                 <td><input type="text" value="${{sale?.apps.parrot.income}}" (blur)="setValueIncome(sale.apps.parrot, sale.dateSale, $any($event.target).value)" formatoMoneda></td>
-                                <td>{{sale?.apps.parrot.commission}}</td>
+                                <td>{{sale?.apps.parrot.commission | currency}}</td>
                                 <td><option-pay [isSelected]="sale?.apps.parrot.isPay"/></td>
                                 <td></td>
-                                <td>${{sale?.totalApps}}</td>
+                                <td>{{sale?.totalApps | currency}}</td>
                                 <td></td>
-                                <td>${{sale?.apps.uber.sale}}</td>
+                                <td>{{sale?.apps.uber.sale | currency}}</td>
                                 <td> <input type="text" value="${{sale?.apps.uber.income}}"  (blur)="setIncomePlatforms(sale.apps.uber, sale.dateSale, $any($event.target).value, 1)" formatoMoneda></td>
                                 <td>{{sale?.apps.uber.tax}}%</td>
                                 <td><option-pay [isSelected]="sale?.apps.uber.isPay"/></td>
                                 <td></td>
-                                <td>${{sale?.apps.rappi.sale}}</td>
+                                <td>{{sale?.apps.rappi.sale | currency}}</td>
                                 <td><input type="text" value="{{sale?.apps.rappi.income}}" (blur)="setIncomePlatforms(sale.apps.rappi, sale.dateSale, $any($event.target).value, 3)"></td>
                                 <td>{{sale?.apps.rappi.tax}}%</td>
                                 <td><option-pay [isSelected]="sale?.apps.rappi.isPay"/></td>
                                 <td></td>
-                                <td>${{sale?.apps.didi.sale}}</td>
+                                <td>{{sale?.apps.didi.sale | currency}}</td>
                                 <td><input type="text" value="{{sale?.apps.didi.income}}" (blur)="setIncomePlatforms(sale.apps.didi, sale.dateSale, $any($event.target).value, 2)"></td>
                                 <td>{{sale?.apps.didi.tax}}%</td>
                                 <td><option-pay [isSelected]="sale?.apps.didi.isPay" /></td>
                                 <td></td>
-                                <td>${{sale?.totalSale}}</td>
+                                <td>{{sale?.totalSale | currency}}</td>
                             </tr>
                         </tbody>
                     </table>
