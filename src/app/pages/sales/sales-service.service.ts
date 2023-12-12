@@ -26,4 +26,9 @@ export class SalesService{
     let url = this.endPoint.concat(`report/kpis/reportPerMonth?branchId=${branchId}&startDate=${startDate}&endDate=${endDate}`)
     return this.httpClient.get(url)
   }
+
+  setValueIncomeChannel(params: any) {
+    let url = this.endPoint.concat(`report/kpis/incomeForMonth`)
+    return this.httpClient.post(url, params)
+  }
 }
