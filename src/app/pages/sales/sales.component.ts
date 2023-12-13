@@ -6,9 +6,10 @@ import { SalesService } from './sales-service.service';
 import { firstUpperCase, groupArrayByKey, barChartOptions, donutChartOptions, pieChartOptions, ReportChannel } from 'src/app/util/util';
 import { ToastrService } from 'ngx-toastr';
 import { Dates } from 'src/app/util/Dates';
-import { ChartConfiguration, ChartData, ChartOptions } from 'chart.js';
+import { ChartConfiguration, ChartData, ChartOptions, ChartType } from 'chart.js';
 import { Charts } from 'src/app/util/Charts';
 import { BaseChartDirective } from 'ng2-charts';
+import * as pluginDataLabels from 'chartjs-plugin-datalabels'
 
 @Component({
   selector: 'app-sales',
@@ -30,6 +31,8 @@ export class SalesComponent implements OnInit {
 
   barChartData: ChartData<'bar'> = { labels: [], datasets: [] };
   barChartOptions: ChartOptions = barChartOptions
+  public barChartPlugins = [pluginDataLabels];
+  public barChartType: ChartType = 'bar';
 
   pieChartOptions: ChartOptions = pieChartOptions
   public pieChartPlugins = [];
@@ -220,7 +223,7 @@ export class SalesComponent implements OnInit {
     data.sale = data.sale.toFixed(2)
     let percent = ((Number(data.income) * 100) / Number(data.sale))
     data.tax = percent ? (percent).toFixed(1) : (data.tax * 100).toFixed(1)
-    data.income = data.income ? data.income.toFixed(2) : ((Number(data.sale) * Number(data.tax)) / 100).toFixed(2)
+    data.income = data.income ? data.income.toFixed(2) : '0.00'
 
     return data
   }
@@ -296,14 +299,6 @@ export class SalesComponent implements OnInit {
     }
 
     this.salesDonutChartData = Charts.Donut(['Comedor', 'ParaLlevar', 'Recoger', 'Domicilio', 'Uber', 'Didi', 'Rappi'], [percentDinningRoom, percentTakeOut, percentPickUp , percentDelivery, percentUber, percentDidi, percentRappi], [this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.uber, this.chartColors.didi, this.chartColors.rappi])
-
-    // this.applicationsDataChart = Charts.Donut(['SI', 'NO'], [countYes, countNot], ['#8EC948','#F71313'])
-    /** 
-     * let countYes = data.filter(r => r.billing == 'SI').length
-      let countNot = data.filter(r => r.billing == 'NO').length
-      this.facturationChartData = Charts.Donut(['SI', 'NO'], [countYes, countNot], ['#8EC948','#F71313'])
-     * 
-    */
   }
 
   setValueIncome(sale: any, dateSale: string, value: any) {
