@@ -24,19 +24,21 @@
         </div>
         <div class="row">
             <div class="col-6 md-6 sm-12">
-                <canvas baseChart class="chart" [data]="barChartData" [options]="barChartOptions"
-                    [type]="'bar'"></canvas>
+                <canvas baseChart  class="chart" [data]="barChartData" [options]="barChartOptions"
+                    [type]="barChartType"></canvas>
             </div>
             <div class="col-3 md-3 sm-12">
-                <div style="display: list-item; align-items: center; width: 200px; margin: auto; float: right;">
-                    <div style="display: flex; padding: 10px;"><div class="point" style="background-color: #3889EB;"></div><label>Comedor</label></div>
-                    <label style="font-weight: bold; font-size: 17pt; padding-left: 25px;">{{channelSales?.totalDinnigRoom | currency}}</label>
-                    <div style="display: flex; padding: 10px;"><div class="point" style="background-color: #31B968;"></div><label>Uber</label></div>
-                    <label style="font-weight: bold; font-size: 17pt; padding-left: 25px;">{{channelSales?.totalUber | currency}}</label>
-                    <div style="display: flex; padding: 10px;"><div class="point" style="background-color: #F31A86;"></div><label>Rappi</label></div>
-                    <label style="font-weight: bold; font-size: 17pt; padding-left: 25px;">{{channelSales?.totalRappi | currency}}</label>
-                    <div style="display: flex; padding: 10px;"><div class="point" style="background-color: #F37D1A;"></div><label>Didi</label></div>
-                    <label style="font-weight: bold; font-size: 17pt; padding-left: 25px;">{{channelSales?.totalDidi | currency}}</label>
+                <div style="display: block; align-items: center; width: 200px; margin: auto; float: right;">
+                    <div style="display: flex; padding: 5px;  padding-left: 25px;"><label>Venta Total</label></div>
+                    <label style="font-weight: bold; font-size: 17pt; padding-left: 25px;">{{(channelSales?.totalDinnigRoom + channelSales?.totalUber + channelSales?.totalRappi + channelSales?.totalDidi) | currency}}</label>
+                    <div style="display: flex; padding: 5px;"><div class="point" style="background-color: #3889EB;"></div><label>Comedor</label></div>
+                    <label style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDinnigRoom | currency}}</label>
+                    <div style="display: flex; padding: 5px;"><div class="point" style="background-color: #31B968;"></div><label>Uber</label></div>
+                    <label style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalUber | currency}}</label>
+                    <div style="display: flex; padding: 5px;"><div class="point" style="background-color: #F31A86;"></div><label>Rappi</label></div>
+                    <label style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalRappi | currency}}</label>
+                    <div style="display: flex; padding: 5px;"><div class="point" style="background-color: #F37D1A;"></div><label>Didi</label></div>
+                    <label style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDidi | currency}}</label>
                 </div>
             </div>
             <div class="col-3 md-3 sm-12">
