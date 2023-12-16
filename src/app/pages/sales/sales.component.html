@@ -17,28 +17,57 @@
                     <div class="point" style="background-color: #F37D1A;"></div><label>Didi</label>
                 </div>
             </div>
-            <div class="col-4 md-4 sm-12">
+            <div class="col-3 md-3 sm-12">
+                <div style="margin: auto; ">
+                    <button class="button-switch" [ngClass]="{'btn-active': isBtnVentaActive, 'btn-inactive': !isBtnVentaActive}" (click)="fillBarChart(2)">Punto de Venta</button>
+                    <button class="button-switch" [ngClass]="{'btn-active': !isBtnVentaActive, 'btn-inactive': isBtnVentaActive}" (click)="fillBarChart(1)" style="margin-left: 10px;">Todos</button>
+                </div>
+
+            </div>
+            <div class="col-3 md-3 sm-12">
+                <div style="margin-left: 12%; ">
+                    <button class="button-switch" [ngClass]="{'btn-active': isBtnParrotActive, 'btn-inactive': !isBtnParrotActive}"  (click)="fillDonughtChart(2)">Parrot</button>
+                    <button class="button-switch" [ngClass]="{'btn-active': !isBtnParrotActive, 'btn-inactive': isBtnParrotActive}" (click)="fillDonughtChart(1)" style="margin-left: 10px;">Ingresos</button>
+                </div>
+            </div>
+            <div class="col-2 md-2 sm-12">
+                <div >
+                    <div style="display: flex; padding: 5px;  padding-left: 25px;"><label>Venta Total</label></div>
+                    <label style="font-weight: bold; font-size: 17pt; padding-left: 25px;">{{(channelSales?.totalDinnigRoom
+                        + channelSales?.totalUber + channelSales?.totalRappi + channelSales?.totalDidi) | currency}}</label>
+                </div>
                 
             </div>
-            <div class="col-4 md-4 sm-12"><label></label></div>
         </div>
         <div class="row">
             <div class="col-6 md-6 sm-12">
-                <canvas baseChart  class="chart" [data]="barChartData" [options]="barChartOptions"
+                <canvas baseChart class="chart" [data]="barChartData" [options]="barChartOptions"
                     [type]="barChartType"></canvas>
             </div>
             <div class="col-3 md-3 sm-12">
                 <div style="display: block; align-items: center; width: 200px; margin: auto; float: right;">
-                    <div style="display: flex; padding: 5px;  padding-left: 25px;"><label>Venta Total</label></div>
-                    <label style="font-weight: bold; font-size: 17pt; padding-left: 25px;">{{(channelSales?.totalDinnigRoom + channelSales?.totalUber + channelSales?.totalRappi + channelSales?.totalDidi) | currency}}</label>
-                    <div style="display: flex; padding: 5px;"><div class="point" style="background-color: #3889EB;"></div><label>Comedor</label></div>
-                    <label style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDinnigRoom | currency}}</label>
-                    <div style="display: flex; padding: 5px;"><div class="point" style="background-color: #31B968;"></div><label>Uber</label></div>
-                    <label style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalUber | currency}}</label>
-                    <div style="display: flex; padding: 5px;"><div class="point" style="background-color: #F31A86;"></div><label>Rappi</label></div>
-                    <label style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalRappi | currency}}</label>
-                    <div style="display: flex; padding: 5px;"><div class="point" style="background-color: #F37D1A;"></div><label>Didi</label></div>
-                    <label style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDidi | currency}}</label>
+
+                    <div style="display: flex; padding: 5px;">
+                        <div class="point" style="background-color: #3889EB;"></div><label>Comedor</label>
+                    </div>
+                    <label
+                        style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDinnigRoom
+                        | currency}}</label>
+                    <div style="display: flex; padding: 5px;">
+                        <div class="point" style="background-color: #31B968;"></div><label>Uber</label>
+                    </div>
+                    <label style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalUber |
+                        currency}}</label>
+                    <div style="display: flex; padding: 5px;">
+                        <div class="point" style="background-color: #F31A86;"></div><label>Rappi</label>
+                    </div>
+                    <label style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalRappi |
+                        currency}}</label>
+                    <div style="display: flex; padding: 5px;">
+                        <div class="point" style="background-color: #F37D1A;"></div><label>Didi</label>
+                    </div>
+                    <label style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDidi |
+                        currency}}</label>
                 </div>
             </div>
             <div class="col-3 md-3 sm-12">
@@ -109,24 +138,32 @@
                                 <td></td>
                                 <td>{{sale?.delivery | currency}}</td>
                                 <td>{{sale?.apps.parrot.sale | currency}}</td>
-                                <td><input type="text" value="${{sale?.apps.parrot.income}}" (blur)="setValueIncome(sale.apps.parrot, sale.dateSale, $any($event.target).value)" formatoMoneda></td>
+                                <td><input type="text" value="${{sale?.apps.parrot.income}}"
+                                        (blur)="setValueIncome(sale.apps.parrot, sale.dateSale, $any($event.target).value)"
+                                        formatoMoneda></td>
                                 <td>{{sale?.apps.parrot.commission | currency}}</td>
-                                <td><option-pay [isSelected]="sale?.apps.parrot.isPay"/></td>
+                                <td><option-pay [isSelected]="sale?.apps.parrot.isPay" /></td>
                                 <td></td>
                                 <td>{{sale?.totalApps | currency}}</td>
                                 <td></td>
                                 <td>{{sale?.apps.uber.sale | currency}}</td>
-                                <td> <input type="text" value="${{sale?.apps.uber.income}}"  (blur)="setIncomePlatforms(sale.apps.uber, sale.dateSale, $any($event.target).value, 1)" formatoMoneda></td>
+                                <td> <input type="text" value="${{sale?.apps.uber.income}}"
+                                        (blur)="setIncomePlatforms(sale.apps.uber, sale.dateSale, $any($event.target).value, 1)"
+                                        formatoMoneda></td>
                                 <td>{{sale?.apps.uber.tax}}%</td>
-                                <td><option-pay [isSelected]="sale?.apps.uber.isPay"/></td>
+                                <td><option-pay [isSelected]="sale?.apps.uber.isPay" /></td>
                                 <td></td>
                                 <td>{{sale?.apps.rappi.sale | currency}}</td>
-                                <td><input type="text" value="{{sale?.apps.rappi.income}}" (blur)="setIncomePlatforms(sale.apps.rappi, sale.dateSale, $any($event.target).value, 3)"></td>
+                                <td><input type="text" value="{{sale?.apps.rappi.income}}"
+                                        (blur)="setIncomePlatforms(sale.apps.rappi, sale.dateSale, $any($event.target).value, 3)">
+                                </td>
                                 <td>{{sale?.apps.rappi.tax}}%</td>
-                                <td><option-pay [isSelected]="sale?.apps.rappi.isPay"/></td>
+                                <td><option-pay [isSelected]="sale?.apps.rappi.isPay" /></td>
                                 <td></td>
                                 <td>{{sale?.apps.didi.sale | currency}}</td>
-                                <td><input type="text" value="{{sale?.apps.didi.income}}" (blur)="setIncomePlatforms(sale.apps.didi, sale.dateSale, $any($event.target).value, 2)"></td>
+                                <td><input type="text" value="{{sale?.apps.didi.income}}"
+                                        (blur)="setIncomePlatforms(sale.apps.didi, sale.dateSale, $any($event.target).value, 2)">
+                                </td>
                                 <td>{{sale?.apps.didi.tax}}%</td>
                                 <td><option-pay [isSelected]="sale?.apps.didi.isPay" /></td>
                                 <td></td>

@@ -56,3 +56,25 @@ table {
     margin-right: 5px;
     margin-left: 10px;
 }
+
+.button-switch {
+    text-align: center;
+   // min-width: 10px;
+   // width: 140px;
+    //height: 40px;
+    background-color: #ffffff;
+    border-radius: 8%;
+    border: 1px solid #696969;
+    cursor: pointer;
+    color: #000;
+}
+
+.btn-active {
+    background-color: #7881af;
+    color: #fff;
+}
+
+.btn-inactive {
+    background-color: #ffffff;
+    color: #000;
+} 
