@@ -44,6 +44,8 @@ export class SalesComponent implements OnInit {
 
   channelSales: any = {}
 
+  isBtnVentaActive = true
+  isBtnParrotActive = true
  
 
   constructor(private mainService: MainService, private salesService: SalesService, private toast: ToastrService) {
@@ -96,7 +98,6 @@ export class SalesComponent implements OnInit {
 
       this.salesService.uploadFileSales(formData).subscribe({
         next: (response: any) => {
-          //console.log(response)
           if (response.acknowledge) {
             this.toast.success("El archivo se ha subido correctamente")
             this.getReportSalesByDateRange(response.createdAt, response.createdAt)
@@ -105,7 +106,6 @@ export class SalesComponent implements OnInit {
           }
         },
         error: (e) => {
-          //console.error(e)
           this.toast.error(`Ocurrio un error al subir el archivo: ${e.error.message}`)
           this.mainService.isLoading(false)
         }, complete: () => {
@@ -194,8 +194,8 @@ export class SalesComponent implements OnInit {
           })
           this.sales = sales
 
-          this.fillBarChart(sales)
-          this.fillDonughtChart(sales)
+          this.fillBarChart(2)
+          this.fillDonughtChart(2)
         }
 
       },
@@ -228,11 +228,12 @@ export class SalesComponent implements OnInit {
     return data
   }
 
-  fillBarChart(data: Array<any>) {
+  fillBarChart(type: number = 1) {
+    this.isBtnVentaActive = type == 2
     this.barChartData.datasets = []
     this.barChartData.labels = []
 
-    let grouped = groupArrayByKey(data, 'day')
+    let grouped = groupArrayByKey(this.sales, 'day')
 
     let barchartLabels = Object.keys(grouped)
 
@@ -240,6 +241,7 @@ export class SalesComponent implements OnInit {
     let listTotalDidi: any = []
     let listTotalUber: any = []
     let listTotalRappi: any = []
+    let listTotalVenta: any = []
 
     barchartLabels.map((day: any) => {
       let dataDay = grouped[day]
@@ -259,27 +261,35 @@ export class SalesComponent implements OnInit {
       listTotalDidi.push(totalDidi)
       listTotalUber.push(totalUber)
       listTotalRappi.push(totalRappi)
+      listTotalVenta.push(totalDinnigRoom + totalDidi + totalUber + totalRappi)
 
       this.barChartData.labels?.push(day)
     })
 
-    this.barChartData.datasets.push({ data: listTotalDinningRoom, label: '', backgroundColor: this.chartColors.dinningRoom, stack: 'a' })
-    this.barChartData.datasets.push({ data: listTotalDidi, label: '', backgroundColor: this.chartColors.didi, stack: 'a' })
-    this.barChartData.datasets.push({ data: listTotalUber, label: '', backgroundColor: this.chartColors.uber, stack: 'a' })
-    this.barChartData.datasets.push({ data: listTotalRappi, label: '', backgroundColor: this.chartColors.rappi, stack: 'a' })
-
+    if(type == 1) {
+      this.barChartData.datasets.push({ data: listTotalDinningRoom, label: '', backgroundColor: this.chartColors.dinningRoom, stack: 'a' })
+      this.barChartData.datasets.push({ data: listTotalDidi, label: '', backgroundColor: this.chartColors.didi, stack: 'a' })
+      this.barChartData.datasets.push({ data: listTotalUber, label: '', backgroundColor: this.chartColors.uber, stack: 'a' })
+      this.barChartData.datasets.push({ data: listTotalRappi, label: '', backgroundColor: this.chartColors.rappi, stack: 'a' })  
+    } else {
+      this.barChartData.datasets.push({ data: listTotalVenta, label: '', backgroundColor: this.chartColors.dinningRoom, stack: 'a' })
+    }
+   
     this.chart?.update()
   }
 
-  fillDonughtChart(data: Array<any>) {
+  fillDonughtChart(type: number = 1) {
+    this.isBtnParrotActive = type == 2
+    let data = this.sales
+    
     let totalDinnigRoom = data.reduce((total, sale) => total + Number(sale.diningRoom), 0)
     let totalDelivery = data.reduce((total,sale) => total + Number(sale.delivery), 0)
     let totalPickUp = data.reduce((total,sale) => total + Number(sale.pickUp), 0)
     let totalTakeout = data.reduce((total,sale) => total + Number(sale.takeout), 0)
 
-    let totalUber = data.reduce((total, sale) => total + Number(sale.apps.uber.sale), 0)
-    let totalDidi = data.reduce((total, sale) => total + Number(sale.apps.didi.sale), 0)
-    let totalRappi = data.reduce((total, sale) => total + Number(sale.apps.rappi.sale), 0)
+    let totalUber = type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.uber.sale), 0) : data.reduce((total, sale) => total + Number(sale.apps.uber.income), 0)
+    let totalDidi =  type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.didi.sale), 0) : data.reduce((total, sale) => total + Number(sale.apps.didi.income), 0)
+    let totalRappi = type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.rappi.sale), 0) :  data.reduce((total, sale) => total + Number(sale.apps.rappi.income), 0)
 
     let total = totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout + totalDidi + totalUber + totalRappi
     let percentDinningRoom = Math.round(((totalDinnigRoom) * 100) / total)
