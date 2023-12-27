@@ -1,0 +1,7 @@
+<div class="progress-bar">
+    <div class="progress-border" style="display: inline-flex;">
+        <div class="progress-bar-fill" [ngStyle]="{'background-color': progressColor, 'width': progress}"
+            style="height:24px; text-align: center;">{{progress}}</div><label style="margin-left: 1%;">{{ammount |
+            currency}}</label>
+    </div>
+</div>
