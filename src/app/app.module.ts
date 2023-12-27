@@ -38,6 +38,7 @@ import { NoTextInputDirective } from './directivas/no-text-input.directive';
 import { LoadingComponent } from './components/loading/loading.component';
 import { SalesComponent } from './pages/sales/sales.component';
 import { OptionPayComponent } from './components/option-pay/option-pay.component';
+import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import { OptionPayComponent } from './components/option-pay/option-pay.component
     NoTextInputDirective,
     LoadingComponent,
     SalesComponent,
-    OptionPayComponent
+    OptionPayComponent,
+    ProgressBarComponent
   ],
   imports: [
     BrowserModule,
