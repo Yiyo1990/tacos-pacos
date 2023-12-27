@@ -21,8 +21,8 @@
             </div>
             <div class="col-3 md-3 sm-12">
                 <div style="display: -webkit-inline-box; justify-content: center; align-items: center;">
-                    <label>Punto de Venta</label>
-                    <select class="form-control" style="margin-left: 2%;" (change)="fillBarChart(0,$any($event.target).value)">
+                    <label style="font-weight: 600;">Punto de Venta</label>
+                    <select class="form-control" style="margin-left: 3%;" (change)="fillBarChart(0,$any($event.target).value)">
                         <option value="1" [selected]>Todos</option>
                         <option value="2">General</option>
                         <option value="3">Sucursal</option>
@@ -45,7 +45,7 @@
             </div>
             <div class="col-3 md-2 sm-12">
                 <div style="display: inline-flex;">
-                    <div style="display: flex; padding: 5px;  padding-left: 25px;"><label>Venta Total</label></div>
+                    <div style="display: flex; padding: 5px;  padding-left: 25px; font-weight: 600;"><label>Venta Total</label></div>
                     <label
                         style="font-weight: bold; font-size: 17pt; padding-left: 25px;">{{(channelSales?.totalDinnigRoom
                         + channelSales?.totalUber + channelSales?.totalRappi + channelSales?.totalDidi) |
@@ -71,21 +71,21 @@
                                 style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDinnigRoom
                                 | currency}}</label>
                             <div style="display: flex; padding: 5px;">
-                                <div class="point" style="background-color: #31B968;"></div><label>Uber</label>
+                                <div class="point" style="background-color: #31B968; margin-top: 5%;"></div><img width="80" height="40" src="assets/uber.svg">
                             </div>
                             <label
                                 style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalUber
                                 |
                                 currency}}</label>
                             <div style="display: flex; padding: 5px;">
-                                <div class="point" style="background-color: #F31A86;"></div><label>Rappi</label>
+                                <div class="point" style="background-color: #F31A86;"></div><img width="50" height="25" src="assets/rappi.png">
                             </div>
                             <label
                                 style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalRappi
                                 |
                                 currency}}</label>
                             <div style="display: flex; padding: 5px;">
-                                <div class="point" style="background-color: #F37D1A;"></div><label>Didi</label>
+                                <div class="point" style="background-color: #F37D1A; margin-top: 5%;"></div><img width="80" height="40" src="assets/didi.svg">
                             </div>
                             <label
                                 style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDidi
@@ -105,7 +105,7 @@
                         <label class="subtitle">Tipo de Pago</label>
                         <div class="row">
                             <div class="col-2 md-2 sm-12">
-                                TARJETA
+                                <label style="font-weight: 600; font-size: 11pt; color: #074877;">TARJETA</label>
                             </div>
                             <div class="col-10 md-10 sm-12">
                                 <progress-bar [progressColor]="'#ffda22'" [progress]="paymentType.percentPayment"
@@ -114,7 +114,7 @@
                         </div>
                         <div class="row" style="margin-top: 1%;">
                             <div class="col-2 md-2 sm-12">
-                                EFECTIVO
+                                <label style="font-weight: 600; font-size: 11pt; color: #074877;">EFECTIVO</label>
                             </div>
                             <div class="col-10 md-10 sm-12">
                                 <progress-bar [progressColor]="'#69e141'" [progress]="paymentType.percentParrot"
@@ -129,16 +129,14 @@
                     <div class="row-body">
                         <table>
                             <thead>
-                                <tr style="text-align: center;">
+                                <tr style="text-align: center; font-size: 13pt; font-weight: 500;">
                                     <th colspan="2" style="background-color: #fff;"></th>
-                                    <th colspan="10" style="background-color: #fff; border: 2px solid #000;">Comedor
+                                    <th colspan="12" style="background-color: #074877; color: #fff;">Venta en Sucursal
                                     </th>
                                     <th style="width: 10px; background-color: white;"></th>
-                                    <th colspan="16" style="background-color: #fff; border: 2px solid #000;">
-                                        Aplicaciones
+                                    <th colspan="16" style="background-color: #074877; color: #fff;">
+                                        Venta en APPS
                                     </th>
-                                    <th style="width: 10px; background-color: white;"></th>
-                                    <th style="background-color: #fff; border: 2px solid #000;">Total</th>
                                 </tr>
                                 <tr>
                                     <th colspan="31" style="background-color: #fff;"></th>
@@ -146,46 +144,49 @@
                                 <tr style="text-align: center;">
                                     <th class="sticky-col" style="background-color: #fff; color:#000">Fecha</th>
                                     <th class="sticky-col2" style="background-color: #fff; color:#000">Día</th>
-                                    <th style="background-color: #0072c2; color: #fff;">Venta Total</th>
+                                    <th style="width: 10px; background-color: white;"></th>
+                                    <th style="background-color: #00b253; color: #fff; width: 200px;">Total Diario</th>
+                                    <th style="width: 10px; background-color: white;"></th>
+                                    <th style="background-color: #074877; color: #fff;">Total Sucursal</th>
                                     <th>Comedor</th>
                                     <th>Para Llevar</th>
                                     <th>Recoger</th>
-                                    <th style="width: 10px; background-color: white;"></th>
                                     <th>Domicilio</th>
-                                    <th>Efectivo</th>
-                                    <th style="background-color: #fff1ce;">Pay</th>
-                                    <th style="background-color: #f8ccac;">Comisión</th>
-                                    <th style="background-color: #90d04d;">Pago</th>
+                                    <th style="color: #669e2a;">Efectivo</th>
+                                    <th style="color: #ff5050;">Pay</th>
+                                    <th>Comisión</th>
+                                    <th>Pago</th>
                                     <th style="width: 10px; background-color: white;"></th>
-                                    <th style="background-color: #0072c2; color: #fff;">Venta Apps</th>
+                                    <th style="background-color: #074877; color: #fff;">Total Apps</th>
                                     <th style="width: 10px; background-color:  #fff"></th>
-                                    <th style="background-color:#000200; color: #128a55;">Venta Uber</th>
+                                    <th><img width="60" height="40" src="assets/uber.svg"></th>
                                     <th>Ingreso</th>
                                     <th>%</th>
-                                    <th style="background-color: #90d04d;">Pago</th>
+                                    <th>Pago</th>
                                     <th style="width: 10px; background-color: white;"></th>
-                                    <th style="background-color: #fe0066; color: #fff;">Venta Rappi</th>
+                                    <th><img width="50" height="25" src="assets/rappi.png"></th>
                                     <th>Ingreso</th>
                                     <th>%</th>
-                                    <th style="background-color: #90d04d;">Pago</th>
+                                    <th>Pago</th>
                                     <th style="width: 10px; background-color: white;"></th>
-                                    <th style="background-color: #ee7e31; color: #fff;">Venta Didi</th>
+                                    <th><img width="60" height="40" src="assets/didi.svg"></th>
                                     <th>Ingreso</th>
                                     <th>%</th>
-                                    <th style="background-color: #90d04d;">Pago</th>
-                                    <th style="width: 10px; background-color: white;"></th>
-                                    <th style="background-color: #00b253; color: #fff; width: 200px;">Venta Total</th>
+                                    <th>Pago</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let sale of sales; let i = index;" [ngClass]="{'row-background':i%2==1}">
                                     <td class="sticky-col">{{sale.dateSale}}</td>
                                     <td class="sticky-col2">{{sale.day}}</td>
+                                    <td></td>
+                                    <td>{{sale?.totalSale | currency}}</td>
+                                    <td></td>
                                     <td>{{sale?.totalDinnigRoom | currency}}</td>
                                     <td>{{sale?.diningRoom | currency}}</td>
                                     <td>{{sale?.takeout | currency}}</td>
                                     <td>{{sale?.pickUp | currency}}</td>
-                                    <td></td>
                                     <td>{{sale?.delivery | currency}}</td>
                                     <td>{{sale?.apps.parrot.sale | currency}}</td>
                                     <td><input type="text" value="${{sale?.apps.parrot.income}}"
@@ -216,8 +217,6 @@
                                     </td>
                                     <td>{{sale?.apps.didi.tax}}%</td>
                                     <td><option-pay [isSelected]="sale?.apps.didi.isPay" /></td>
-                                    <td></td>
-                                    <td>{{sale?.totalSale | currency}}</td>
                                 </tr>
                             </tbody>
                         </table>
