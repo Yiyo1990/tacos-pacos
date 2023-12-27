@@ -39,14 +39,18 @@ export class SalesComponent implements OnInit {
 
   applicationsDataChart: any
   salesDonutChartData: any
-  chartColors = { dinningRoom: "#3889EB", uber: "#31B968", rappi: "#F31A86", didi: "#F37D1A" }
+  chartColors = { general: '#2b65ab', dinningRoom: "#3889EB", uber: "#31B968", rappi: "#F31A86", didi: "#F37D1A" }
   filterDate: any = {}
 
   channelSales: any = {}
 
-  isBtnVentaActive = true
+  isBtnMonthActive = true
   isBtnParrotActive = true
- 
+  private typeFilterBarChart = 0
+  private typeFilterAppBarChart = 0
+
+  paymentType: any = {}
+
 
   constructor(private mainService: MainService, private salesService: SalesService, private toast: ToastrService) {
     mainService.setPageName("Ventas")
@@ -127,6 +131,7 @@ export class SalesComponent implements OnInit {
           })
 
           this.sumDataSales(groupArrayByKey(sales, 'date'))
+          
           this.mainService.isLoading(false)
         } else {
           this.toast.error("Ha ocurrido un error", "Error")
@@ -184,17 +189,18 @@ export class SalesComponent implements OnInit {
             let totalDinnigRoom = s.diningRoom + s.pickUp + s.takeout + s.delivery
 
             let day = firstUpperCase(s.day)
+            let month = this.dates.getMonthName(s.dateSale)
 
             let apps = this.fillSalesTbl(s)
 
             let totalApps = (Number(apps.uber.sale) + Number(apps.didi.sale) + Number(apps.rappi.sale))
             let totalSale = (totalDinnigRoom + totalApps)
 
-            return { ...s, totalSale: totalSale.toFixed(2), diningRoom: diningRoom, pickUp: pickUp, takeout: takeout, delivery: delivery, totalDinnigRoom: totalDinnigRoom.toFixed(2), day: day, apps: apps, totalApps: totalApps.toFixed(2) }
+            return { ...s, totalSale: totalSale.toFixed(2), diningRoom, pickUp, takeout, delivery, totalDinnigRoom: totalDinnigRoom.toFixed(2), day, apps, totalApps: totalApps.toFixed(2), month }
           })
           this.sales = sales
-
-          this.fillBarChart(2)
+          this.getPaymentType()
+          this.fillBarChart(2,1)
           this.fillDonughtChart(2)
         }
 
@@ -228,12 +234,14 @@ export class SalesComponent implements OnInit {
     return data
   }
 
-  fillBarChart(type: number = 1) {
-    this.isBtnVentaActive = type == 2
+  fillBarChart(typeFilter: number = 1, type: number = 1) {
+    this.typeFilterBarChart = typeFilter == 0 ? this.typeFilterBarChart : typeFilter
+    this.typeFilterAppBarChart = type == 0 ? this.typeFilterAppBarChart : type
+    this.isBtnMonthActive = this.typeFilterBarChart == 1
     this.barChartData.datasets = []
     this.barChartData.labels = []
 
-    let grouped = groupArrayByKey(this.sales, 'day')
+    let grouped = !this.isBtnMonthActive ? groupArrayByKey(this.sales, 'day') : groupArrayByKey(this.sales, 'month')
 
     let barchartLabels = Object.keys(grouped)
 
@@ -266,30 +274,38 @@ export class SalesComponent implements OnInit {
       this.barChartData.labels?.push(day)
     })
 
-    if(type == 1) {
+    if (this.typeFilterAppBarChart == 1) {
       this.barChartData.datasets.push({ data: listTotalDinningRoom, label: '', backgroundColor: this.chartColors.dinningRoom, stack: 'a' })
       this.barChartData.datasets.push({ data: listTotalDidi, label: '', backgroundColor: this.chartColors.didi, stack: 'a' })
       this.barChartData.datasets.push({ data: listTotalUber, label: '', backgroundColor: this.chartColors.uber, stack: 'a' })
-      this.barChartData.datasets.push({ data: listTotalRappi, label: '', backgroundColor: this.chartColors.rappi, stack: 'a' })  
-    } else {
-      this.barChartData.datasets.push({ data: listTotalVenta, label: '', backgroundColor: this.chartColors.dinningRoom, stack: 'a' })
+      this.barChartData.datasets.push({ data: listTotalRappi, label: '', backgroundColor: this.chartColors.rappi, stack: 'a' })
+    } else if (this.typeFilterAppBarChart == 2) {
+      this.barChartData.datasets.push({ data: listTotalVenta, label: '', backgroundColor: this.chartColors.general, stack: 'a' })
+    } else if (this.typeFilterAppBarChart == 3) {
+      this.barChartData.datasets.push({ data: listTotalDinningRoom, label: '', backgroundColor: this.chartColors.dinningRoom, stack: 'a' })
+    } else if (this.typeFilterAppBarChart == 4) {
+      this.barChartData.datasets.push({ data: listTotalUber, label: '', backgroundColor: this.chartColors.uber, stack: 'a' })
+    } else if (this.typeFilterAppBarChart == 5) {
+      this.barChartData.datasets.push({ data: listTotalRappi, label: '', backgroundColor: this.chartColors.rappi, stack: 'a' })
+    } else if (this.typeFilterAppBarChart == 6) {
+      this.barChartData.datasets.push({ data: listTotalDidi, label: '', backgroundColor: this.chartColors.didi, stack: 'a' })
     }
-   
+
     this.chart?.update()
   }
 
   fillDonughtChart(type: number = 1) {
     this.isBtnParrotActive = type == 2
     let data = this.sales
-    
+
     let totalDinnigRoom = data.reduce((total, sale) => total + Number(sale.diningRoom), 0)
-    let totalDelivery = data.reduce((total,sale) => total + Number(sale.delivery), 0)
-    let totalPickUp = data.reduce((total,sale) => total + Number(sale.pickUp), 0)
-    let totalTakeout = data.reduce((total,sale) => total + Number(sale.takeout), 0)
+    let totalDelivery = data.reduce((total, sale) => total + Number(sale.delivery), 0)
+    let totalPickUp = data.reduce((total, sale) => total + Number(sale.pickUp), 0)
+    let totalTakeout = data.reduce((total, sale) => total + Number(sale.takeout), 0)
 
     let totalUber = type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.uber.sale), 0) : data.reduce((total, sale) => total + Number(sale.apps.uber.income), 0)
-    let totalDidi =  type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.didi.sale), 0) : data.reduce((total, sale) => total + Number(sale.apps.didi.income), 0)
-    let totalRappi = type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.rappi.sale), 0) :  data.reduce((total, sale) => total + Number(sale.apps.rappi.income), 0)
+    let totalDidi = type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.didi.sale), 0) : data.reduce((total, sale) => total + Number(sale.apps.didi.income), 0)
+    let totalRappi = type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.rappi.sale), 0) : data.reduce((total, sale) => total + Number(sale.apps.rappi.income), 0)
 
     let total = totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout + totalDidi + totalUber + totalRappi
     let percentDinningRoom = Math.round(((totalDinnigRoom) * 100) / total)
@@ -308,7 +324,7 @@ export class SalesComponent implements OnInit {
       totalRappi: totalRappi
     }
 
-    this.salesDonutChartData = Charts.Donut(['Comedor', 'ParaLlevar', 'Recoger', 'Domicilio', 'Uber', 'Didi', 'Rappi'], [percentDinningRoom, percentTakeOut, percentPickUp , percentDelivery, percentUber, percentDidi, percentRappi], [this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.uber, this.chartColors.didi, this.chartColors.rappi])
+    this.salesDonutChartData = Charts.Donut(['Comedor', 'ParaLlevar', 'Recoger', 'Domicilio', 'Uber', 'Didi', 'Rappi'], [percentDinningRoom, percentTakeOut, percentPickUp, percentDelivery, percentUber, percentDidi, percentRappi], [this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.uber, this.chartColors.didi, this.chartColors.rappi])
   }
 
   setValueIncome(sale: any, dateSale: string, value: any) {
@@ -358,7 +374,6 @@ export class SalesComponent implements OnInit {
 
   }
 
-
   getObjectIncome(sale: any, dateSale: string, value: any, channel: ReportChannel) {
     let params: any = {}
     params.id = sale.id
@@ -369,6 +384,24 @@ export class SalesComponent implements OnInit {
     params.branchId = this.brandSelected.id
 
     return params
+  }
+
+  async getPaymentType() {
+    let data = this.sales
+    let totalParrot = data.reduce((total, sale) => total + Number(sale.apps.parrot.sale), 0)
+    
+    let paymentUber = data.reduce((total, sale) => total + Number(sale.apps.uber.income), 0) 
+    let paymentDidi = data.reduce((total, sale) => total + Number(sale.apps.didi.income), 0) 
+    let paymentRappi = data.reduce((total, sale) => total + Number(sale.apps.rappi.income), 0)
+    let paymentParrot = data.reduce((total, sale) => total + Number(sale.apps.parrot.income), 0)
+
+    let totalPayment = (paymentUber + paymentDidi + paymentRappi + paymentParrot)
+    let percentParrot = (totalParrot * 100) / (totalParrot + totalPayment)
+    let percentPayment = (totalPayment * 100) / (totalParrot + totalPayment)
+    this.paymentType.totalParrot = Number(totalParrot.toFixed(2))
+    this.paymentType.totalPayment = Number(totalPayment.toFixed(2))
+    this.paymentType.percentParrot = percentParrot ? `${Math.round(percentParrot)}%` : '0%'
+    this.paymentType.percentPayment = percentPayment ?  `${Math.round(percentPayment)}%` : '0%'
   }
 
 }

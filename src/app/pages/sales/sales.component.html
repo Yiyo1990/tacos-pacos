@@ -9,34 +9,49 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-4 md-4 sm-12" style="margin-top: 20px;">
-                <div style="display: inline-flex;">
-                    <div class="point" style="background-color: #3889EB;"></div><label>Comedor</label>
-                    <div class="point" style="background-color: #31B968;"></div><label>Uber</label>
-                    <div class="point" style="background-color: #F31A86;"></div><label>Rappi</label>
-                    <div class="point" style="background-color: #F37D1A;"></div><label>Didi</label>
+            <div class="col-3 md-3 sm-12" style="margin-top: 20px;">
+                <div style="margin-left: 12%; ">
+                    <button class="button-switch"
+                        [ngClass]="{'btn-active': isBtnMonthActive, 'btn-inactive': !isBtnMonthActive}"
+                        (click)="fillBarChart(1,0)">Mensual</button>
+                    <button class="button-switch"
+                        [ngClass]="{'btn-active': !isBtnMonthActive, 'btn-inactive': isBtnMonthActive}"
+                        (click)="fillBarChart(2,0)" style="margin-left: 10px;">Semanal</button>
                 </div>
             </div>
             <div class="col-3 md-3 sm-12">
-                <div style="margin: auto; ">
-                    <button class="button-switch" [ngClass]="{'btn-active': isBtnVentaActive, 'btn-inactive': !isBtnVentaActive}" (click)="fillBarChart(2)">Punto de Venta</button>
-                    <button class="button-switch" [ngClass]="{'btn-active': !isBtnVentaActive, 'btn-inactive': isBtnVentaActive}" (click)="fillBarChart(1)" style="margin-left: 10px;">Todos</button>
+                <div style="display: -webkit-inline-box; justify-content: center; align-items: center;">
+                    <label>Punto de Venta</label>
+                    <select class="form-control" style="margin-left: 2%;" (change)="fillBarChart(0,$any($event.target).value)">
+                        <option value="1" [selected]>Todos</option>
+                        <option value="2">General</option>
+                        <option value="3">Sucursal</option>
+                        <option value="4">Uber</option>
+                        <option value="5">Rappi</option>
+                        <option value="6">DiDi</option>
+                    </select>
                 </div>
 
             </div>
             <div class="col-3 md-3 sm-12">
                 <div style="margin-left: 12%; ">
-                    <button class="button-switch" [ngClass]="{'btn-active': isBtnParrotActive, 'btn-inactive': !isBtnParrotActive}"  (click)="fillDonughtChart(2)">Parrot</button>
-                    <button class="button-switch" [ngClass]="{'btn-active': !isBtnParrotActive, 'btn-inactive': isBtnParrotActive}" (click)="fillDonughtChart(1)" style="margin-left: 10px;">Ingresos</button>
+                    <button class="button-switch"
+                        [ngClass]="{'btn-active': isBtnParrotActive, 'btn-inactive': !isBtnParrotActive}"
+                        (click)="fillDonughtChart(2)">Parrot</button>
+                    <button class="button-switch"
+                        [ngClass]="{'btn-active': !isBtnParrotActive, 'btn-inactive': isBtnParrotActive}"
+                        (click)="fillDonughtChart(1)" style="margin-left: 10px;">Ingresos</button>
                 </div>
             </div>
-            <div class="col-2 md-2 sm-12">
-                <div >
+            <div class="col-3 md-2 sm-12">
+                <div style="display: inline-flex;">
                     <div style="display: flex; padding: 5px;  padding-left: 25px;"><label>Venta Total</label></div>
-                    <label style="font-weight: bold; font-size: 17pt; padding-left: 25px;">{{(channelSales?.totalDinnigRoom
-                        + channelSales?.totalUber + channelSales?.totalRappi + channelSales?.totalDidi) | currency}}</label>
+                    <label
+                        style="font-weight: bold; font-size: 17pt; padding-left: 25px;">{{(channelSales?.totalDinnigRoom
+                        + channelSales?.totalUber + channelSales?.totalRappi + channelSales?.totalDidi) |
+                        currency}}</label>
                 </div>
-                
+
             </div>
         </div>
         <div class="row">
@@ -44,136 +59,171 @@
                 <canvas baseChart class="chart" [data]="barChartData" [options]="barChartOptions"
                     [type]="barChartType"></canvas>
             </div>
-            <div class="col-3 md-3 sm-12">
-                <div style="display: block; align-items: center; width: 200px; margin: auto; float: right;">
+            <div class="col-6 md-6 sm-12">
+                <div class="row">
+                    <div class="col-6 md-6 sm-12">
+                        <div style="display: block; align-items: center; width: 200px; margin: auto;">
 
-                    <div style="display: flex; padding: 5px;">
-                        <div class="point" style="background-color: #3889EB;"></div><label>Comedor</label>
+                            <div style="display: flex; padding: 5px;">
+                                <div class="point" style="background-color: #3889EB;"></div><label>Comedor</label>
+                            </div>
+                            <label
+                                style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDinnigRoom
+                                | currency}}</label>
+                            <div style="display: flex; padding: 5px;">
+                                <div class="point" style="background-color: #31B968;"></div><label>Uber</label>
+                            </div>
+                            <label
+                                style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalUber
+                                |
+                                currency}}</label>
+                            <div style="display: flex; padding: 5px;">
+                                <div class="point" style="background-color: #F31A86;"></div><label>Rappi</label>
+                            </div>
+                            <label
+                                style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalRappi
+                                |
+                                currency}}</label>
+                            <div style="display: flex; padding: 5px;">
+                                <div class="point" style="background-color: #F37D1A;"></div><label>Didi</label>
+                            </div>
+                            <label
+                                style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDidi
+                                |
+                                currency}}</label>
+                        </div>
                     </div>
-                    <label
-                        style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDinnigRoom
-                        | currency}}</label>
-                    <div style="display: flex; padding: 5px;">
-                        <div class="point" style="background-color: #31B968;"></div><label>Uber</label>
+                    <div class="col-4 md-4 sm-12">
+                        <canvas baseChart class="chart" [data]="salesDonutChartData" [type]="'pie'"
+                            [options]="pieChartOptions" [plugins]="pieChartPlugins">
+                        </canvas>
                     </div>
-                    <label style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalUber |
-                        currency}}</label>
-                    <div style="display: flex; padding: 5px;">
-                        <div class="point" style="background-color: #F31A86;"></div><label>Rappi</label>
+                </div>
+                <div class="row">
+                    <div class="col-1 md-1 sm-12"></div>
+                    <div class="col-10 md-10 sm-12" style="text-align: center;">
+                        <label class="subtitle">Tipo de Pago</label>
+                        <div class="row">
+                            <div class="col-2 md-2 sm-12">
+                                TARJETA
+                            </div>
+                            <div class="col-10 md-10 sm-12">
+                                <progress-bar [progressColor]="'#ffda22'" [progress]="paymentType.percentPayment"
+                                    [ammount]="paymentType.totalPayment" />
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 1%;">
+                            <div class="col-2 md-2 sm-12">
+                                EFECTIVO
+                            </div>
+                            <div class="col-10 md-10 sm-12">
+                                <progress-bar [progressColor]="'#69e141'" [progress]="paymentType.percentParrot"
+                                    [ammount]="paymentType.totalParrot" />
+                            </div>
+                        </div>
                     </div>
-                    <label style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalRappi |
-                        currency}}</label>
-                    <div style="display: flex; padding: 5px;">
-                        <div class="point" style="background-color: #F37D1A;"></div><label>Didi</label>
-                    </div>
-                    <label style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDidi |
-                        currency}}</label>
                 </div>
             </div>
-            <div class="col-3 md-3 sm-12">
-                <canvas baseChart class="chart" [data]="salesDonutChartData" [type]="'pie'" [options]="pieChartOptions"
-                    [plugins]="pieChartPlugins">
-                </canvas>
-            </div>
-        </div>
-        <div class="row">
-            <div class="table-body">
-                <div class="row-body">
-                    <table>
-                        <thead>
-                            <tr style="text-align: center;">
-                                <th colspan="2" style="background-color: #fff;"></th>
-                                <th colspan="10" style="background-color: #fff; border: 2px solid #000;">Comedor</th>
-                                <th style="width: 10px; background-color: white;"></th>
-                                <th colspan="16" style="background-color: #fff; border: 2px solid #000;">Aplicaciones
-                                </th>
-                                <th style="width: 10px; background-color: white;"></th>
-                                <th style="background-color: #fff; border: 2px solid #000;">Total</th>
-                            </tr>
-                            <tr>
-                                <th colspan="31" style="background-color: #fff;"></th>
-                            </tr>
-                            <tr style="text-align: center;">
-                                <th class="sticky-col" style="background-color: #fff; color:#000">Fecha</th>
-                                <th class="sticky-col2" style="background-color: #fff; color:#000">Día</th>
-                                <th style="background-color: #0072c2; color: #fff;">Venta Total</th>
-                                <th>Comedor</th>
-                                <th>Para Llevar</th>
-                                <th>Recoger</th>
-                                <th style="width: 10px; background-color: white;"></th>
-                                <th>Domicilio</th>
-                                <th>Efectivo</th>
-                                <th style="background-color: #fff1ce;">Pay</th>
-                                <th style="background-color: #f8ccac;">Comisión</th>
-                                <th style="background-color: #90d04d;">Pago</th>
-                                <th style="width: 10px; background-color: white;"></th>
-                                <th style="background-color: #0072c2; color: #fff;">Venta Apps</th>
-                                <th style="width: 10px; background-color:  #fff"></th>
-                                <th style="background-color:#000200; color: #128a55;">Venta Uber</th>
-                                <th>Ingreso</th>
-                                <th>%</th>
-                                <th style="background-color: #90d04d;">Pago</th>
-                                <th style="width: 10px; background-color: white;"></th>
-                                <th style="background-color: #fe0066; color: #fff;">Venta Rappi</th>
-                                <th>Ingreso</th>
-                                <th>%</th>
-                                <th style="background-color: #90d04d;">Pago</th>
-                                <th style="width: 10px; background-color: white;"></th>
-                                <th style="background-color: #ee7e31; color: #fff;">Venta Didi</th>
-                                <th>Ingreso</th>
-                                <th>%</th>
-                                <th style="background-color: #90d04d;">Pago</th>
-                                <th style="width: 10px; background-color: white;"></th>
-                                <th style="background-color: #00b253; color: #fff; width: 200px;">Venta Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let sale of sales; let i = index;" [ngClass]="{'row-background':i%2==1}">
-                                <td class="sticky-col">{{sale.dateSale}}</td>
-                                <td class="sticky-col2">{{sale.day}}</td>
-                                <td>{{sale?.totalDinnigRoom | currency}}</td>
-                                <td>{{sale?.diningRoom | currency}}</td>
-                                <td>{{sale?.takeout | currency}}</td>
-                                <td>{{sale?.pickUp | currency}}</td>
-                                <td></td>
-                                <td>{{sale?.delivery | currency}}</td>
-                                <td>{{sale?.apps.parrot.sale | currency}}</td>
-                                <td><input type="text" value="${{sale?.apps.parrot.income}}"
-                                        (blur)="setValueIncome(sale.apps.parrot, sale.dateSale, $any($event.target).value)"
-                                        formatoMoneda></td>
-                                <td>{{sale?.apps.parrot.commission | currency}}</td>
-                                <td><option-pay [isSelected]="sale?.apps.parrot.isPay" /></td>
-                                <td></td>
-                                <td>{{sale?.totalApps | currency}}</td>
-                                <td></td>
-                                <td>{{sale?.apps.uber.sale | currency}}</td>
-                                <td> <input type="text" value="${{sale?.apps.uber.income}}"
-                                        (blur)="setIncomePlatforms(sale.apps.uber, sale.dateSale, $any($event.target).value, 1)"
-                                        formatoMoneda></td>
-                                <td>{{sale?.apps.uber.tax}}%</td>
-                                <td><option-pay [isSelected]="sale?.apps.uber.isPay" /></td>
-                                <td></td>
-                                <td>{{sale?.apps.rappi.sale | currency}}</td>
-                                <td><input type="text" value="{{sale?.apps.rappi.income}}"
-                                        (blur)="setIncomePlatforms(sale.apps.rappi, sale.dateSale, $any($event.target).value, 3)">
-                                </td>
-                                <td>{{sale?.apps.rappi.tax}}%</td>
-                                <td><option-pay [isSelected]="sale?.apps.rappi.isPay" /></td>
-                                <td></td>
-                                <td>{{sale?.apps.didi.sale | currency}}</td>
-                                <td><input type="text" value="{{sale?.apps.didi.income}}"
-                                        (blur)="setIncomePlatforms(sale.apps.didi, sale.dateSale, $any($event.target).value, 2)">
-                                </td>
-                                <td>{{sale?.apps.didi.tax}}%</td>
-                                <td><option-pay [isSelected]="sale?.apps.didi.isPay" /></td>
-                                <td></td>
-                                <td>{{sale?.totalSale | currency}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div class="row">
+                <div class="table-body">
+                    <div class="row-body">
+                        <table>
+                            <thead>
+                                <tr style="text-align: center;">
+                                    <th colspan="2" style="background-color: #fff;"></th>
+                                    <th colspan="10" style="background-color: #fff; border: 2px solid #000;">Comedor
+                                    </th>
+                                    <th style="width: 10px; background-color: white;"></th>
+                                    <th colspan="16" style="background-color: #fff; border: 2px solid #000;">
+                                        Aplicaciones
+                                    </th>
+                                    <th style="width: 10px; background-color: white;"></th>
+                                    <th style="background-color: #fff; border: 2px solid #000;">Total</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="31" style="background-color: #fff;"></th>
+                                </tr>
+                                <tr style="text-align: center;">
+                                    <th class="sticky-col" style="background-color: #fff; color:#000">Fecha</th>
+                                    <th class="sticky-col2" style="background-color: #fff; color:#000">Día</th>
+                                    <th style="background-color: #0072c2; color: #fff;">Venta Total</th>
+                                    <th>Comedor</th>
+                                    <th>Para Llevar</th>
+                                    <th>Recoger</th>
+                                    <th style="width: 10px; background-color: white;"></th>
+                                    <th>Domicilio</th>
+                                    <th>Efectivo</th>
+                                    <th style="background-color: #fff1ce;">Pay</th>
+                                    <th style="background-color: #f8ccac;">Comisión</th>
+                                    <th style="background-color: #90d04d;">Pago</th>
+                                    <th style="width: 10px; background-color: white;"></th>
+                                    <th style="background-color: #0072c2; color: #fff;">Venta Apps</th>
+                                    <th style="width: 10px; background-color:  #fff"></th>
+                                    <th style="background-color:#000200; color: #128a55;">Venta Uber</th>
+                                    <th>Ingreso</th>
+                                    <th>%</th>
+                                    <th style="background-color: #90d04d;">Pago</th>
+                                    <th style="width: 10px; background-color: white;"></th>
+                                    <th style="background-color: #fe0066; color: #fff;">Venta Rappi</th>
+                                    <th>Ingreso</th>
+                                    <th>%</th>
+                                    <th style="background-color: #90d04d;">Pago</th>
+                                    <th style="width: 10px; background-color: white;"></th>
+                                    <th style="background-color: #ee7e31; color: #fff;">Venta Didi</th>
+                                    <th>Ingreso</th>
+                                    <th>%</th>
+                                    <th style="background-color: #90d04d;">Pago</th>
+                                    <th style="width: 10px; background-color: white;"></th>
+                                    <th style="background-color: #00b253; color: #fff; width: 200px;">Venta Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let sale of sales; let i = index;" [ngClass]="{'row-background':i%2==1}">
+                                    <td class="sticky-col">{{sale.dateSale}}</td>
+                                    <td class="sticky-col2">{{sale.day}}</td>
+                                    <td>{{sale?.totalDinnigRoom | currency}}</td>
+                                    <td>{{sale?.diningRoom | currency}}</td>
+                                    <td>{{sale?.takeout | currency}}</td>
+                                    <td>{{sale?.pickUp | currency}}</td>
+                                    <td></td>
+                                    <td>{{sale?.delivery | currency}}</td>
+                                    <td>{{sale?.apps.parrot.sale | currency}}</td>
+                                    <td><input type="text" value="${{sale?.apps.parrot.income}}"
+                                            (blur)="setValueIncome(sale.apps.parrot, sale.dateSale, $any($event.target).value)"
+                                            formatoMoneda></td>
+                                    <td>{{sale?.apps.parrot.commission | currency}}</td>
+                                    <td><option-pay [isSelected]="sale?.apps.parrot.isPay" /></td>
+                                    <td></td>
+                                    <td>{{sale?.totalApps | currency}}</td>
+                                    <td></td>
+                                    <td>{{sale?.apps.uber.sale | currency}}</td>
+                                    <td> <input type="text" value="${{sale?.apps.uber.income}}"
+                                            (blur)="setIncomePlatforms(sale.apps.uber, sale.dateSale, $any($event.target).value, 1)"
+                                            formatoMoneda></td>
+                                    <td>{{sale?.apps.uber.tax}}%</td>
+                                    <td><option-pay [isSelected]="sale?.apps.uber.isPay" /></td>
+                                    <td></td>
+                                    <td>{{sale?.apps.rappi.sale | currency}}</td>
+                                    <td><input type="text" value="{{sale?.apps.rappi.income}}"
+                                            (blur)="setIncomePlatforms(sale.apps.rappi, sale.dateSale, $any($event.target).value, 3)">
+                                    </td>
+                                    <td>{{sale?.apps.rappi.tax}}%</td>
+                                    <td><option-pay [isSelected]="sale?.apps.rappi.isPay" /></td>
+                                    <td></td>
+                                    <td>{{sale?.apps.didi.sale | currency}}</td>
+                                    <td><input type="text" value="{{sale?.apps.didi.income}}"
+                                            (blur)="setIncomePlatforms(sale.apps.didi, sale.dateSale, $any($event.target).value, 2)">
+                                    </td>
+                                    <td>{{sale?.apps.didi.tax}}%</td>
+                                    <td><option-pay [isSelected]="sale?.apps.didi.isPay" /></td>
+                                    <td></td>
+                                    <td>{{sale?.totalSale | currency}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+            <br>
         </div>
-        <br>
     </div>
-</div>

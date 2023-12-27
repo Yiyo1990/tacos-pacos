@@ -17,6 +17,15 @@ export class Dates {
         }
     }
 
+    public getMonthName(date: string) {
+        try {
+            const dateM = moment(date, 'DD-MM-yyyy')
+            return firstUpperCase(dateM.format('MMMM'))
+        } catch (e) {
+            return ''
+        }
+    }
+
     formatDate(date: any, format: string = 'DD-MM-yyyy') {
         const dateM = moment(date, 'DD-MM-yyyy HH:mm:ss')
         return dateM.format(format)
