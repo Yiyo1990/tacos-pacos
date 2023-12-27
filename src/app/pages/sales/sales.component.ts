@@ -44,10 +44,10 @@ export class SalesComponent implements OnInit {
 
   channelSales: any = {}
 
-  isBtnMonthActive = true
+  isBtnMonthActive = false
   isBtnParrotActive = true
-  private typeFilterBarChart = 0
-  private typeFilterAppBarChart = 0
+  private typeFilterBarChart = 2
+  private typeFilterAppBarChart = 1
 
   paymentType: any = {}
 
@@ -200,7 +200,7 @@ export class SalesComponent implements OnInit {
           })
           this.sales = sales
           this.getPaymentType()
-          this.fillBarChart(2,1)
+          this.fillBarChart(this.typeFilterBarChart,this.typeFilterAppBarChart)
           this.fillDonughtChart(2)
         }
 
