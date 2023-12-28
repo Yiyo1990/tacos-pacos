@@ -50,6 +50,7 @@ export class SalesComponent implements OnInit {
   private typeFilterAppBarChart = 1
 
   paymentType: any = {}
+  isOpenDesgloce: boolean = true
 
 
   constructor(private mainService: MainService, private salesService: SalesService, private toast: ToastrService) {
@@ -87,6 +88,10 @@ export class SalesComponent implements OnInit {
       this.filterDate = { start: months.start, end: months.end }
       this.getReportSalesByDateRange(months.start, months.end)
     })
+  }
+
+  selectFile(){
+    document.getElementById('upfile')?.click()
   }
 
   handleFileInput(event: any) {
@@ -259,10 +264,10 @@ export class SalesComponent implements OnInit {
       let totalRappi = 0
 
       dataDay.map((d: any) => {
-        totalDinnigRoom += Number(d.totalDinnigRoom)
-        totalDidi += Number(d.apps.didi.sale)
-        totalUber += Number(d.apps.uber.sale)
-        totalRappi += Number(d.apps.rappi.sale)
+        totalDinnigRoom += Number(d.totalDinnigRoom) 
+        totalDidi += this.isBtnParrotActive ?  Number(d.apps.didi.sale) : Number(d.apps.didi.income)
+        totalUber += this.isBtnParrotActive ?  Number(d.apps.uber.sale) : Number(d.apps.uber.income)
+        totalRappi += this.isBtnParrotActive ?  Number(d.apps.rappi.sale) : Number(d.apps.rappi.income)
       })
 
       listTotalDinningRoom.push(totalDinnigRoom)
@@ -325,6 +330,7 @@ export class SalesComponent implements OnInit {
     }
 
     this.salesDonutChartData = Charts.Donut(['Comedor', 'ParaLlevar', 'Recoger', 'Domicilio', 'Uber', 'Didi', 'Rappi'], [percentDinningRoom, percentTakeOut, percentPickUp, percentDelivery, percentUber, percentDidi, percentRappi], [this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.uber, this.chartColors.didi, this.chartColors.rappi])
+    this.fillBarChart(this.typeFilterBarChart, this.typeFilterAppBarChart)
   }
 
   setValueIncome(sale: any, dateSale: string, value: any) {
@@ -403,6 +409,8 @@ export class SalesComponent implements OnInit {
     this.paymentType.percentParrot = percentParrot ? `${Math.round(percentParrot)}%` : '0%'
     this.paymentType.percentPayment = percentPayment ?  `${Math.round(percentPayment)}%` : '0%'
   }
+
+ 
 
 }
 

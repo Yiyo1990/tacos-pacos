@@ -1,8 +1,20 @@
 <div class="container">
-    <div class="top-division {{backgrounColor}}" (click)="handleClick()">
-        <i class="fas fa-{{icon}} icon"></i> {{description}}
+    <div class="row">
+        <div class="col-1 md-1 sm-12">
+            <input type="checkbox">
+        </div>
+        <div class="col-11 md-11 sm-12">
+            <div class="top-division {{backgrounColor}}" (click)="handleClick()">
+                <i class="fas fa-{{icon}} icon"></i> {{description}}
+            </div>
+        </div>
     </div>
-    <div class="bottom-division">
-        {{ total }}
+    <div class="row">
+        <div class="col-12 md-12 sm-12">
+            <div class="bottom-division">
+                {{ total }}
+            </div>
+        </div>
     </div>
+
 </div>
