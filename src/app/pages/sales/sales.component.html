@@ -3,14 +3,19 @@
         <div class="row">
             <div class="col-3 md-3">
                 <form (ngSubmit)="onFileUpload()" #fileUploadForm="ngForm">
-                    <input type="file" (change)="handleFileInput($event)" #fileInput>
-                    <button type="submit">Subir archivo</button>
+                    <div style="display: grid; width: 50%;">
+                        <button (click)="selectFile()" style="margin-bottom: 2%; background-color: #666666;"
+                            type="submit">Seleccionar Archivo</button>
+                        <input type="file" id="upfile" style="overflow: hidden; width: 0px; height: 0px;"
+                            (change)="handleFileInput($event)" #fileInput>
+                        <button type="submit">Subir archivo</button>
+                    </div>
                 </form>
             </div>
         </div>
         <div class="row">
             <div class="col-3 md-3 sm-12" style="margin-top: 20px;">
-                <div style="margin-left: 12%; ">
+                <div style="display: flex;">
                     <button class="button-switch"
                         [ngClass]="{'btn-active': isBtnMonthActive, 'btn-inactive': !isBtnMonthActive}"
                         (click)="fillBarChart(1,0)">Mensual</button>
@@ -19,87 +24,128 @@
                         (click)="fillBarChart(2,0)" style="margin-left: 10px;">Semanal</button>
                 </div>
             </div>
-            <div class="col-3 md-3 sm-12">
-                <div style="display: -webkit-inline-box; justify-content: center; align-items: center;">
-                    <label style="font-weight: 600;">Punto de Venta</label>
-                    <select class="form-control" style="margin-left: 3%;" (change)="fillBarChart(0,$any($event.target).value)">
-                        <option value="1" [selected]>Todos</option>
-                        <option value="2">General</option>
-                        <option value="3">Sucursal</option>
-                        <option value="4">Uber</option>
-                        <option value="5">Rappi</option>
-                        <option value="6">DiDi</option>
-                    </select>
-                </div>
 
-            </div>
             <div class="col-3 md-3 sm-12">
-                <div style="margin-left: 12%; ">
-                    <button class="button-switch"
-                        [ngClass]="{'btn-active': isBtnParrotActive, 'btn-inactive': !isBtnParrotActive}"
-                        (click)="fillDonughtChart(2)">Parrot</button>
-                    <button class="button-switch"
-                        [ngClass]="{'btn-active': !isBtnParrotActive, 'btn-inactive': isBtnParrotActive}"
-                        (click)="fillDonughtChart(1)" style="margin-left: 10px;">Ingresos</button>
+                <div class="row" style="margin-top: 6%;">
+                    <div class="col-6 md-6 sm-12" style="margin: auto;"><label
+                            style="font-weight: 600; float: right;">Punto de Venta</label></div>
+                    <div class="col-6 md-6 sm-12">
+                        <select class="form-control" (change)="fillBarChart(0,$any($event.target).value)">
+                            <option value="1" [selected]>Todos</option>
+                            <option value="2">General</option>
+                            <option value="3">Sucursal</option>
+                            <option value="4">Uber</option>
+                            <option value="5">Rappi</option>
+                            <option value="6">DiDi</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="col-3 md-2 sm-12">
-                <div style="display: inline-flex;">
-                    <div style="display: flex; padding: 5px;  padding-left: 25px; font-weight: 600;"><label>Venta Total</label></div>
-                    <label
-                        style="font-weight: bold; font-size: 17pt; padding-left: 25px;">{{(channelSales?.totalDinnigRoom
-                        + channelSales?.totalUber + channelSales?.totalRappi + channelSales?.totalDidi) |
-                        currency}}</label>
-                </div>
 
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6 md-6 sm-12">
-                <canvas baseChart class="chart" [data]="barChartData" [options]="barChartOptions"
-                    [type]="barChartType"></canvas>
-            </div>
             <div class="col-6 md-6 sm-12">
                 <div class="row">
-                    <div class="col-6 md-6 sm-12">
-                        <div style="display: block; align-items: center; width: 200px; margin: auto;">
-
-                            <div style="display: flex; padding: 5px;">
-                                <div class="point" style="background-color: #3889EB;"></div><label>Comedor</label>
-                            </div>
-                            <label
-                                style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDinnigRoom
-                                | currency}}</label>
-                            <div style="display: flex; padding: 5px;">
-                                <div class="point" style="background-color: #31B968; margin-top: 5%;"></div><img width="80" height="40" src="assets/uber.svg">
-                            </div>
-                            <label
-                                style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalUber
-                                |
-                                currency}}</label>
-                            <div style="display: flex; padding: 5px;">
-                                <div class="point" style="background-color: #F31A86;"></div><img width="50" height="25" src="assets/rappi.png">
-                            </div>
-                            <label
-                                style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalRappi
-                                |
-                                currency}}</label>
-                            <div style="display: flex; padding: 5px;">
-                                <div class="point" style="background-color: #F37D1A; margin-top: 5%;"></div><img width="80" height="40" src="assets/didi.svg">
-                            </div>
-                            <label
-                                style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDidi
-                                |
-                                currency}}</label>
+                    <div class="col-1 md-1 sm-12"> </div>
+                    <div class="col-11 md-11 sm-12">
+                        <div style="display: flex; margin-top: 2%;">
+                            <button class="button-switch"
+                                [ngClass]="{'btn-active': isBtnParrotActive, 'btn-inactive': !isBtnParrotActive}"
+                                (click)="fillDonughtChart(2)">Parrot</button>
+                            <button class="button-switch"
+                                [ngClass]="{'btn-active': !isBtnParrotActive, 'btn-inactive': isBtnParrotActive}"
+                                (click)="fillDonughtChart(1)" style="margin-left: 10px;">Ingresos</button>
                         </div>
                     </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+
+            <div class="col-6 md-6 sm-12">
+                
+                <div class="row" style="margin-top: 6%;">
+                    <div class="col-3 md-3 sm-12">
+                        <div style="display: flex;">
+                            <input type="checkbox" checked>
+                            <label style="margin-left: 5%;">Tacos Pacos</label>
+                        </div>
+                    </div>
+                    <div class="col-9 md-9 sm-12">
+                        <canvas baseChart class="chart" [data]="barChartData" [options]="barChartOptions"
+                            [type]="barChartType"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-6 md-6 sm-12">
+                <div class="row">
+                    <div class="col-1 md-1 sm-12"> </div>
+                    <div class="col-6 md-6 sm-12">
+                        <div style="margin: auto; margin-top: 3%;">
+                            
+                            <div style="display: flex;">
+                                <div style="width: 40%; padding: 5px;  padding-left: 25px;">
+                                    <label style="font-size: 13pt; font-weight: 600;">Venta Total</label>
+                                </div>
+                                <label
+                                    style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{(channelSales?.totalDinnigRoom
+                                    + channelSales?.totalUber + channelSales?.totalRappi + channelSales?.totalDidi) |
+                                    currency}}</label>
+                            </div>
+
+                            <div style="display: flex; margin-top: 7px;">
+                                <div style="width: 40%; display: flex;">
+                                    <div class="point" style="background-color: #3889EB;"></div><label>Sucursal</label>
+                                </div>
+                                <label
+                                    style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDinnigRoom
+                                    | currency}}
+                                </label>
+                            </div>
+
+                            <div style="display: flex; margin-top: 7px;">
+                                <div style="width: 40%; display: flex;">
+                                    <div class="point" style="background-color: #31B968; margin-top: 5%;"></div><img
+                                        width="80" height="40" src="assets/uber.svg">
+                                </div>
+                                <label
+                                    style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalUber
+                                    | currency}}</label>
+                            </div>
+
+                            <div style="display: flex; margin-top: 7px;">
+                                <div style="width: 40%; display: flex;">
+                                    <div class="point" style="background-color: #F31A86;"></div><img width="50"
+                                        height="25" src="assets/rappi.png">
+                                </div>
+                                <label
+                                    style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalRappi
+                                    | currency}}</label>
+                            </div>
+
+                            <div style="display: flex; margin-top: 7px;">
+                                <div style="width: 40%; display: flex;">
+                                    <div class="point" style="background-color: #F37D1A; margin-top: 5%;"></div><img
+                                        width="80" height="40" src="assets/didi.svg">
+                                </div>
+                                <label
+                                    style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDidi
+                                    | currency}}</label>
+                            </div>
+
+                        </div>
+                    </div>
+
                     <div class="col-4 md-4 sm-12">
                         <canvas baseChart class="chart" [data]="salesDonutChartData" [type]="'pie'"
                             [options]="pieChartOptions" [plugins]="pieChartPlugins">
                         </canvas>
                     </div>
+
                 </div>
-                <div class="row">
+
+                <div class="row" style="margin-top: 8%;">
                     <div class="col-1 md-1 sm-12"></div>
                     <div class="col-10 md-10 sm-12" style="text-align: center;">
                         <label class="subtitle">Tipo de Pago</label>
@@ -123,15 +169,22 @@
                         </div>
                     </div>
                 </div>
+
             </div>
-            <div class="row">
+            <div (click)="isOpenDesgloce = !isOpenDesgloce" style="width: 100%; height: 40px; background-color: #dadada; margin-top: 5%; text-align: center; cursor: pointer;">
+                <label style="font-weight: 600; color: #074877; font-size: 15pt;">Desgloce de Ventas</label>
+                <i [ngClass]="isOpenDesgloce ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down'" style="font-size: large; float: right; margin-top: 0.5%;"></i>
+            </div>
+
+            <div class="row"  *ngIf="isOpenDesgloce">
                 <div class="table-body">
                     <div class="row-body">
                         <table>
                             <thead>
                                 <tr style="text-align: center; font-size: 13pt; font-weight: 500;">
                                     <th colspan="2" style="background-color: #fff;"></th>
-                                    <th colspan="12" style="background-color: #074877; color: #fff;">Venta en Sucursal
+                                    <th colspan="12" style="background-color: #074877; color: #fff;">Venta en
+                                        Sucursal
                                     </th>
                                     <th style="width: 10px; background-color: white;"></th>
                                     <th colspan="16" style="background-color: #074877; color: #fff;">
@@ -145,7 +198,8 @@
                                     <th class="sticky-col" style="background-color: #fff; color:#000">Fecha</th>
                                     <th class="sticky-col2" style="background-color: #fff; color:#000">Día</th>
                                     <th style="width: 10px; background-color: white;"></th>
-                                    <th style="background-color: #00b253; color: #fff; width: 200px;">Total Diario</th>
+                                    <th style="background-color: #00b253; color: #fff; width: 200px;">Total
+                                        Diario</th>
                                     <th style="width: 10px; background-color: white;"></th>
                                     <th style="background-color: #074877; color: #fff;">Total Sucursal</th>
                                     <th>Comedor</th>
@@ -173,7 +227,7 @@
                                     <th>Ingreso</th>
                                     <th>%</th>
                                     <th>Pago</th>
-                                    
+
                                 </tr>
                             </thead>
                             <tbody>
