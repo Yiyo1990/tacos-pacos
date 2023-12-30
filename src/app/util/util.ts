@@ -20,7 +20,7 @@ const firstUpperCase = (str: string) => {
 }
 
 
-const groupArrayByKey = (sales: Array<any>, keyName: string): Array<any>  => {
+const groupArrayByKey = (sales: Array<any>, keyName: string): Array<any> => {
   const grouped = sales.reduce((result, item) => {
     let key = item[keyName]
     if (!result[key]) {
@@ -31,6 +31,31 @@ const groupArrayByKey = (sales: Array<any>, keyName: string): Array<any>  => {
   }, {})
   return grouped
 }
+
+const fixedData = (data: any) => {
+  data.commission = data.commission.toFixed(2)
+  data.sale = data.sale.toFixed(2)
+  let percent = ((Number(data.income) * 100) / Number(data.sale))
+  data.tax = percent ? (percent).toFixed(1) : (data.tax * 100).toFixed(1)
+  data.income = data.income ? data.income.toFixed(2) : '0.00'
+
+  return data
+}
+
+const lineChartOptions = {
+  responsive: true,
+  legend: {
+    display: false,
+  },
+  plugins: {
+    legend: {
+      display: false,
+    }
+  },
+  scales: {
+  },
+  curvature: 1
+};
 
 const barChartOptions = {
   responsive: true,
@@ -51,9 +76,9 @@ const barChartOptions = {
     },
     tooltip: {
       callbacks: {
-         title : () => '' // or function () { return null; }
+        title: () => '' // or function () { return null; }
       }
-   }
+    }
   },
 };
 
@@ -89,4 +114,4 @@ enum ReportChannel {
   DIDI_FOOD = 'DIDI_FOOD'
 }
 
-export { configDropdown, firstUpperCase, barChartOptions, donutChartOptions, pieChartOptions, groupArrayByKey, ReportChannel }
+export { configDropdown, firstUpperCase, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions, groupArrayByKey, ReportChannel, fixedData }
