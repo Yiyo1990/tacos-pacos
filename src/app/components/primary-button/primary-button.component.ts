@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 
 @Component({
@@ -11,12 +11,15 @@ export class PrimaryButtonComponent {
   @Input() backgrounColor: string = "#555"
   @Input() total: string = ""
   @Input() icon: string = ""
+  @Output() checkedEvent : EventEmitter<any> = new EventEmitter()
 
 
-  text: string = "Texto en la división inferior";
+  handleClick(): void {
 
-  handleClick() {
-    console.log("División superior clicleada");
-    // Aquí puedes agregar el comportamiento deseado al hacer clic en la división superior
+  }
+
+  onChecked(e: any): void {
+
+    this.checkedEvent.emit({id: this.description, target: e.target.checked})
   }
 }

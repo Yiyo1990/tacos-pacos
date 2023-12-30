@@ -1,22 +1,21 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MainService } from 'src/app/main/main.service';
 import { SalesService } from './sales-service.service';
-import { firstUpperCase, groupArrayByKey, barChartOptions, donutChartOptions, pieChartOptions, ReportChannel } from 'src/app/util/util';
+import { firstUpperCase, groupArrayByKey, barChartOptions, donutChartOptions, pieChartOptions, ReportChannel, fixedData } from 'src/app/util/util';
 import { ToastrService } from 'ngx-toastr';
 import { Dates } from 'src/app/util/Dates';
 import { ChartConfiguration, ChartData, ChartOptions, ChartType } from 'chart.js';
 import { Charts } from 'src/app/util/Charts';
 import { BaseChartDirective } from 'ng2-charts';
-import * as pluginDataLabels from 'chartjs-plugin-datalabels'
 
 @Component({
   selector: 'app-sales',
   templateUrl: './sales.component.html',
   styleUrls: ['./sales.component.scss']
 })
-export class SalesComponent implements OnInit {
+export class SalesComponent implements OnInit, AfterViewInit {
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild('fileInput') fileInput: any;
@@ -31,7 +30,6 @@ export class SalesComponent implements OnInit {
 
   barChartData: ChartData<'bar'> = { labels: [], datasets: [] };
   barChartOptions: ChartOptions = barChartOptions
-  public barChartPlugins = [pluginDataLabels];
   public barChartType: ChartType = 'bar';
 
   pieChartOptions: ChartOptions = pieChartOptions
@@ -50,11 +48,15 @@ export class SalesComponent implements OnInit {
   private typeFilterAppBarChart = 1
 
   paymentType: any = {}
-  isOpenDesgloce: boolean = true
+  isOpenDesgloce: boolean = false
 
 
   constructor(private mainService: MainService, private salesService: SalesService, private toast: ToastrService) {
     mainService.setPageName("Ventas")
+  }
+
+  ngAfterViewInit(): void {
+    document.getElementById("desgloce")?.click()  
   }
 
   ngOnInit(): void {
@@ -205,7 +207,7 @@ export class SalesComponent implements OnInit {
           })
           this.sales = sales
           this.getPaymentType()
-          this.fillBarChart(this.typeFilterBarChart,this.typeFilterAppBarChart)
+          //this.fillBarChart(this.typeFilterBarChart,this.typeFilterAppBarChart)
           this.fillDonughtChart(2)
         }
 
@@ -226,17 +228,7 @@ export class SalesComponent implements OnInit {
     let didi = data.reportChannel.find((s: any) => s.channel == ReportChannel.DIDI_FOOD)
     let rappi = data.reportChannel.find((s: any) => s.channel == ReportChannel.RAPPI)
 
-    return { parrot: this.fixedData(parrot), uber: this.fixedData(uber), didi: this.fixedData(didi), rappi: this.fixedData(rappi) }
-  }
-
-  fixedData(data: any) {
-    data.commission = data.commission.toFixed(2)
-    data.sale = data.sale.toFixed(2)
-    let percent = ((Number(data.income) * 100) / Number(data.sale))
-    data.tax = percent ? (percent).toFixed(1) : (data.tax * 100).toFixed(1)
-    data.income = data.income ? data.income.toFixed(2) : '0.00'
-
-    return data
+    return { parrot: fixedData(parrot), uber: fixedData(uber), didi: fixedData(didi), rappi: fixedData(rappi) }
   }
 
   fillBarChart(typeFilter: number = 1, type: number = 1) {
@@ -277,6 +269,7 @@ export class SalesComponent implements OnInit {
       listTotalVenta.push(totalDinnigRoom + totalDidi + totalUber + totalRappi)
 
       this.barChartData.labels?.push(day)
+      document.getElementById("desgloce")?.click()  
     })
 
     if (this.typeFilterAppBarChart == 1) {

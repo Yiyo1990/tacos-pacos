@@ -12,8 +12,27 @@
                     </div>
                 </form>
             </div>
+            <div class="col-3 md-3"></div>
+            <div class="col-3 md-3"></div>
         </div>
         <div class="row">
+    
+            <div class="col-6 md-6 sm-12">
+                <div class="row">
+                    <div class="col-1 md-1 sm-12"> </div>
+                    <div class="col-11 md-11 sm-12">
+                        <div style="display: flex; margin-top: 2%;">
+                            <button class="button-switch"
+                                [ngClass]="{'btn-active': isBtnParrotActive, 'btn-inactive': !isBtnParrotActive}"
+                                (click)="fillDonughtChart(2)">Parrot</button>
+                            <button class="button-switch"
+                                [ngClass]="{'btn-active': !isBtnParrotActive, 'btn-inactive': isBtnParrotActive}"
+                                (click)="fillDonughtChart(1)" style="margin-left: 10px;">Ingresos</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-3 md-3 sm-12" style="margin-top: 20px;">
                 <div style="display: flex;">
                     <button class="button-switch"
@@ -42,48 +61,15 @@
                 </div>
             </div>
 
-            <div class="col-6 md-6 sm-12">
-                <div class="row">
-                    <div class="col-1 md-1 sm-12"> </div>
-                    <div class="col-11 md-11 sm-12">
-                        <div style="display: flex; margin-top: 2%;">
-                            <button class="button-switch"
-                                [ngClass]="{'btn-active': isBtnParrotActive, 'btn-inactive': !isBtnParrotActive}"
-                                (click)="fillDonughtChart(2)">Parrot</button>
-                            <button class="button-switch"
-                                [ngClass]="{'btn-active': !isBtnParrotActive, 'btn-inactive': isBtnParrotActive}"
-                                (click)="fillDonughtChart(1)" style="margin-left: 10px;">Ingresos</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
         <div class="row">
-
-            <div class="col-6 md-6 sm-12">
-                
-                <div class="row" style="margin-top: 6%;">
-                    <div class="col-3 md-3 sm-12">
-                        <div style="display: flex;">
-                            <input type="checkbox" checked>
-                            <label style="margin-left: 5%;">Tacos Pacos</label>
-                        </div>
-                    </div>
-                    <div class="col-9 md-9 sm-12">
-                        <canvas baseChart class="chart" [data]="barChartData" [options]="barChartOptions"
-                            [type]="barChartType"></canvas>
-                    </div>
-                </div>
-
-            </div>
 
             <div class="col-6 md-6 sm-12">
                 <div class="row">
                     <div class="col-1 md-1 sm-12"> </div>
                     <div class="col-6 md-6 sm-12">
                         <div style="margin: auto; margin-top: 3%;">
-                            
+
                             <div style="display: flex;">
                                 <div style="width: 40%; padding: 5px;  padding-left: 25px;">
                                     <label style="font-size: 13pt; font-weight: 600;">Venta Total</label>
@@ -171,12 +157,32 @@
                 </div>
 
             </div>
-            <div (click)="isOpenDesgloce = !isOpenDesgloce" style="width: 100%; height: 40px; background-color: #dadada; margin-top: 5%; text-align: center; cursor: pointer;">
-                <label style="font-weight: 600; color: #074877; font-size: 15pt;">Desgloce de Ventas</label>
-                <i [ngClass]="isOpenDesgloce ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down'" style="font-size: large; float: right; margin-top: 0.5%;"></i>
+
+            <div class="col-6 md-6 sm-12">
+
+                <div class="row" style="margin-top: 6%;">
+                    <div class="col-3 md-3 sm-12">
+                        <div style="display: flex;">
+                            <input type="checkbox" checked>
+                            <label style="margin-left: 5%;">Tacos Pacos</label>
+                        </div>
+                    </div>
+                    <div class="col-9 md-9 sm-12">
+                        <canvas baseChart class="chart" [data]="barChartData" [options]="barChartOptions"
+                            [type]="barChartType"></canvas>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="row"  *ngIf="isOpenDesgloce">
+            <div id="desgloce" (click)="isOpenDesgloce = !isOpenDesgloce"
+                style="width: 100%; height: 40px; background-color: #dadada; margin-top: 5%; text-align: center; cursor: pointer;">
+                <label style="font-weight: 600; color: #074877; font-size: 15pt;">Desgloce de Ventas</label>
+                <i [ngClass]="isOpenDesgloce ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down'"
+                    style="font-size: large; float: right; margin-top: 0.5%;"></i>
+            </div>
+
+            <div class="row" *ngIf="isOpenDesgloce">
                 <div class="table-body">
                     <div class="row-body">
                         <table>

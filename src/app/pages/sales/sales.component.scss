@@ -80,3 +80,11 @@ table {
     background-color: #ffffff;
     color: #000;
 } 
+
+.hideTab {
+    transform:translateY(-0%);
+}
+
+.showTab {
+    transform:translateY(100%);
+}
