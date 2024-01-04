@@ -43,7 +43,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
   channelSales: any = {}
 
   isBtnMonthActive = false
-  isBtnParrotActive = true
+  isBtnParrotActive = 2
   private typeFilterBarChart = 2
   private typeFilterAppBarChart = 1
 
@@ -56,7 +56,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    document.getElementById("desgloce")?.click()  
+    document.getElementById("desgloce")?.click()
   }
 
   ngOnInit(): void {
@@ -92,7 +92,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
     })
   }
 
-  selectFile(){
+  selectFile() {
     document.getElementById('upfile')?.click()
   }
 
@@ -138,7 +138,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
           })
 
           this.sumDataSales(groupArrayByKey(sales, 'date'))
-          
+
           this.mainService.isLoading(false)
         } else {
           this.toast.error("Ha ocurrido un error", "Error")
@@ -256,10 +256,10 @@ export class SalesComponent implements OnInit, AfterViewInit {
       let totalRappi = 0
 
       dataDay.map((d: any) => {
-        totalDinnigRoom += Number(d.totalDinnigRoom) 
-        totalDidi += this.isBtnParrotActive ?  Number(d.apps.didi.sale) : Number(d.apps.didi.income)
-        totalUber += this.isBtnParrotActive ?  Number(d.apps.uber.sale) : Number(d.apps.uber.income)
-        totalRappi += this.isBtnParrotActive ?  Number(d.apps.rappi.sale) : Number(d.apps.rappi.income)
+        totalDinnigRoom += Number(d.totalDinnigRoom)
+        totalDidi += this.isBtnParrotActive ? Number(d.apps.didi.sale) : Number(d.apps.didi.income)
+        totalUber += this.isBtnParrotActive ? Number(d.apps.uber.sale) : Number(d.apps.uber.income)
+        totalRappi += this.isBtnParrotActive ? Number(d.apps.rappi.sale) : Number(d.apps.rappi.income)
       })
 
       listTotalDinningRoom.push(totalDinnigRoom)
@@ -269,7 +269,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
       listTotalVenta.push(totalDinnigRoom + totalDidi + totalUber + totalRappi)
 
       this.barChartData.labels?.push(day)
-      document.getElementById("desgloce")?.click()  
+      document.getElementById("desgloce")?.click()
     })
 
     if (this.typeFilterAppBarChart == 1) {
@@ -293,37 +293,41 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   fillDonughtChart(type: number = 1) {
-    this.isBtnParrotActive = type == 2
-    let data = this.sales
+   // this.isBtnParrotActive = type == 2
+    this.isBtnParrotActive = type
+    if (type == 1 || type == 2) {
+      let data = this.sales
 
-    let totalDinnigRoom = data.reduce((total, sale) => total + Number(sale.diningRoom), 0)
-    let totalDelivery = data.reduce((total, sale) => total + Number(sale.delivery), 0)
-    let totalPickUp = data.reduce((total, sale) => total + Number(sale.pickUp), 0)
-    let totalTakeout = data.reduce((total, sale) => total + Number(sale.takeout), 0)
+      let totalDinnigRoom = data.reduce((total, sale) => total + Number(sale.diningRoom), 0)
+      let totalDelivery = data.reduce((total, sale) => total + Number(sale.delivery), 0)
+      let totalPickUp = data.reduce((total, sale) => total + Number(sale.pickUp), 0)
+      let totalTakeout = data.reduce((total, sale) => total + Number(sale.takeout), 0)
 
-    let totalUber = type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.uber.sale), 0) : data.reduce((total, sale) => total + Number(sale.apps.uber.income), 0)
-    let totalDidi = type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.didi.sale), 0) : data.reduce((total, sale) => total + Number(sale.apps.didi.income), 0)
-    let totalRappi = type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.rappi.sale), 0) : data.reduce((total, sale) => total + Number(sale.apps.rappi.income), 0)
+      let totalUber = type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.uber.sale), 0) : data.reduce((total, sale) => total + Number(sale.apps.uber.income), 0)
+      let totalDidi = type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.didi.sale), 0) : data.reduce((total, sale) => total + Number(sale.apps.didi.income), 0)
+      let totalRappi = type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.rappi.sale), 0) : data.reduce((total, sale) => total + Number(sale.apps.rappi.income), 0)
 
-    let total = totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout + totalDidi + totalUber + totalRappi
-    let percentDinningRoom = Math.round(((totalDinnigRoom) * 100) / total)
-    let percentDelivery = Math.round(((totalDelivery) * 100) / total)
-    let percentPickUp = Math.round(((totalPickUp) * 100) / total)
-    let percentTakeOut = Math.round(((totalTakeout) * 100) / total)
+      let total = totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout + totalDidi + totalUber + totalRappi
+      let percentDinningRoom = Math.round(((totalDinnigRoom) * 100) / total)
+      let percentDelivery = Math.round(((totalDelivery) * 100) / total)
+      let percentPickUp = Math.round(((totalPickUp) * 100) / total)
+      let percentTakeOut = Math.round(((totalTakeout) * 100) / total)
 
-    let percentDidi = Math.round((totalDidi * 100) / total)
-    let percentUber = Math.round((totalUber * 100) / total)
-    let percentRappi = Math.round((totalRappi * 100) / total)
+      let percentDidi = Math.round((totalDidi * 100) / total)
+      let percentUber = Math.round((totalUber * 100) / total)
+      let percentRappi = Math.round((totalRappi * 100) / total)
 
-    this.channelSales = {
-      totalDinnigRoom: (totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout),
-      totalUber: totalUber,
-      totalDidi: totalDidi,
-      totalRappi: totalRappi
+      this.channelSales = {
+        totalDinnigRoom: (totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout),
+        totalUber: totalUber,
+        totalDidi: totalDidi,
+        totalRappi: totalRappi
+      }
+
+      this.salesDonutChartData = Charts.Donut(['Comedor', 'ParaLlevar', 'Recoger', 'Domicilio', 'Uber', 'Didi', 'Rappi'], [percentDinningRoom, percentTakeOut, percentPickUp, percentDelivery, percentUber, percentDidi, percentRappi], [this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.uber, this.chartColors.didi, this.chartColors.rappi])
+      this.fillBarChart(this.typeFilterBarChart, this.typeFilterAppBarChart)
     }
 
-    this.salesDonutChartData = Charts.Donut(['Comedor', 'ParaLlevar', 'Recoger', 'Domicilio', 'Uber', 'Didi', 'Rappi'], [percentDinningRoom, percentTakeOut, percentPickUp, percentDelivery, percentUber, percentDidi, percentRappi], [this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.uber, this.chartColors.didi, this.chartColors.rappi])
-    this.fillBarChart(this.typeFilterBarChart, this.typeFilterAppBarChart)
   }
 
   setValueIncome(sale: any, dateSale: string, value: any) {
@@ -388,9 +392,9 @@ export class SalesComponent implements OnInit, AfterViewInit {
   async getPaymentType() {
     let data = this.sales
     let totalParrot = data.reduce((total, sale) => total + Number(sale.apps.parrot.sale), 0)
-    
-    let paymentUber = data.reduce((total, sale) => total + Number(sale.apps.uber.income), 0) 
-    let paymentDidi = data.reduce((total, sale) => total + Number(sale.apps.didi.income), 0) 
+
+    let paymentUber = data.reduce((total, sale) => total + Number(sale.apps.uber.income), 0)
+    let paymentDidi = data.reduce((total, sale) => total + Number(sale.apps.didi.income), 0)
     let paymentRappi = data.reduce((total, sale) => total + Number(sale.apps.rappi.income), 0)
     let paymentParrot = data.reduce((total, sale) => total + Number(sale.apps.parrot.income), 0)
 
@@ -400,10 +404,10 @@ export class SalesComponent implements OnInit, AfterViewInit {
     this.paymentType.totalParrot = Number(totalParrot.toFixed(2))
     this.paymentType.totalPayment = Number(totalPayment.toFixed(2))
     this.paymentType.percentParrot = percentParrot ? `${Math.round(percentParrot)}%` : '0%'
-    this.paymentType.percentPayment = percentPayment ?  `${Math.round(percentPayment)}%` : '0%'
+    this.paymentType.percentPayment = percentPayment ? `${Math.round(percentPayment)}%` : '0%'
   }
 
- 
+
 
 }
 
