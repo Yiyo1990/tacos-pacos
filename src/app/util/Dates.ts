@@ -39,7 +39,7 @@ export class Dates {
     getMonths(): any {
         const meses = [];
         for (let i = 0; i < 12; i++) {
-            const mes = moment().month(i).format('MMMM');
+            const mes = moment().month(i).format('MMMM').substring(0,3);
             
             meses.push({id: i+1, name: firstUpperCase(mes)});
         }
