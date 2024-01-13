@@ -281,7 +281,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
     let grouped = !this.isBtnMonthActive ? groupArrayByKey(this.sales, 'day') : groupArrayByKey(this.sales, 'month')
 
     let barchartLabels = Object.keys(grouped)
-
+    
 
     let listTotalDinningRoom: any = []
     let listTotalDidi: any = []
@@ -328,8 +328,9 @@ export class SalesComponent implements OnInit, AfterViewInit {
     } else if (this.typeFilterAppBarChart == 6) {
       data.push({ data: listTotalDidi, label: '', backgroundColor: this.chartColors.didi, stack: 'a' })
     }
-
-    this.barChartData.datasets.concat(data)
+    data.map(d => {
+      this.barChartData.datasets.push(d)
+    })
 
     this.chart?.forEach(c => {
       c.chart?.update()
