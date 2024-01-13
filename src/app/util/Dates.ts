@@ -52,6 +52,7 @@ export class Dates {
     }
 
     getStartAndEndDayMonth(month: number, year: number) {
+        month = month == 0 ? 1 : month
         let monthDate = moment(new Date(year, month-1))
         const startOfMonth = monthDate.startOf('month').format('DD-MM-YYYY');
         const endOfMonth   = monthDate.endOf('month').format('DD-MM-YYYY');
@@ -81,6 +82,12 @@ export class Dates {
 
     getCurrentMonth() {
         return moment().month()
+    }
+
+    getWeekNumberDay(date: string) {
+        console.log(date)
+        let r = new Date(date)
+        return r.getDay()
     }
 }
 

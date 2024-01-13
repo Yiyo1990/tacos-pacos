@@ -4,27 +4,31 @@
   margin: 0;
   padding: 0;
 }
+
 .header {
   position: fixed;
   display: flex;
- justify-content: end;
- width: 100%;
+  justify-content: end;
+  width: 100%;
   height: 4rem;
   border-bottom: solid 3px #ffca2e;
   z-index: 100;
   background-color: #fff;
 }
+
 .header-remains {
   width: calc(100% - 13rem);
   height: 100%;
   display: flex;
 }
+
 .title-currency {
   display: flex;
   justify-content: start;
   align-items: center;
   height: 4rem;
 }
+
 .title-currency h6 {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-weight: 800;
@@ -32,31 +36,36 @@
   margin-left: 0.5rem;
   color: #090661;
 }
+
 .sections {
   display: flex;
-  justify-content:flex-end;
+  justify-content: flex-end;
   align-items: center;
   padding-right: 2rem;
 }
-.filters i{
+
+.filters i {
   font-size: 1.7rem;
   color: #090661;
 }
+
 .card-filter {
   width: 20rem;
   height: auto;
   padding: 0.5rem;
 }
-.card-title{
 
-}
-.card-body{
+.card-title {}
+
+.card-body {
   background-color: orange;
 }
-.card-footer{
+
+.card-footer {
   display: flex;
   justify-content: end;
 }
+
 .card-filter button {
   width: 5rem;
   height: auto;
@@ -64,23 +73,28 @@
   border: 0.1rem #090661 solid;
   color: #090661;
 }
+
 .option-filter {
   background-color: darksalmon;
   display: flex;
   justify-content: center;
 }
+
 .menu-content {
   width: 13rem;
 }
+
 .dashboard-menu {
   position: absolute;
   z-index: 300;
 }
+
 .content-body {
   width: 100%;
   height: 100%;
   overflow-y: auto;
 }
+
 .body-main {
   position: relative;
   width: calc(100% - 13rem);
@@ -88,6 +102,7 @@
   top: 4rem;
   padding: 0.5rem 0rem;
 }
+
 /* ------------------------------------------- */
 
 

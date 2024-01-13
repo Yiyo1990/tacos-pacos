@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MainService } from 'src/app/main/main.service';
@@ -9,6 +9,7 @@ import { Dates } from 'src/app/util/Dates';
 import { ChartConfiguration, ChartData, ChartOptions, ChartType } from 'chart.js';
 import { Charts } from 'src/app/util/Charts';
 import { BaseChartDirective } from 'ng2-charts';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-sales',
@@ -23,9 +24,10 @@ export class SalesComponent implements OnInit, AfterViewInit {
   brandSelected: any
   dates = new Dates()
   sales: any[] = []
+  salesToShow: any[] = []
   currentYear: number = this.dates.getCurrentYear()
   currentMonthSelected: any = { id: 0, name: 'Anual' }
-  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
+  @ViewChildren(BaseChartDirective) chart: QueryList<BaseChartDirective> | undefined;
   donutChartOptions: ChartConfiguration['options'] = donutChartOptions
 
   barChartData: ChartData<'bar'> = { labels: [], datasets: [] };
@@ -49,6 +51,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   paymentType: any = {}
   isOpenDesgloce: boolean = false
+  isAnual: boolean = false
 
 
   constructor(private mainService: MainService, private salesService: SalesService, private toast: ToastrService) {
@@ -57,6 +60,14 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     document.getElementById("desgloce")?.click()
+    setTimeout(() => {
+      let rowBody = document.getElementsByClassName("row-body")
+      Array.from(rowBody).forEach(el => el.addEventListener('scroll', e => {
+        Array.from(rowBody).forEach(d => {
+          d.scrollLeft = el.scrollLeft
+        })
+      }))
+    }, 2000)
   }
 
   ngOnInit(): void {
@@ -67,11 +78,25 @@ export class SalesComponent implements OnInit, AfterViewInit {
         this.onFilterDates()
       }
     })
+
+    document.getElementById("content-body")?.addEventListener("scroll", (e) => {
+      let tbl = document.getElementsByTagName('table')[1]
+      let offset = tbl.getBoundingClientRect()
+
+      let header = document.getElementById("hiddenHeader")
+
+      if (offset.top <= 14) {
+        header!.style.visibility = 'visible'
+      } else {
+        header!.style.visibility = 'hidden'
+      }
+    })
   }
 
   onFilterDates() {
     this.mainService.$filterMonth.subscribe((month: any) => {
       this.currentMonthSelected = month
+      this.isAnual = month.id == 0
       let dates = month.id == 0 ? this.dates.getStartAndEndYear(this.currentYear) : this.dates.getStartAndEndDayMonth(month.id, this.currentYear)
       this.filterDate = { start: dates.start, end: dates.end }
       this.getReportSalesByDateRange(dates.start, dates.end)
@@ -79,6 +104,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
     this.mainService.$filterRange.subscribe((dates: any) => {
       if (dates) {
+        this.isAnual = false
         this.filterDate = { start: dates.start, end: dates.end }
         this.getReportSalesByDateRange(dates.start, dates.end)
       }
@@ -86,6 +112,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
     this.mainService.$yearsFilter.subscribe((year: any) => {
       this.currentYear = year;
+      this.isAnual = this.currentMonthSelected.id == 0
       let months = this.currentMonthSelected.id == 0 ? this.dates.getStartAndEndYear(year) : this.dates.getStartAndEndDayMonth(this.currentMonthSelected.id, year)
       this.filterDate = { start: months.start, end: months.end }
       this.getReportSalesByDateRange(months.start, months.end)
@@ -197,17 +224,28 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
             let day = firstUpperCase(s.day)
             let month = this.dates.getMonthName(s.dateSale)
+            let weekday = new Date(s.dateSale).getDay()
 
             let apps = this.fillSalesTbl(s)
 
             let totalApps = (Number(apps.uber.sale) + Number(apps.didi.sale) + Number(apps.rappi.sale))
             let totalSale = (totalDinnigRoom + totalApps)
 
-            return { ...s, totalSale: totalSale.toFixed(2), diningRoom, pickUp, takeout, delivery, totalDinnigRoom: totalDinnigRoom.toFixed(2), day, apps, totalApps: totalApps.toFixed(2), month }
+            let totalIncome = (Number(apps.uber.income) + Number(apps.didi.income) + Number(apps.rappi.income)).toFixed(2)
+            apps.parrot.commission = Number((Number(apps.parrot.income) * 0.04).toFixed(2))
+            //data.reduce((total, sale) => total + Number(sale.apps.uber.income), 0)
+
+            return { ...s, totalSale: totalSale.toFixed(2), diningRoom, pickUp, takeout, delivery, totalDinnigRoom: Number(totalDinnigRoom.toFixed(2)), day, apps, totalApps: totalApps.toFixed(2), month, totalIncome: Number(totalIncome), weekday }
           })
+
           this.sales = sales
+          if (this.isAnual) {
+            this.getSalesCurrentMonth()
+          } else {
+            this.salesToShow = this.sales
+            this.isOpenDesgloce = true
+          }
           this.getPaymentType()
-          //this.fillBarChart(this.typeFilterBarChart,this.typeFilterAppBarChart)
           this.fillDonughtChart(2)
         }
 
@@ -217,6 +255,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
       },
       complete: () => {
         this.mainService.isLoading(false)
+
       }
     })
   }
@@ -235,12 +274,14 @@ export class SalesComponent implements OnInit, AfterViewInit {
     this.typeFilterBarChart = typeFilter == 0 ? this.typeFilterBarChart : typeFilter
     this.typeFilterAppBarChart = type == 0 ? this.typeFilterAppBarChart : type
     this.isBtnMonthActive = this.typeFilterBarChart == 1
+    let data: any[] = []
     this.barChartData.datasets = []
     this.barChartData.labels = []
 
     let grouped = !this.isBtnMonthActive ? groupArrayByKey(this.sales, 'day') : groupArrayByKey(this.sales, 'month')
 
     let barchartLabels = Object.keys(grouped)
+
 
     let listTotalDinningRoom: any = []
     let listTotalDidi: any = []
@@ -257,9 +298,9 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
       dataDay.map((d: any) => {
         totalDinnigRoom += Number(d.totalDinnigRoom)
-        totalDidi += this.isBtnParrotActive ? Number(d.apps.didi.sale) : Number(d.apps.didi.income)
-        totalUber += this.isBtnParrotActive ? Number(d.apps.uber.sale) : Number(d.apps.uber.income)
-        totalRappi += this.isBtnParrotActive ? Number(d.apps.rappi.sale) : Number(d.apps.rappi.income)
+        totalDidi += this.isBtnParrotActive == 2 ? Number(d.apps.didi.sale) : Number(d.apps.didi.income)
+        totalUber += this.isBtnParrotActive == 2 ? Number(d.apps.uber.sale) : Number(d.apps.uber.income)
+        totalRappi += this.isBtnParrotActive == 2 ? Number(d.apps.rappi.sale) : Number(d.apps.rappi.income)
       })
 
       listTotalDinningRoom.push(totalDinnigRoom)
@@ -269,7 +310,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
       listTotalVenta.push(totalDinnigRoom + totalDidi + totalUber + totalRappi)
 
       this.barChartData.labels?.push(day)
-      document.getElementById("desgloce")?.click()
     })
 
     if (this.typeFilterAppBarChart == 1) {
@@ -278,22 +318,27 @@ export class SalesComponent implements OnInit, AfterViewInit {
       this.barChartData.datasets.push({ data: listTotalUber, label: '', backgroundColor: this.chartColors.uber, stack: 'a' })
       this.barChartData.datasets.push({ data: listTotalRappi, label: '', backgroundColor: this.chartColors.rappi, stack: 'a' })
     } else if (this.typeFilterAppBarChart == 2) {
-      this.barChartData.datasets.push({ data: listTotalVenta, label: '', backgroundColor: this.chartColors.general, stack: 'a' })
+      data.push({ data: listTotalVenta, label: '', backgroundColor: this.chartColors.general, stack: 'a' })
     } else if (this.typeFilterAppBarChart == 3) {
-      this.barChartData.datasets.push({ data: listTotalDinningRoom, label: '', backgroundColor: this.chartColors.dinningRoom, stack: 'a' })
+      data.push({ data: listTotalDinningRoom, label: '', backgroundColor: this.chartColors.dinningRoom, stack: 'a' })
     } else if (this.typeFilterAppBarChart == 4) {
-      this.barChartData.datasets.push({ data: listTotalUber, label: '', backgroundColor: this.chartColors.uber, stack: 'a' })
+      data.push({ data: listTotalUber, label: '', backgroundColor: this.chartColors.uber, stack: 'a' })
     } else if (this.typeFilterAppBarChart == 5) {
-      this.barChartData.datasets.push({ data: listTotalRappi, label: '', backgroundColor: this.chartColors.rappi, stack: 'a' })
+      data.push({ data: listTotalRappi, label: '', backgroundColor: this.chartColors.rappi, stack: 'a' })
     } else if (this.typeFilterAppBarChart == 6) {
-      this.barChartData.datasets.push({ data: listTotalDidi, label: '', backgroundColor: this.chartColors.didi, stack: 'a' })
+      data.push({ data: listTotalDidi, label: '', backgroundColor: this.chartColors.didi, stack: 'a' })
     }
 
-    this.chart?.update()
+    this.barChartData.datasets.concat(data)
+
+    this.chart?.forEach(c => {
+      c.chart?.update()
+    })
+
   }
 
   fillDonughtChart(type: number = 1) {
-   // this.isBtnParrotActive = type == 2
+    // this.isBtnParrotActive = type == 2
     this.isBtnParrotActive = type
     if (type == 1 || type == 2) {
       let data = this.sales
@@ -327,10 +372,11 @@ export class SalesComponent implements OnInit, AfterViewInit {
       this.salesDonutChartData = Charts.Donut(['Comedor', 'ParaLlevar', 'Recoger', 'Domicilio', 'Uber', 'Didi', 'Rappi'], [percentDinningRoom, percentTakeOut, percentPickUp, percentDelivery, percentUber, percentDidi, percentRappi], [this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.uber, this.chartColors.didi, this.chartColors.rappi])
       this.fillBarChart(this.typeFilterBarChart, this.typeFilterAppBarChart)
     }
+    // this.chart?.update()
 
   }
 
-  setValueIncome(sale: any, dateSale: string, value: any) {
+  setValueIncome(index: number, sale: any, dateSale: string, value: any) {
     if (!value) return
 
     let newValue = Number(value.replace("$", ""))
@@ -338,8 +384,16 @@ export class SalesComponent implements OnInit, AfterViewInit {
     let params: any = this.getObjectIncome(sale, dateSale, newValue, ReportChannel.PARROT)
 
     this.salesService.setValueIncomeChannel(params).subscribe({
-      next: () => {
-        this.getReportSalesByDateRange(this.filterDate.start, this.filterDate.end)
+      next: (s: any) => {
+        //this.getReportSalesByDateRange(this.filterDate.start, this.filterDate.end)
+        if (!s.acknowledge) {
+          this.toast.error("Ha ocurrido un error al guardar los datos")
+        } else {
+          //sale.sale = Number(sale.sale) - Number(sale.income)
+          //sale.commission = Number((Number(sale.income) * 0.04).toFixed(2))
+          this.sales[index].apps.parrot.sale = Number(sale.sale) - Number(sale.income)
+          this.sales[index].apps.parrot.commission = Number((Number(sale.income) * 0.04).toFixed(2))
+        }
       },
       error: () => {
         this.toast.error('Ha ocurrido un error', 'Error')
@@ -367,8 +421,13 @@ export class SalesComponent implements OnInit, AfterViewInit {
     let params: any = this.getObjectIncome(sale, dateSale, newValue, channelType)
 
     this.salesService.setValueIncomeChannel(params).subscribe({
-      next: () => {
-        this.getReportSalesByDateRange(this.filterDate.start, this.filterDate.end)
+      next: (s: any) => {
+        if (!s.acknowledge) {
+          this.toast.error("Ha ocurrido un error al guardar los datos")
+        } else {
+          let totalIncome = (Number(sale.apps.uber.income) + Number(sale.apps.didi.income) + Number(sale.apps.rappi.income)).toFixed(2)
+          sale.totalIncome = totalIncome
+        }
       },
       error: () => {
         this.toast.error('Ha ocurrido un error', 'Error')
@@ -408,6 +467,16 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
 
-
+  getSalesCurrentMonth() {
+    this.salesToShow = []
+    let startEndMonth = this.dates.getStartAndEndDayMonth(this.dates.getCurrentMonth(), this.dates.getCurrentYear())
+    let current = moment(startEndMonth.start.concat(' 00:00:00'), 'DD-MM-YYYY HH:mm:ss')
+    while (current.isBetween(moment(startEndMonth.start.concat(' 00:00:00'), 'DD-MM-YYYY HH:mm:ss').subtract(1, 'second'), moment(startEndMonth.end.concat(' 00:00:00'), 'DD-MM-YYYY HH:mm:ss'))) {
+      let salesByDay = this.sales.filter(s => s.dateSale == current.format('DD/MM/YYYY'))
+      this.salesToShow = this.salesToShow.concat(salesByDay)
+      current = current.add(1, 'day')
+    }
+    this.isOpenDesgloce = true
+  }
 }
 
