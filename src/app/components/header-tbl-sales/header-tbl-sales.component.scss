@@ -1,0 +1,25 @@
+@import '/src/styles.scss';
+
+// border-bottom: 2px solid #b1b1b1;
+table {
+    min-width: 2500px;
+    thead {
+        border-bottom: 2px solid #b1b1b1;
+
+        tr {
+            th {
+                background-color: rgb(255, 255, 255);
+                color: #000;
+                width: 100px;
+                margin-left: 5px;
+                margin-right: 5px;
+                font-weight: 700;
+            }
+
+            .padding-tr {
+              //  padding: 8px;
+            }
+        }
+
+    }
+}
