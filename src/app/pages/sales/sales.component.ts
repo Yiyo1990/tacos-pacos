@@ -27,29 +27,29 @@ export class SalesComponent implements OnInit, AfterViewInit {
   salesToShow: any[] = []
   currentYear: number = this.dates.getCurrentYear()
   currentMonthSelected: any = { id: 0, name: 'Anual' }
-  @ViewChildren(BaseChartDirective) chart: QueryList<BaseChartDirective> | undefined;
-  donutChartOptions: ChartConfiguration['options'] = donutChartOptions
+  //@ViewChildren(BaseChartDirective) chart: QueryList<BaseChartDirective> | undefined;
+  //donutChartOptions: ChartConfiguration['options'] = donutChartOptions
 
-  barChartData: ChartData<'bar'> = { labels: [], datasets: [] };
-  barChartOptions: ChartOptions = barChartOptions
-  public barChartType: ChartType = 'bar';
+  //barChartData: ChartData<'bar'> = { labels: [], datasets: [] };
+  //barChartOptions: ChartOptions = barChartOptions
+  //public barChartType: ChartType = 'bar';
 
-  pieChartOptions: ChartOptions = pieChartOptions
-  public pieChartPlugins = [];
+  //pieChartOptions: ChartOptions = pieChartOptions
+  //public pieChartPlugins = [];
 
-  applicationsDataChart: any
-  salesDonutChartData: any
-  chartColors = { general: '#2b65ab', dinningRoom: "#3889EB", uber: "#31B968", rappi: "#F31A86", didi: "#F37D1A" }
+  //applicationsDataChart: any
+  //salesDonutChartData: any
+  //chartColors = { general: '#2b65ab', dinningRoom: "#3889EB", uber: "#31B968", rappi: "#F31A86", didi: "#F37D1A" }
   filterDate: any = {}
 
-  channelSales: any = {}
+  //channelSales: any = {}
 
-  isBtnMonthActive = false
-  isBtnParrotActive = 2
-  private typeFilterBarChart = 2
-  private typeFilterAppBarChart = 1
+  //isBtnMonthActive = false
+  //isBtnParrotActive = 2
+  //private typeFilterBarChart = 2
+  //private typeFilterAppBarChart = 1
 
-  paymentType: any = {}
+  //paymentType: any = {}
   isOpenDesgloce: boolean = false
   isAnual: boolean = false
 
@@ -202,14 +202,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
     this.dataSource = resultSum
   }
 
-  eventEditable(e: any, b: any) {
-    let sale = this.sales.find((s: any) => s.id == e.id)
-    //sale.ingresoUber = b.target.innerHTML.replace(/<br>/g,"").replace(/(\r\n|\n|\r)/gm, "");
-    console.log(b.keyCode)
-    //b.blur()
-    console.log(b)
-  }
-
   getReportSalesByDateRange(startDate: string, endDate: string) {
     this.mainService.isLoading(true)
     this.salesService.getReportSalesByDateRange(this.brandSelected.id, startDate, endDate).subscribe({
@@ -233,7 +225,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
             let totalIncome = (Number(apps.uber.income) + Number(apps.didi.income) + Number(apps.rappi.income)).toFixed(2)
             apps.parrot.commission = Number((Number(apps.parrot.income) * 0.04).toFixed(2))
-            //data.reduce((total, sale) => total + Number(sale.apps.uber.income), 0)
 
             return { ...s, totalSale: totalSale.toFixed(2), diningRoom, pickUp, takeout, delivery, totalDinnigRoom: Number(totalDinnigRoom.toFixed(2)), day, apps, totalApps: totalApps.toFixed(2), month, totalIncome: Number(totalIncome), weekday }
           })
@@ -245,8 +236,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
             this.salesToShow = this.sales
             this.isOpenDesgloce = true
           }
-          this.getPaymentType()
-          this.fillDonughtChart(2)
         }
 
       },
@@ -270,130 +259,21 @@ export class SalesComponent implements OnInit, AfterViewInit {
     return { parrot: fixedData(parrot), uber: fixedData(uber), didi: fixedData(didi), rappi: fixedData(rappi) }
   }
 
-  fillBarChart(typeFilter: number = 1, type: number = 1) {
-    this.typeFilterBarChart = typeFilter == 0 ? this.typeFilterBarChart : typeFilter
-    this.typeFilterAppBarChart = type == 0 ? this.typeFilterAppBarChart : type
-    this.isBtnMonthActive = this.typeFilterBarChart == 1
-    let data: any[] = []
-    this.barChartData.datasets = []
-    this.barChartData.labels = []
 
-    let grouped = !this.isBtnMonthActive ? groupArrayByKey(this.sales, 'day') : groupArrayByKey(this.sales, 'month')
 
-    let barchartLabels = Object.keys(grouped)
-    
-
-    let listTotalDinningRoom: any = []
-    let listTotalDidi: any = []
-    let listTotalUber: any = []
-    let listTotalRappi: any = []
-    let listTotalVenta: any = []
-
-    barchartLabels.map((day: any) => {
-      let dataDay = grouped[day]
-      let totalDinnigRoom = 0
-      let totalDidi = 0
-      let totalUber = 0
-      let totalRappi = 0
-
-      dataDay.map((d: any) => {
-        totalDinnigRoom += Number(d.totalDinnigRoom)
-        totalDidi += this.isBtnParrotActive == 2 ? Number(d.apps.didi.sale) : Number(d.apps.didi.income)
-        totalUber += this.isBtnParrotActive == 2 ? Number(d.apps.uber.sale) : Number(d.apps.uber.income)
-        totalRappi += this.isBtnParrotActive == 2 ? Number(d.apps.rappi.sale) : Number(d.apps.rappi.income)
-      })
-
-      listTotalDinningRoom.push(totalDinnigRoom)
-      listTotalDidi.push(totalDidi)
-      listTotalUber.push(totalUber)
-      listTotalRappi.push(totalRappi)
-      listTotalVenta.push(totalDinnigRoom + totalDidi + totalUber + totalRappi)
-
-      this.barChartData.labels?.push(day)
-    })
-
-    if (this.typeFilterAppBarChart == 1) {
-      this.barChartData.datasets.push({ data: listTotalDinningRoom, label: '', backgroundColor: this.chartColors.dinningRoom, stack: 'a' })
-      this.barChartData.datasets.push({ data: listTotalDidi, label: '', backgroundColor: this.chartColors.didi, stack: 'a' })
-      this.barChartData.datasets.push({ data: listTotalUber, label: '', backgroundColor: this.chartColors.uber, stack: 'a' })
-      this.barChartData.datasets.push({ data: listTotalRappi, label: '', backgroundColor: this.chartColors.rappi, stack: 'a' })
-    } else if (this.typeFilterAppBarChart == 2) {
-      data.push({ data: listTotalVenta, label: '', backgroundColor: this.chartColors.general, stack: 'a' })
-    } else if (this.typeFilterAppBarChart == 3) {
-      data.push({ data: listTotalDinningRoom, label: '', backgroundColor: this.chartColors.dinningRoom, stack: 'a' })
-    } else if (this.typeFilterAppBarChart == 4) {
-      data.push({ data: listTotalUber, label: '', backgroundColor: this.chartColors.uber, stack: 'a' })
-    } else if (this.typeFilterAppBarChart == 5) {
-      data.push({ data: listTotalRappi, label: '', backgroundColor: this.chartColors.rappi, stack: 'a' })
-    } else if (this.typeFilterAppBarChart == 6) {
-      data.push({ data: listTotalDidi, label: '', backgroundColor: this.chartColors.didi, stack: 'a' })
-    }
-    data.map(d => {
-      this.barChartData.datasets.push(d)
-    })
-
-    this.chart?.forEach(c => {
-      c.chart?.update()
-    })
-
-  }
-
-  fillDonughtChart(type: number = 1) {
-    // this.isBtnParrotActive = type == 2
-    this.isBtnParrotActive = type
-    if (type == 1 || type == 2) {
-      let data = this.sales
-
-      let totalDinnigRoom = data.reduce((total, sale) => total + Number(sale.diningRoom), 0)
-      let totalDelivery = data.reduce((total, sale) => total + Number(sale.delivery), 0)
-      let totalPickUp = data.reduce((total, sale) => total + Number(sale.pickUp), 0)
-      let totalTakeout = data.reduce((total, sale) => total + Number(sale.takeout), 0)
-
-      let totalUber = type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.uber.sale), 0) : data.reduce((total, sale) => total + Number(sale.apps.uber.income), 0)
-      let totalDidi = type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.didi.sale), 0) : data.reduce((total, sale) => total + Number(sale.apps.didi.income), 0)
-      let totalRappi = type == 2 ? data.reduce((total, sale) => total + Number(sale.apps.rappi.sale), 0) : data.reduce((total, sale) => total + Number(sale.apps.rappi.income), 0)
-
-      let total = totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout + totalDidi + totalUber + totalRappi
-      let percentDinningRoom = Math.round(((totalDinnigRoom) * 100) / total)
-      let percentDelivery = Math.round(((totalDelivery) * 100) / total)
-      let percentPickUp = Math.round(((totalPickUp) * 100) / total)
-      let percentTakeOut = Math.round(((totalTakeout) * 100) / total)
-
-      let percentDidi = Math.round((totalDidi * 100) / total)
-      let percentUber = Math.round((totalUber * 100) / total)
-      let percentRappi = Math.round((totalRappi * 100) / total)
-
-      this.channelSales = {
-        totalDinnigRoom: (totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout),
-        totalUber: totalUber,
-        totalDidi: totalDidi,
-        totalRappi: totalRappi
-      }
-
-      this.salesDonutChartData = Charts.Donut(['Comedor', 'ParaLlevar', 'Recoger', 'Domicilio', 'Uber', 'Didi', 'Rappi'], [percentDinningRoom, percentTakeOut, percentPickUp, percentDelivery, percentUber, percentDidi, percentRappi], [this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.uber, this.chartColors.didi, this.chartColors.rappi])
-      this.fillBarChart(this.typeFilterBarChart, this.typeFilterAppBarChart)
-    }
-    // this.chart?.update()
-
-  }
-
-  setValueIncome(index: number, sale: any, dateSale: string, value: any) {
+  setValueIncome(index: number, sale: any, value: any) {
     if (!value) return
 
     let newValue = Number(value.replace("$", ""))
 
-    let params: any = this.getObjectIncome(sale, dateSale, newValue, ReportChannel.PARROT)
-
+    let params: any = this.getObjectIncome(sale.apps.parrot, sale.dateSale, newValue, ReportChannel.PARROT)
     this.salesService.setValueIncomeChannel(params).subscribe({
       next: (s: any) => {
-        //this.getReportSalesByDateRange(this.filterDate.start, this.filterDate.end)
         if (!s.acknowledge) {
           this.toast.error("Ha ocurrido un error al guardar los datos")
         } else {
-          //sale.sale = Number(sale.sale) - Number(sale.income)
-          //sale.commission = Number((Number(sale.income) * 0.04).toFixed(2))
-          this.sales[index].apps.parrot.sale = Number(sale.sale) - Number(sale.income)
-          this.sales[index].apps.parrot.commission = Number((Number(sale.income) * 0.04).toFixed(2))
+          this.sales[index].apps.parrot.sale = Number(sale.totalDinnigRoom) - Number(sale.apps.parrot.income)
+          this.sales[index].apps.parrot.commission = Number((Number(sale.apps.parrot.income) * 0.04).toFixed(2))
         }
       },
       error: () => {
@@ -402,12 +282,12 @@ export class SalesComponent implements OnInit, AfterViewInit {
     })
   }
 
-  setIncomePlatforms(sale: any, dateSale: string, value: any, channel: any) {
+  setIncomePlatforms(saleP: any, sale: any, dateSale: string, value: any, channel: any) {
     if (!value) return
 
     let newValue = Number(value.replace("$", ""))
-    let percent = ((newValue * 100) / sale.sale)
-    sale.tax = percent.toFixed(1)
+    let percent = ((newValue * 100) / saleP.sale)
+    saleP.tax = percent.toFixed(1)
 
     let channelType = ReportChannel.UBER_EATS
     switch (channel) {
@@ -419,7 +299,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
         break
     }
 
-    let params: any = this.getObjectIncome(sale, dateSale, newValue, channelType)
+    let params: any = this.getObjectIncome(saleP, dateSale, newValue, channelType)
 
     this.salesService.setValueIncomeChannel(params).subscribe({
       next: (s: any) => {
@@ -449,25 +329,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
     return params
   }
 
-  async getPaymentType() {
-    let data = this.sales
-    let totalParrot = data.reduce((total, sale) => total + Number(sale.apps.parrot.sale), 0)
-
-    let paymentUber = data.reduce((total, sale) => total + Number(sale.apps.uber.income), 0)
-    let paymentDidi = data.reduce((total, sale) => total + Number(sale.apps.didi.income), 0)
-    let paymentRappi = data.reduce((total, sale) => total + Number(sale.apps.rappi.income), 0)
-    let paymentParrot = data.reduce((total, sale) => total + Number(sale.apps.parrot.income), 0)
-
-    let totalPayment = (paymentUber + paymentDidi + paymentRappi + paymentParrot)
-    let percentParrot = (totalParrot * 100) / (totalParrot + totalPayment)
-    let percentPayment = (totalPayment * 100) / (totalParrot + totalPayment)
-    this.paymentType.totalParrot = Number(totalParrot.toFixed(2))
-    this.paymentType.totalPayment = Number(totalPayment.toFixed(2))
-    this.paymentType.percentParrot = percentParrot ? `${Math.round(percentParrot)}%` : '0%'
-    this.paymentType.percentPayment = percentPayment ? `${Math.round(percentPayment)}%` : '0%'
-  }
-
-
   getSalesCurrentMonth() {
     this.salesToShow = []
     let startEndMonth = this.dates.getStartAndEndDayMonth(this.dates.getCurrentMonth(), this.dates.getCurrentYear())
@@ -478,6 +339,28 @@ export class SalesComponent implements OnInit, AfterViewInit {
       current = current.add(1, 'day')
     }
     this.isOpenDesgloce = true
+  }
+
+  onChangeIsPay(e: any, type: string, sale: any) {
+
+    switch (type) {
+      case ReportChannel.PARROT:
+        sale.apps.parrot.isPay = e.value == 'SI'
+        this.setValueIncome(e.id, sale, String(sale.apps.parrot.income))
+        break;
+      case ReportChannel.UBER_EATS:
+        sale.apps.uber.isPay = e.value == 'SI'
+        this.setIncomePlatforms(sale.apps.uber, sale, sale.dateSale, String(sale.apps.uber.income), 1)
+        break;
+      case ReportChannel.RAPPI:
+        sale.apps.rappi.isPay = e.value == 'SI'
+        this.setIncomePlatforms(sale.apps.rappi, sale, sale.dateSale, String(sale.apps.rappi.income), 3)
+        break;
+      case ReportChannel.DIDI_FOOD:
+        sale.apps.didi.isPay = e.value == 'SI'
+        this.setIncomePlatforms(sale.apps.didi, sale, sale.dateSale, String(sale.apps.didi.income), 2)
+        break;
+    }
   }
 }
 

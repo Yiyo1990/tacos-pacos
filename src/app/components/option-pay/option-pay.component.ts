@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'option-pay',
@@ -7,6 +7,13 @@ import { Component, Input } from '@angular/core';
 })
 export class OptionPayComponent {
 
-  //@Input() isSelected: string = "NO"
+
+  @Input() index: number = 0
   @Input() isSelected: boolean = false
+  @Output() checkedEvent : EventEmitter<any> = new EventEmitter()
+
+
+  onChangeValue(e: any) {
+    this.checkedEvent.emit({id: this.index, value: e})
+  }
 }

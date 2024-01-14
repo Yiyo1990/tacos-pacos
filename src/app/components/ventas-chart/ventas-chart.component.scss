@@ -1,0 +1,22 @@
+.btn-active {
+    background-color: #7881af !important; 
+    color: #fff !important;
+}
+
+.btn-inactive {
+    background-color: #ffffff !important;
+    color: #000 !important;
+}
+
+
+.button-switch {
+    text-align: center;
+    // min-width: 10px;
+    width: 120px;
+    //height: 40px;
+    background-color: #ffffff;
+    border-radius: 8%;
+    border: 1px solid #696969;
+    cursor: pointer;
+    color: #000;
+}
