@@ -3,18 +3,18 @@
         <div class="row">
             <div class="col-12">
                 <accordion>
-                    <accordion-group heading="Balance" class="title-accordion" style="background-color: crimson;">
+                    <accordion-group heading="Balance" class="title-accordion" style="background-color: crimson;" [isOpen]="true">
                         <div class="row">
                             <div class="col-2 sm-12 md-2">
                                 <app-primary-button description="VENTAS" icon="dollar-sign"
-                                    total="{{totalSales | currency}}" backgrounColor="blueBtn"
+                                    total="{{getTotal() | currency}}" backgrounColor="blueBtn"
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
 
                                 <app-primary-button description="GASTOS" icon="arrow-trend-down" total="{{totalExpenses | currency}}"
                                     backgrounColor="orangeBtn"
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
 
-                                <app-primary-button description="PROFIT" icon="money-bill-trend-up" total="{{(totalSales - totalExpenses) | currency}}"
+                                <app-primary-button description="PROFIT" icon="money-bill-trend-up" total="{{(getTotal() - totalExpenses) | currency}}"
                                     backgrounColor="greenBtn"
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
                             </div>
@@ -44,7 +44,7 @@
                                                 style="width: 130px; height: auto; padding: 0.3%; background-color: rgb(235, 73, 73); text-align: center;">
                                                 <label style="margin: 0; color: #fff;">Pay</label>
                                             </div>
-                                            <label class="cards-total">{{34343 | currency}}</label>
+                                            <label class="cards-total">{{ getTotalPay() | currency}}</label>
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
@@ -93,8 +93,8 @@
                             </div>
                         </div>
                     </accordion-group>
-                    <accordion-group heading="Sección 2">
-
+                    <accordion-group heading="Ventas" [isOpen]="true"       >
+                        <ventas-chart [sales]="sales" />
                     </accordion-group>
                 </accordion>
             </div>

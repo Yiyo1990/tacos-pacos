@@ -1,4 +1,4 @@
-<select class="form-selected">
+<select class="form-selected" (change)="onChangeValue($any($event.target).value)">
     <option [selected]="isSelected" value="SI">SI</option>
     <option [selected]="!isSelected" value="NO">NO</option>
 </select>

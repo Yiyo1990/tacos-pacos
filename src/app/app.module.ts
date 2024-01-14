@@ -40,6 +40,7 @@ import { SalesComponent } from './pages/sales/sales.component';
 import { OptionPayComponent } from './components/option-pay/option-pay.component';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { HeaderTblSalesComponent } from './components/header-tbl-sales/header-tbl-sales.component';
+import { VentasChartComponent } from './components/ventas-chart/ventas-chart.component';
 
 
 @NgModule({
@@ -66,7 +67,8 @@ import { HeaderTblSalesComponent } from './components/header-tbl-sales/header-tb
     SalesComponent,
     OptionPayComponent,
     ProgressBarComponent,
-    HeaderTblSalesComponent
+    HeaderTblSalesComponent,
+    VentasChartComponent
   ],
   imports: [
     BrowserModule,

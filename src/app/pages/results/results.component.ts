@@ -164,8 +164,7 @@ export class ResultsComponent implements OnInit {
   }
 
   sumTotalSales() {
-    let totalSum = this.sales.reduce((total: number, item: any) => total + Number(item.totalSale), 0)
-    this.totalSales = Number(totalSum.toFixed(2))
+    return this.getTotalCard() + this.getTotalApps()
   }
 
   getTotalCash() : number {
@@ -174,7 +173,16 @@ export class ResultsComponent implements OnInit {
   }
 
   getTotalCard() : number {
-    let totalCard = this.sales.reduce((total:number, sale: any) => total + Number(sale.apps.parrot.income), 0)
+    let totalCard = this.sales.filter((a: any) => a.apps.parrot.isPay).reduce((total:number, sale: any) => total + Number(sale.apps.parrot.income), 0)
+    let totalApps = 0
+    totalApps = totalApps + this.sales.filter((s: any) => s.apps.uber.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.uber.income), 0)
+    totalApps = totalApps + this.sales.filter((s: any) => s.apps.didi.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.didi.income), 0)
+    totalApps = totalApps + this.sales.filter((s: any) => s.apps.rappi.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.rappi.income), 0)
+    return (totalCard + totalApps)
+  }
+
+  getTotalPay(): number {
+    let totalCard = this.sales.filter((a: any) => !a.apps.parrot.isPay).reduce((total:number, sale: any) => total + Number(sale.apps.parrot.income), 0)
     return totalCard
   }
 
