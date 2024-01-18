@@ -1,7 +1,7 @@
 @import '/src/styles.scss';
 
 :host {
-    --btn-background: #444;
+    --btn-background: #ffffff;
 }
 
 .container {
@@ -17,11 +17,13 @@
   width: auto;
   color: #000;
   padding: 4px;
+  height: 2.5rem;
   cursor: pointer;
-  border: 1px solid #ccc;
-  box-shadow: 3px 0px 6px 1px #329e99;
-  background-color: #f1f1f1;
+  border: 1px solid #4d4d4d;
+ // box-shadow: 3px 0px 6px 1px #252525;
+  background-color: #ffffff;
   font-size: 12pt;
+  border-radius: 5px;
 }
 
 .icon {

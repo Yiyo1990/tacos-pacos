@@ -139,7 +139,7 @@ export class ResultsComponent implements OnInit {
           this.lineChartData.labels = this.days
 
           this.pushDataSalesChart()
-          this.sumTotalSales()
+          //this.sumTotalSales()
           this.callServiceSearchExpenses(startDate, endDate)
         }
       },
@@ -163,8 +163,18 @@ export class ResultsComponent implements OnInit {
     return { parrot: fixedData(parrot), uber: fixedData(uber), didi: fixedData(didi), rappi: fixedData(rappi) }
   }
 
-  sumTotalSales() {
-    return this.getTotalCard() + this.getTotalApps()
+  getTotalSales() {
+
+    let totalDinnigRoom = this.sales.reduce((total, sale) => total + Number(sale.diningRoom), 0)
+    let totalDelivery = this.sales.reduce((total, sale) => total + Number(sale.delivery), 0)
+    let totalPickUp = this.sales.reduce((total, sale) => total + Number(sale.pickUp), 0)
+    let totalTakeout = this.sales.reduce((total, sale) => total + Number(sale.takeout), 0)
+
+    let totalUber = this.sales.reduce((total, sale) => total + Number(sale.apps.uber.income), 0)
+    let totalDidi = this.sales.reduce((total, sale) => total + Number(sale.apps.didi.income), 0)
+    let totalRappi = this.sales.reduce((total, sale) => total + Number(sale.apps.rappi.income), 0)
+
+    return (totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout + totalUber + totalDidi + totalRappi)
   }
 
   getTotalCash() : number {
@@ -199,7 +209,11 @@ export class ResultsComponent implements OnInit {
   }
 
   getTotalGap(): number{
-    return this.getTotal() - (this.totalSales - this.totalExpenses) 
+    return this.getTotal() - this.getProfit()
+  }
+
+  getProfit(): number {
+    return this.getTotalSales() - this.getTotalExpenses()
   }
 
 
@@ -213,7 +227,7 @@ export class ResultsComponent implements OnInit {
       next: (res: any) => {
         this.expenses = res
         this.getExpensesByDay()
-        this.sumTotalExpenses()
+       // this.sumTotalExpenses()
       },
       error: (e) => {
         this.toast.error("Ha ocurrido un error", "Error")
@@ -224,16 +238,17 @@ export class ResultsComponent implements OnInit {
     })
   }
 
-  sumTotalExpenses() {
+  getTotalExpenses() : number{
     let totalSum = this.expenses.reduce((total: any, value: any) => total + value.amount, 0)
-    this.totalExpenses = Number(totalSum.toFixed(2))
+    return  Number(totalSum.toFixed(2))
   }
 
   getExpensesByDay() {
     this.expensesByDay = []
     let expensesByDay: any[] = []
     this.days.map((day: any) => {
-      let total = this.expenses.reduce((total: number, item: any) => moment(item.expenseDate).isSame(moment(day)) ? total + item.amount : total, 0)
+      
+      let total = this.expenses.reduce((total: number, item: any) => moment(item.expenseDate, 'DD-MM-YYYY HH:mm:ss').isSame(moment(day, 'DD/MM/YYYY')) ? total + item.amount : total, 0)
       expensesByDay.push(total)
     })
     this.expensesByDay = expensesByDay

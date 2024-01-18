@@ -7,14 +7,14 @@
                         <div class="row">
                             <div class="col-2 sm-12 md-2">
                                 <app-primary-button description="VENTAS" icon="dollar-sign"
-                                    total="{{getTotal() | currency}}" backgrounColor="blueBtn"
+                                    total="{{getTotalSales() | currency}}" backgrounColor="blueBtn"
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
 
-                                <app-primary-button description="GASTOS" icon="arrow-trend-down" total="{{totalExpenses | currency}}"
+                                <app-primary-button description="GASTOS" icon="arrow-trend-down" total="{{getTotalExpenses() | currency}}"
                                     backgrounColor="orangeBtn"
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
 
-                                <app-primary-button description="PROFIT" icon="money-bill-trend-up" total="{{(getTotal() - totalExpenses) | currency}}"
+                                <app-primary-button description="PROFIT" icon="money-bill-trend-up" total="{{getProfit() | currency}}"
                                     backgrounColor="greenBtn"
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
                             </div>
@@ -23,10 +23,10 @@
                                     <div class="sm-12" style="width: 14.2%;">
                                         <div style="display: flex;">
                                             <div class="cards-total"
-                                                style="width: 130px; height: auto; padding: 0.3%; background-color: rgb(99, 243, 99); text-align: center;">
+                                                style="width: 130px; height: auto; padding: 0.3%; background-color: #60bb60; text-align: center; opacity: 0.8;">
                                                 <label style="margin: 0; color: #fff;">Efectivo</label>
                                             </div>
-                                            <label class="cards-total">{{getTotalCash() | currency}}</label>
+                                            <label class="cards-total total">{{getTotalCash() | currency}}</label>
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
@@ -35,7 +35,7 @@
                                                 style="width: 130px; height: auto; padding: 0.3%; background-color: rgb(193, 71, 204); text-align: center;">
                                                 <label style="margin: 0; color: #fff;">Tarjeta</label>
                                             </div>
-                                            <label class="cards-total">{{getTotalCard() | currency}}</label>
+                                            <label class="cards-total total">{{getTotalCard() | currency}}</label>
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
@@ -44,7 +44,7 @@
                                                 style="width: 130px; height: auto; padding: 0.3%; background-color: rgb(235, 73, 73); text-align: center;">
                                                 <label style="margin: 0; color: #fff;">Pay</label>
                                             </div>
-                                            <label class="cards-total">{{ getTotalPay() | currency}}</label>
+                                            <label class="cards-total total">{{ getTotalPay() | currency}}</label>
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
@@ -53,7 +53,7 @@
                                                 style="width: 130px; height: auto; padding: 0.3%; background-color: rgb(248, 161, 48); text-align: center;">
                                                 <label style="margin: 0; color: #fff;">Apps</label>
                                             </div>
-                                            <label class="cards-total">{{getTotalApps() | currency}}</label>
+                                            <label class="cards-total total">{{getTotalApps() | currency}}</label>
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
@@ -62,7 +62,7 @@
                                                 style="width: 130px; height: auto; padding: 0.3%; background-color: rgb(160, 160, 160); text-align: center;">
                                                 <label style="margin: 0; color: #fff;">Por Cobrar</label>
                                             </div>
-                                            <label class="cards-total">{{34343 | currency}}</label>
+                                            <label class="cards-total total">{{0 | currency}}</label>
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
@@ -71,7 +71,7 @@
                                                 style="width: 130px; height: auto; padding: 0.3%; background-color: rgb(60, 139, 230); text-align: center;">
                                                 <label style="margin: 0; color: #fff;">Total</label>
                                             </div>
-                                            <label class="cards-total">{{ getTotal() | currency}}</label>
+                                            <label class="cards-total total">{{ getTotal() | currency}}</label>
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
@@ -80,7 +80,7 @@
                                                 style="width: 130px; height: auto; padding: 0.3%; background-color: rgb(255, 211, 65); text-align: center;">
                                                 <label style="margin: 0; color: #fff;">Gap</label>
                                             </div>
-                                            <label class="cards-total">{{getTotalGap() | currency}}</label>
+                                            <label class="cards-total total">{{getTotalGap() | currency}}</label>
                                         </div>
                                     </div>
                                 </div>
