@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, S
 import { ChartData, ChartOptions, ChartType } from "chart.js";
 import { BaseChartDirective } from "ng2-charts";
 import { Charts } from "src/app/util/Charts";
+import { Dates } from "src/app/util/Dates";
 import { groupArrayByKey, pieChartOptions, barChartOptions } from "src/app/util/util";
 
 @Component({
@@ -15,10 +16,11 @@ export class VentasChartComponent implements OnChanges, OnInit {
     @Input() sales: any[] = []
     @Input() isResultadosScreen: boolean = false
     @ViewChildren(BaseChartDirective) charts: QueryList<BaseChartDirective> | undefined;
-    @Output() typeFilterEvent : EventEmitter<any> = new EventEmitter()
+    @Output() typeFilterEvent: EventEmitter<any> = new EventEmitter()
     public pieChartPlugins = [];
+    dates = new Dates()
 
-    private typeFilterBarChart =  2
+    private typeFilterBarChart = 2
     private typeFilterAppBarChart = 1
 
     isBtnMonthActive: boolean = false
@@ -35,9 +37,9 @@ export class VentasChartComponent implements OnChanges, OnInit {
     pieChartOptions: ChartOptions = pieChartOptions
 
     ngOnInit(): void {
-        this.typeFilterBarChart = this.isResultadosScreen ? 1: 2
+        this.typeFilterBarChart = this.isResultadosScreen ? 1 : 2
     }
-    
+
 
     ngOnChanges(changes: SimpleChanges): void {
         this.getPaymentType()
@@ -52,6 +54,15 @@ export class VentasChartComponent implements OnChanges, OnInit {
         let data: any[] = []
         this.barChartData.datasets = []
         this.barChartData.labels = []
+
+        if (this.isResultadosScreen) {
+            let months = this.dates.getMonths()
+            months.map((m: any) => {
+                this.barChartData.labels?.push(m.name)
+            })
+        }
+
+        //console.log(this.dates.getMonths())
 
         let grouped = !this.isBtnMonthActive ? groupArrayByKey(this.sales, 'day') : groupArrayByKey(this.sales, 'month')
 
@@ -84,7 +95,8 @@ export class VentasChartComponent implements OnChanges, OnInit {
             listTotalRappi.push(totalRappi)
             listTotalVenta.push(totalDinnigRoom + totalDidi + totalUber + totalRappi)
 
-            this.barChartData.labels?.push(day)
+            if (!this.isResultadosScreen)
+                this.barChartData.labels?.push(day)
         })
 
         if (this.typeFilterAppBarChart == 1) {
@@ -112,7 +124,7 @@ export class VentasChartComponent implements OnChanges, OnInit {
             c.chart?.update()
         })
 
-        this.typeFilterEvent.emit({parrot: this.isBtnParrotActive, filter: this.typeFilterAppBarChart})
+        this.typeFilterEvent.emit({ parrot: this.isBtnParrotActive, filter: this.typeFilterAppBarChart })
         //this.checkedEvent.emit({id: this.description, target: e.target.checked})
 
     }

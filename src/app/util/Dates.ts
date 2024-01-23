@@ -36,7 +36,7 @@ export class Dates {
         return dateM.toDate()
     }
 
-    getMonths(): any {
+    getMonths(): any[] {
         const meses = [];
         for (let i = 0; i < 12; i++) {
             const mes = moment().month(i).format('MMMM').substring(0,3);
