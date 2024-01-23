@@ -28,3 +28,16 @@
     margin-right: 5px;
     margin-left: 10px;
 }
+
+.line-colors {
+    display: flex;
+
+    .point {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-top: 10%;
+       // margin-right: 5px;
+       // margin-left: 10px;
+    }
+}

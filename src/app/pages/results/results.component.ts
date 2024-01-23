@@ -1,14 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ChartData, ChartOptions, Color } from 'chart.js';
+import { ChartData, ChartOptions, ChartType, Color } from 'chart.js';
 import { MainService } from 'src/app/main/main.service';
 import { Dates } from 'src/app/util/Dates';
-import { ReportChannel, firstUpperCase, fixedData, lineChartOptions } from 'src/app/util/util';
+import { ReportChannel, barChartOptions, firstUpperCase, fixedData, groupArrayByKey, lineChartOptions } from 'src/app/util/util';
 import { SalesService } from '../sales/sales-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { ExpenseService } from '../expenses/expenses.service';
 import * as moment from 'moment';
 import { BaseChartDirective } from 'ng2-charts';
+import { Charts } from 'src/app/util/Charts';
 
 @Component({
   selector: 'app-results',
@@ -16,7 +17,8 @@ import { BaseChartDirective } from 'ng2-charts';
   styleUrls: ['./results.component.scss']
 })
 export class ResultsComponent implements OnInit {
-  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
+  @ViewChildren(BaseChartDirective) charts: QueryList<BaseChartDirective> | undefined;
+
   lineChartOptions: ChartOptions = lineChartOptions
   dates = new Dates()
   currentMonthSelected: any = { id: 0, name: 'Anual' }
@@ -38,7 +40,12 @@ export class ResultsComponent implements OnInit {
   sales: any[] = []
   totalSales: number = 0
   salesByDay: number[] = []
-
+  barChartData: ChartData<'bar'> = { labels: [], datasets: [] };
+  barChartOptions: ChartOptions = barChartOptions
+  barChartType: ChartType = 'bar';
+  isBtnParrotActive: number = 2
+  private typeFilterAppBarChart = 1
+  private chartColors = Charts.chartColors
 
   //--- EXPENSES ---
   totalExpenses: number = 0
@@ -88,16 +95,16 @@ export class ResultsComponent implements OnInit {
 
   onCheckedEvent(data: any) {
     if (!data.target) {
-      let filter = this.lineChartData.datasets.filter((d:any) => d.label != data.id)
+      let filter = this.lineChartData.datasets.filter((d: any) => d.label != data.id)
       this.lineChartData.datasets = filter
-      this.chart?.update()
+      this.updateCharts()
     } else {
       if (data.id == 'VENTAS') {
-          this.pushDataSalesChart()
+        this.pushDataSalesChart()
       } else if (data.id == 'GASTOS') {
-          this.pushDataExpensesChart()
+        this.pushDataExpensesChart()
       } else if (data.id == 'PROFIT') {
-          this.pushDataProfitChart()
+        this.pushDataProfitChart()
       }
     }
   }
@@ -113,7 +120,7 @@ export class ResultsComponent implements OnInit {
       next: (data: any) => {
         if (Array.isArray(data)) {
           this.lineChartData.datasets = []
-          this.chart?.update()
+          this.updateCharts()
           this.days = []
           let sales = data.map((s: any) => {
             let diningRoom = s.diningRoom.toFixed(2)
@@ -129,8 +136,9 @@ export class ResultsComponent implements OnInit {
             let apps = this.addPlatafformsData(s)
 
             let totalApps = (Number(apps.uber.sale) + Number(apps.didi.sale) + Number(apps.rappi.sale))
+            let totalIncomeApps = (Number(apps.uber.income) + Number(apps.didi.income) + Number(apps.rappi.income))
             let totalSale = (totalDinnigRoom + totalApps)
-            this.salesByDay.push(totalSale)
+            this.salesByDay.push((totalDinnigRoom + totalIncomeApps))
 
             return { ...s, totalSale: totalSale.toFixed(2), diningRoom, pickUp, takeout, delivery, totalDinnigRoom: totalDinnigRoom.toFixed(2), day, apps, totalApps: totalApps.toFixed(2), month }
           })
@@ -139,6 +147,7 @@ export class ResultsComponent implements OnInit {
           this.lineChartData.labels = this.days
 
           this.pushDataSalesChart()
+          this.fillBarChartDays()
           //this.sumTotalSales()
           this.callServiceSearchExpenses(startDate, endDate)
         }
@@ -177,13 +186,13 @@ export class ResultsComponent implements OnInit {
     return (totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout + totalUber + totalDidi + totalRappi)
   }
 
-  getTotalCash() : number {
-    let totalCash = this.sales.reduce((total:number, sale: any) => total + Number(sale.apps.parrot.sale), 0)
+  getTotalCash(): number {
+    let totalCash = this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.parrot.sale), 0)
     return totalCash
   }
 
-  getTotalCard() : number {
-    let totalCard = this.sales.filter((a: any) => a.apps.parrot.isPay).reduce((total:number, sale: any) => total + Number(sale.apps.parrot.income), 0)
+  getTotalCard(): number {
+    let totalCard = this.sales.filter((a: any) => a.apps.parrot.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.parrot.income), 0)
     let totalApps = 0
     totalApps = totalApps + this.sales.filter((s: any) => s.apps.uber.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.uber.income), 0)
     totalApps = totalApps + this.sales.filter((s: any) => s.apps.didi.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.didi.income), 0)
@@ -192,11 +201,11 @@ export class ResultsComponent implements OnInit {
   }
 
   getTotalPay(): number {
-    let totalCard = this.sales.filter((a: any) => !a.apps.parrot.isPay).reduce((total:number, sale: any) => total + Number(sale.apps.parrot.income), 0)
+    let totalCard = this.sales.filter((a: any) => !a.apps.parrot.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.parrot.income), 0)
     return totalCard
   }
 
-  getTotalApps() : number{
+  getTotalApps(): number {
     let totalApps = 0
     totalApps = totalApps + this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.uber.income), 0)
     totalApps = totalApps + this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.didi.income), 0)
@@ -204,16 +213,91 @@ export class ResultsComponent implements OnInit {
     return totalApps
   }
 
-  getTotal() : number {
+  getTotal(): number {
     return this.getTotalCash() + this.getTotalCard() + this.getTotalApps()
   }
 
-  getTotalGap(): number{
+  getTotalGap(): number {
     return this.getTotal() - this.getProfit()
   }
 
   getProfit(): number {
     return this.getTotalSales() - this.getTotalExpenses()
+  }
+
+  getTypePay() {
+    let total = this.getTotalCash() + this.getTotalCard()
+    let percentCard = (this.getTotalCard() * 100) / total
+    let percentCash = (this.getTotalCash() * 100) / total
+    return { cash: { total: this.getTotalCash(), percent: Math.round(percentCash) }, card: { total: this.getTotalCard(), percent: Math.round(percentCard) } }
+  }
+
+  fillBarChartDays() {
+    let grouped = groupArrayByKey(this.sales, 'day')
+    this.barChartData.datasets = []
+    this.barChartData.labels = []
+    let data: any[] = []
+
+    let barchartLabels = Object.keys(grouped)
+
+    let listTotalDinningRoom: any = []
+    let listTotalDidi: any = []
+    let listTotalUber: any = []
+    let listTotalRappi: any = []
+    let listTotalVenta: any = []
+
+    barchartLabels.map((day: any) => {
+      let dataDay = grouped[day]
+      let totalDinnigRoom = 0
+      let totalDidi = 0
+      let totalUber = 0
+      let totalRappi = 0
+
+      dataDay.map((d: any) => {
+        totalDinnigRoom += Number(d.totalDinnigRoom)
+        totalDidi += this.isBtnParrotActive == 2 ? Number(d.apps.didi.sale) : Number(d.apps.didi.income)
+        totalUber += this.isBtnParrotActive == 2 ? Number(d.apps.uber.sale) : Number(d.apps.uber.income)
+        totalRappi += this.isBtnParrotActive == 2 ? Number(d.apps.rappi.sale) : Number(d.apps.rappi.income)
+      })
+
+      listTotalDinningRoom.push(totalDinnigRoom)
+      listTotalDidi.push(totalDidi)
+      listTotalUber.push(totalUber)
+      listTotalRappi.push(totalRappi)
+      listTotalVenta.push(totalDinnigRoom + totalDidi + totalUber + totalRappi)
+
+      this.barChartData.labels?.push(day)
+    })
+
+    if (this.typeFilterAppBarChart == 1) {
+      this.barChartData.datasets.push({ data: listTotalDinningRoom, label: '', backgroundColor: this.chartColors.dinningRoom, stack: 'a' })
+      this.barChartData.datasets.push({ data: listTotalDidi, label: '', backgroundColor: this.chartColors.didi, stack: 'a' })
+      this.barChartData.datasets.push({ data: listTotalUber, label: '', backgroundColor: this.chartColors.uber, stack: 'a' })
+      this.barChartData.datasets.push({ data: listTotalRappi, label: '', backgroundColor: this.chartColors.rappi, stack: 'a' })
+    } else if (this.typeFilterAppBarChart == 2) {
+      data.push({ data: listTotalVenta, label: '', backgroundColor: this.chartColors.general, stack: 'a' })
+    } else if (this.typeFilterAppBarChart == 3) {
+      data.push({ data: listTotalDinningRoom, label: '', backgroundColor: this.chartColors.dinningRoom, stack: 'a' })
+    } else if (this.typeFilterAppBarChart == 4) {
+      data.push({ data: listTotalUber, label: '', backgroundColor: this.chartColors.uber, stack: 'a' })
+    } else if (this.typeFilterAppBarChart == 5) {
+      data.push({ data: listTotalRappi, label: '', backgroundColor: this.chartColors.rappi, stack: 'a' })
+    } else if (this.typeFilterAppBarChart == 6) {
+      data.push({ data: listTotalDidi, label: '', backgroundColor: this.chartColors.didi, stack: 'a' })
+    }
+
+    data.map(d => {
+      this.barChartData.datasets.push(d)
+    })
+
+    this.updateCharts()
+
+  }
+
+  filterCharts(event: any) {
+    this.isBtnParrotActive = event.parrot
+    this.typeFilterAppBarChart = event.filter
+    this.fillBarChartDays()
   }
 
 
@@ -227,7 +311,7 @@ export class ResultsComponent implements OnInit {
       next: (res: any) => {
         this.expenses = res
         this.getExpensesByDay()
-       // this.sumTotalExpenses()
+        // this.sumTotalExpenses()
       },
       error: (e) => {
         this.toast.error("Ha ocurrido un error", "Error")
@@ -238,16 +322,16 @@ export class ResultsComponent implements OnInit {
     })
   }
 
-  getTotalExpenses() : number{
+  getTotalExpenses(): number {
     let totalSum = this.expenses.reduce((total: any, value: any) => total + value.amount, 0)
-    return  Number(totalSum.toFixed(2))
+    return Number(totalSum.toFixed(2))
   }
 
   getExpensesByDay() {
     this.expensesByDay = []
     let expensesByDay: any[] = []
     this.days.map((day: any) => {
-      
+
       let total = this.expenses.reduce((total: number, item: any) => moment(item.expenseDate, 'DD-MM-YYYY HH:mm:ss').isSame(moment(day, 'DD/MM/YYYY')) ? total + item.amount : total, 0)
       expensesByDay.push(total)
     })
@@ -279,7 +363,7 @@ export class ResultsComponent implements OnInit {
         borderColor: '#3c8be6',
         pointStyle: 'circle'
       })
-      this.chart?.update()
+      this.updateCharts()
     }
   }
 
@@ -293,7 +377,7 @@ export class ResultsComponent implements OnInit {
         borderColor: '#f8a130',
         pointStyle: 'circle'
       })
-      this.chart?.update()
+      this.updateCharts()
     }
   }
 
@@ -307,7 +391,7 @@ export class ResultsComponent implements OnInit {
         borderColor: '#63f363',
         pointStyle: 'circle'
       })
-      this.chart?.update()
+      this.updateCharts()
     }
   }
 
@@ -320,6 +404,12 @@ export class ResultsComponent implements OnInit {
       }
     })
     return index
+  }
+
+  updateCharts() {
+    this.charts?.forEach(c => {
+      c.chart?.update()
+    })
   }
 
 }

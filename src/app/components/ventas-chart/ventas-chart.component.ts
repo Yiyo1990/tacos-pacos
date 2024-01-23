@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, QueryList, SimpleChanges, ViewChildren } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from "@angular/core";
 import { ChartData, ChartOptions, ChartType } from "chart.js";
 import { BaseChartDirective } from "ng2-charts";
 import { Charts } from "src/app/util/Charts";
@@ -10,19 +10,21 @@ import { groupArrayByKey, pieChartOptions, barChartOptions } from "src/app/util/
     styleUrls: ['./ventas-chart.component.scss']
 })
 
-export class VentasChartComponent implements OnChanges {
+export class VentasChartComponent implements OnChanges, OnInit {
 
     @Input() sales: any[] = []
+    @Input() isResultadosScreen: boolean = false
     @ViewChildren(BaseChartDirective) charts: QueryList<BaseChartDirective> | undefined;
+    @Output() typeFilterEvent : EventEmitter<any> = new EventEmitter()
     public pieChartPlugins = [];
 
-    private typeFilterBarChart = 2
+    private typeFilterBarChart =  2
     private typeFilterAppBarChart = 1
 
     isBtnMonthActive: boolean = false
     barChartData: ChartData<'bar'> = { labels: [], datasets: [] };
     isBtnParrotActive: number = 2
-    chartColors = { general: '#2b65ab', dinningRoom: "#3889EB", uber: "#31B968", rappi: "#F31A86", didi: "#F37D1A" }
+    private chartColors = Charts.chartColors
     channelSales: any = {}
     salesDonutChartData: any
     paymentType: any = {}
@@ -31,6 +33,11 @@ export class VentasChartComponent implements OnChanges {
     public barChartType: ChartType = 'bar';
 
     pieChartOptions: ChartOptions = pieChartOptions
+
+    ngOnInit(): void {
+        this.typeFilterBarChart = this.isResultadosScreen ? 1: 2
+    }
+    
 
     ngOnChanges(changes: SimpleChanges): void {
         this.getPaymentType()
@@ -104,6 +111,9 @@ export class VentasChartComponent implements OnChanges {
         this.charts?.forEach(c => {
             c.chart?.update()
         })
+
+        this.typeFilterEvent.emit({parrot: this.isBtnParrotActive, filter: this.typeFilterAppBarChart})
+        //this.checkedEvent.emit({id: this.description, target: e.target.checked})
 
     }
 
