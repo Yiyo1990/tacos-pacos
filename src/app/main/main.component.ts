@@ -15,7 +15,7 @@ export class MainComponent implements AfterViewInit {
   dates = new Dates()
   isLoading!: boolean
 
-  months: [any] = new Dates().getMonths()
+  months: any[] = new Dates().getMonths()
   years: number[] = new Dates().getYears()
   currentYear: number = new Dates().getCurrentYear()
   currentMonth: any = this.months[0]
