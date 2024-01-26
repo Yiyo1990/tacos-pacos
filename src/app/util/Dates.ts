@@ -17,10 +17,10 @@ export class Dates {
         }
     }
 
-    public getMonthName(date: string) {
+    public getMonthName(date: string, format: string = "MMMM") {
         try {
             const dateM = moment(date, 'DD-MM-yyyy')
-            return firstUpperCase(dateM.format('MMMM'))
+            return firstUpperCase(dateM.format(format))
         } catch (e) {
             return ''
         }
@@ -36,12 +36,12 @@ export class Dates {
         return dateM.toDate()
     }
 
-    getMonths(): any[] {
+    getMonths(shortName: boolean = true): any[] {
         const meses = [];
         for (let i = 0; i < 12; i++) {
-            const mes = moment().month(i).format('MMMM').substring(0,3);
+            const mes = moment().month(i).format('MMMM');
             
-            meses.push({id: i+1, name: firstUpperCase(mes)});
+            meses.push({id: i+1, name: shortName ? firstUpperCase(mes).substring(0,3) : firstUpperCase(mes)});
         }
         return meses
     }

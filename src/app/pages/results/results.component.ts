@@ -51,6 +51,7 @@ export class ResultsComponent implements OnInit {
   totalExpenses: number = 0
   expenses: any[] = []
   expensesByDay: number[] = []
+  foodCategories: any = []
 
   //-----PROFITS -----
   profitByDay: number[] = []
@@ -66,6 +67,7 @@ export class ResultsComponent implements OnInit {
       if (result) {
         this.brandSelected = JSON.parse(result)
         this.onFilterDates()
+        this.getFoodCategories()
       }
     })
   }
@@ -186,6 +188,7 @@ export class ResultsComponent implements OnInit {
     return (totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout + totalUber + totalDidi + totalRappi)
   }
 
+  //  descontar los gastos de 'efectivo y caja'
   getTotalCash(): number {
     let totalCash = this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.parrot.sale), 0)
     return totalCash
@@ -207,9 +210,10 @@ export class ResultsComponent implements OnInit {
 
   getTotalApps(): number {
     let totalApps = 0
-    totalApps = totalApps + this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.uber.income), 0)
-    totalApps = totalApps + this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.didi.income), 0)
-    totalApps = totalApps + this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.rappi.income), 0)
+    //  PAGADO NO
+    totalApps = totalApps + this.sales.filter((s: any) => !s.apps.uber.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.uber.income), 0)
+    totalApps = totalApps + this.sales.filter((s: any) => !s.apps.didi.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.didi.income), 0)
+    totalApps = totalApps + this.sales.filter((s: any) => !s.apps.rappi.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.rappi.income), 0)
     return totalApps
   }
 
@@ -404,6 +408,20 @@ export class ResultsComponent implements OnInit {
       }
     })
     return index
+  }
+
+  getFoodCategories() {
+    this.mainService.$foodCategories.subscribe((result: any) => {
+      if (result) {
+        this.foodCategories = result
+        this.foodCategories.map((category: any) => {
+          let expCategories = this.expenses.filter((e: any) => e.foodCategories.id == category.id)
+          let sum = expCategories.reduce((total: any, value: any) => total + value.amount, 0)
+          let percent = (sum / this.getTotalExpenses()) * 100
+          return { id: category.id, name: category.name, amount: sum.toFixed(2), percent: percent.toFixed(2) }
+        })
+      }
+    })
   }
 
   updateCharts() {

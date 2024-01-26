@@ -1,16 +1,24 @@
-<div class="row" style="padding-bottom: 1rem;">
-   <div class="col-8 sm-12 md-8">
-
+<div class="row"  style=" margin: 0; width: 100% !important;">
+   <div class="col-12 sm-12 md-12">
       <div class="row" style="padding-bottom: 1rem;">
          <div class="col-4 sm-12 md-8">
             <button (click)="openModal(template)">Registrar Gasto</button>
          </div>
          <div class="col-4 sm-12 md-8"></div>
          <div class="col-4 sm-12 md-8">
-            <input type="text" class="form-control" (keyup)="onSearchExpense($event)" placeholder="Buscar...">
+           
          </div>
       </div>
 
+      <gastos-chart [expenses]="expensesList"  [foodCategories]="foodCategories" />
+
+      <div class="row" style="margin: 2%;">
+         <div class="col-4 md-4 sm-12"></div>
+         <div class="col-4 md-4 sm-12"></div>
+         <div class="col-4 md-4 sm-12">
+            <input type="text" class="form-control" (keyup)="onSearchExpense($event)" placeholder="Buscar...">
+         </div>
+      </div>
       <div class="row">
          <div class="col-12 sm-12 md-12">
             <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
@@ -71,32 +79,7 @@
       </div>
    </div>
 
-   <div class="col-4 sm-12 md-4">
-      <div class="row">
-         <div class="col-12 sm-12 md-12" style="text-align: center;">
-            <label>TOTAL GASTOS</label><br>
-            <h3>${{sumaGastosTotales}}</h3>
-         </div>
-      </div>
-      <br>
-      <div class="row">
-         <div class="col-12 sm-12 md-12" style="text-align: center;">
-            <label class="subtitle">CATEGORIAS</label>
-            <canvas baseChart class="chart" [data]="barChartData"  [options]="barChartOptions"   [type]="'bar'">
-            </canvas>
-         </div>
-      </div>
-      <br>
-      <div class="row">
-         <div class="col-2"></div>
-         <div class="col-8 sm-10 md-8" style="text-align: center;">
-            <label class="subtitle">FACTURACION</label>
-            <canvas baseChart class="chart" [data]="facturationChartData" [options]="donutChartOptions" [type]="'doughnut'">
-            </canvas>
-         </div>
-         <div class="col-2"></div>
-      </div>
-   </div>
+  
 
    <ng-template #template>
       <div class="modal-header">

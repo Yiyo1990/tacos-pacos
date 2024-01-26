@@ -14,12 +14,9 @@ export class PrimaryButtonComponent {
   @Output() checkedEvent : EventEmitter<any> = new EventEmitter()
 
 
-  handleClick(): void {
-
-  }
+  handleClick(): void {}
 
   onChecked(e: any): void {
-
     this.checkedEvent.emit({id: this.description, target: e.target.checked})
   }
 }

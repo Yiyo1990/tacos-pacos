@@ -3,8 +3,11 @@
         <div class="row">
             <div class="col-12">
                 <accordion>
-                    <accordion-group heading="Balance" class="title-accordion" style="background-color: crimson;"
-                        [isOpen]="true">
+                    <!-- ///////////  BALANCE ////////////-->
+                    <accordion-group class="title-accordion" style="background-color: crimson;" [isOpen]="true">
+                        <span accordion-heading>
+                            <label style="font-size: 15pt; font-weight: bold;">Balance</label> &nbsp; <i   style="float: right;" class='fa fa-chevron-down'></i>
+                        </span>
                         <div class="row">
                             <div class="col-2 sm-12 md-2">
                                 <app-primary-button description="VENTAS" icon="dollar-sign"
@@ -19,10 +22,13 @@
                                     total="{{getProfit() | currency}}" backgrounColor="greenBtn"
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
                             </div>
+
+
                             <div class="col-10 md-10 sm-12">
                                 <div class="row">
                                     <div class="sm-12" style="width: 14.2%;">
                                         <div style="display: flex;">
+                                            <!-- Los colores ponerle el borde solamente-->
                                             <div class="cards-total"
                                                 style="width: 130px; height: auto; padding: 0.3%; background-color: #60bb60; text-align: center; opacity: 0.8;">
                                                 <label style="margin: 0; color: #fff;">Efectivo</label>
@@ -94,7 +100,12 @@
                             </div>
                         </div>
                     </accordion-group>
-                    <accordion-group heading="Ventas" [isOpen]="true">
+
+                    <!-- ///////////  VENTAS ////////////-->
+                    <accordion-group [isOpen]="true">
+                        <span accordion-heading>
+                            <label style="font-size: 15pt; font-weight: bold;">Ventas</label> &nbsp; <i style="float: right;" class='fa fa-chevron-down'></i>
+                        </span>
                         <ventas-chart [sales]="sales" [isResultadosScreen]="true"
                             (typeFilterEvent)="filterCharts($event)" />
                         <div class="row" style="margin-top: 2rem;">
@@ -137,6 +148,18 @@
                                     <div class="col-1 md-1 sm-12">{{getTypePay().card.percent}}%</div>
                                 </div>
                             </div>
+                        </div>
+                    </accordion-group>
+
+                    <!-- ///////////  GASTOS ////////////-->
+                    <accordion-group class="title-accordion" style="background-color: crimson;" [isOpen]="true">
+                        <span accordion-heading>
+                            <label style="font-size: 15pt; font-weight: bold;">Gastos</label> &nbsp; <i style="float: right;" class='fa fa-chevron-down'></i>
+                        </span>
+                        <gastos-chart [expenses]="expenses" [foodCategories]="foodCategories" />
+
+                        <div class="row">
+
                         </div>
                     </accordion-group>
                 </accordion>

@@ -55,19 +55,9 @@ export class VentasChartComponent implements OnChanges, OnInit {
         this.barChartData.datasets = []
         this.barChartData.labels = []
 
-        if (this.isResultadosScreen) {
-            let months = this.dates.getMonths()
-            months.map((m: any) => {
-                this.barChartData.labels?.push(m.name)
-            })
-        }
-
-        //console.log(this.dates.getMonths())
-
         let grouped = !this.isBtnMonthActive ? groupArrayByKey(this.sales, 'day') : groupArrayByKey(this.sales, 'month')
 
         let barchartLabels = Object.keys(grouped)
-
 
         let listTotalDinningRoom: any = []
         let listTotalDidi: any = []
@@ -75,7 +65,28 @@ export class VentasChartComponent implements OnChanges, OnInit {
         let listTotalRappi: any = []
         let listTotalVenta: any = []
 
+        let months = this.dates.getMonths(false)
+        if (this.isResultadosScreen) {
+           
+            months.map((m: any) => {
+                this.barChartData.labels?.push(m.name)
+                listTotalDinningRoom.push(0)
+                listTotalDidi.push(0)
+                listTotalUber.push(0)
+                listTotalRappi.push(0)
+                listTotalVenta.push(0)
+            })
+
+        }
+
+
         barchartLabels.map((day: any) => {
+            let monthIndex = 0
+            if(this.isResultadosScreen) {
+                monthIndex = months.find((m:any) => m.name == day).id - 1
+            }
+            
+
             let dataDay = grouped[day]
             let totalDinnigRoom = 0
             let totalDidi = 0
@@ -89,21 +100,30 @@ export class VentasChartComponent implements OnChanges, OnInit {
                 totalRappi += this.isBtnParrotActive == 2 ? Number(d.apps.rappi.sale) : Number(d.apps.rappi.income)
             })
 
-            listTotalDinningRoom.push(totalDinnigRoom)
-            listTotalDidi.push(totalDidi)
-            listTotalUber.push(totalUber)
-            listTotalRappi.push(totalRappi)
-            listTotalVenta.push(totalDinnigRoom + totalDidi + totalUber + totalRappi)
+            if(!this.isResultadosScreen) {
+                listTotalDinningRoom.push(totalDinnigRoom)
+                listTotalDidi.push(totalDidi)
+                listTotalUber.push(totalUber)
+                listTotalRappi.push(totalRappi)
+                listTotalVenta.push(totalDinnigRoom + totalDidi + totalUber + totalRappi)
+            } else {
+                listTotalDinningRoom[monthIndex] = totalDinnigRoom
+                listTotalDidi[monthIndex] = totalDidi
+                listTotalUber[monthIndex] = totalUber
+                listTotalRappi[monthIndex] = totalRappi
+                listTotalVenta[monthIndex] = totalDinnigRoom + totalDidi + totalUber + totalRappi
+            }
 
             if (!this.isResultadosScreen)
                 this.barChartData.labels?.push(day)
         })
 
+
         if (this.typeFilterAppBarChart == 1) {
-            this.barChartData.datasets.push({ data: listTotalDinningRoom, label: '', backgroundColor: this.chartColors.dinningRoom, stack: 'a' })
-            this.barChartData.datasets.push({ data: listTotalDidi, label: '', backgroundColor: this.chartColors.didi, stack: 'a' })
-            this.barChartData.datasets.push({ data: listTotalUber, label: '', backgroundColor: this.chartColors.uber, stack: 'a' })
-            this.barChartData.datasets.push({ data: listTotalRappi, label: '', backgroundColor: this.chartColors.rappi, stack: 'a' })
+            data.push({ data: listTotalDinningRoom, label: '', backgroundColor: this.chartColors.dinningRoom, stack: 'a' })
+            data.push({ data: listTotalDidi, label: '', backgroundColor: this.chartColors.didi, stack: 'a' })
+            data.push({ data: listTotalUber, label: '', backgroundColor: this.chartColors.uber, stack: 'a' })
+            data.push({ data: listTotalRappi, label: '', backgroundColor: this.chartColors.rappi, stack: 'a' })
         } else if (this.typeFilterAppBarChart == 2) {
             data.push({ data: listTotalVenta, label: '', backgroundColor: this.chartColors.general, stack: 'a' })
         } else if (this.typeFilterAppBarChart == 3) {
@@ -125,7 +145,6 @@ export class VentasChartComponent implements OnChanges, OnInit {
         })
 
         this.typeFilterEvent.emit({ parrot: this.isBtnParrotActive, filter: this.typeFilterAppBarChart })
-        //this.checkedEvent.emit({id: this.description, target: e.target.checked})
 
     }
 

@@ -63,7 +63,6 @@ export class BillsComponent implements OnInit {
          if (month) {
             this.currentMonth = month
             this.dateFilter = month.id == 0 ? this.dates.getStartAndEndYear(this.currentYear) : this.dates.getStartAndEndDayMonth(month.id, this.currentYear)
-            console.log("dateFilter Month", this.dateFilter)
             this.callServiceSearchExpenses('')
          }
       })
