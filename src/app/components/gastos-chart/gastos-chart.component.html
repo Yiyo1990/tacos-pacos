@@ -1,0 +1,50 @@
+<div class="row">
+    <div class="col-3 md-3 sm-12"></div>
+    <div class="col-6 md-6 sm-12"></div>
+    <div class="col-3 md-3 sm-12">
+        <div class="line-title"><label>Facturación</label></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-3 md-3 sm-12">
+        <div class="row" style="margin-left: 2rem; margin-right: 2rem;">
+            <div class="col-12 sm-12 md-12" style="text-align: center;">
+                <label>Gasto Total</label><br>
+                <h3>{{getTotalGastos() | currency}}</h3>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 2rem; margin-right: 2rem; margin-top: 0.5rem;"
+            *ngFor="let op of operationsType">
+            <div class="col-12 md-12 sm-12">
+                <gastos-check [name]="op.name" [ammount]="op.amount" [percent]="op.percent"
+                    (checkedEvent)="onOperationChecked($event)" [checked]="op.isChecked" />
+            </div>
+        </div>
+    </div>
+    <div class="col-6 sm-12 md-6">
+        <div class="row">
+            <div class="col-12 sm-12 md-12" style="text-align: center;">
+                <canvas baseChart class="chart" [data]="barChartData" [options]="barChartOptions" [type]="'bar'">
+                </canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-3 md-3 sm-12">
+        <div class="row" style="height: 85%;">
+            <div class="col-12 md-12 sm-12">
+                <div class="bar-chart">
+                    <div class="bar" [ngStyle]="{'height': billingChartData.billingPercent}" style="background-color: rgb(94, 187, 85);" [attr.data-value]="billingChartData?.billing | currency"></div>
+                    <div class="bar" [ngStyle]="{'height': billingChartData.noBillingPercent}" style="background-color: rgb(233, 143, 59);" [attr.data-value]="billingChartData?.noBilling | currency"></div>
+                  </div>
+            </div>
+        </div>  
+        <div class="row">
+            <div class="col-6 md-6 sm-12" style="text-align: center;">
+                <label>Facturado</label>
+            </div>
+            <div class="col-6 md-6 sm-12" style="text-align: center;">
+                <label>Sin Facturar</label>
+            </div>
+        </div>
+    </div>
+</div>
