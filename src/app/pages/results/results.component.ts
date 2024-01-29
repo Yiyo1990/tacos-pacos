@@ -315,7 +315,6 @@ export class ResultsComponent implements OnInit {
       next: (res: any) => {
         this.expenses = res
         this.getExpensesByDay()
-        // this.sumTotalExpenses()
       },
       error: (e) => {
         this.toast.error("Ha ocurrido un error", "Error")

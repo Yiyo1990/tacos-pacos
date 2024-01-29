@@ -101,7 +101,7 @@ export class BillsComponent implements OnInit {
    getCatalogs() {
       this.mainService.$foodCategories.subscribe((result: any) => {
          if (result) {
-            this.foodCategories = result
+                        this.foodCategories = result
          }
       })
 

@@ -24,10 +24,11 @@ export class MainComponent implements AfterViewInit {
   maxDate = new Date()
 
   modalRef?: BsModalRef
+  brandData: any
 
   constructor(private service: MainService, private modalService: BsModalService) {
-    service.getFoodCategories()
-    service.getProvidersCategories()
+    
+   
     service.getOperationsCategories()
     service.setBranSelected(sessionStorage.getItem('marcaSeleccionada'))
 
@@ -45,6 +46,13 @@ export class MainComponent implements AfterViewInit {
 
     this.service.$pageName.subscribe((name: string) => {
       this.currentPage = name
+    })
+
+    service.$brandSelected.subscribe((brand: any) => {
+      brand = JSON.parse(brand)
+      this.brandData = brand
+      service.getFoodCategories(brand.id)
+      service.getProvidersCategories(brand.id)
     })
 
     let currenNumbertMonth = (this.dates.getCurrentMonth() + 1)

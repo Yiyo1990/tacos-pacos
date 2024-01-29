@@ -15,6 +15,7 @@ export class VentasChartComponent implements OnChanges, OnInit {
 
     @Input() sales: any[] = []
     @Input() isResultadosScreen: boolean = false
+    @Input() brandSelected: any
     @ViewChildren(BaseChartDirective) charts: QueryList<BaseChartDirective> | undefined;
     @Output() typeFilterEvent: EventEmitter<any> = new EventEmitter()
     public pieChartPlugins = [];
@@ -30,7 +31,7 @@ export class VentasChartComponent implements OnChanges, OnInit {
     channelSales: any = {}
     salesDonutChartData: any
     paymentType: any = {}
-
+    
     barChartOptions: ChartOptions = barChartOptions
     public barChartType: ChartType = 'bar';
 
@@ -76,9 +77,7 @@ export class VentasChartComponent implements OnChanges, OnInit {
                 listTotalRappi.push(0)
                 listTotalVenta.push(0)
             })
-
         }
-
 
         barchartLabels.map((day: any) => {
             let monthIndex = 0
@@ -86,7 +85,6 @@ export class VentasChartComponent implements OnChanges, OnInit {
                 monthIndex = months.find((m:any) => m.name == day).id - 1
             }
             
-
             let dataDay = grouped[day]
             let totalDinnigRoom = 0
             let totalDidi = 0
