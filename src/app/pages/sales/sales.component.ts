@@ -27,29 +27,8 @@ export class SalesComponent implements OnInit, AfterViewInit {
   salesToShow: any[] = []
   currentYear: number = this.dates.getCurrentYear()
   currentMonthSelected: any = { id: 0, name: 'Anual' }
-  //@ViewChildren(BaseChartDirective) chart: QueryList<BaseChartDirective> | undefined;
-  //donutChartOptions: ChartConfiguration['options'] = donutChartOptions
-
-  //barChartData: ChartData<'bar'> = { labels: [], datasets: [] };
-  //barChartOptions: ChartOptions = barChartOptions
-  //public barChartType: ChartType = 'bar';
-
-  //pieChartOptions: ChartOptions = pieChartOptions
-  //public pieChartPlugins = [];
-
-  //applicationsDataChart: any
-  //salesDonutChartData: any
-  //chartColors = { general: '#2b65ab', dinningRoom: "#3889EB", uber: "#31B968", rappi: "#F31A86", didi: "#F37D1A" }
   filterDate: any = {}
 
-  //channelSales: any = {}
-
-  //isBtnMonthActive = false
-  //isBtnParrotActive = 2
-  //private typeFilterBarChart = 2
-  //private typeFilterAppBarChart = 1
-
-  //paymentType: any = {}
   isOpenDesgloce: boolean = false
   isAnual: boolean = false
 
@@ -81,14 +60,16 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
     document.getElementById("content-body")?.addEventListener("scroll", (e) => {
       let tbl = document.getElementsByTagName('table')[1]
-      let offset = tbl.getBoundingClientRect()
+      if (tbl) {
+        let offset = tbl.getBoundingClientRect()
 
-      let header = document.getElementById("hiddenHeader")
+        let header = document.getElementById("hiddenHeader")
 
-      if (offset.top <= 14) {
-        header!.style.visibility = 'visible'
-      } else {
-        header!.style.visibility = 'hidden'
+        if (offset.top <= 14) {
+          header!.style.visibility = 'visible'
+        } else {
+          header!.style.visibility = 'hidden'
+        }
       }
     })
   }
@@ -258,8 +239,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
     return { parrot: fixedData(parrot), uber: fixedData(uber), didi: fixedData(didi), rappi: fixedData(rappi) }
   }
-
-
 
   setValueIncome(index: number, sale: any, value: any) {
     if (!value) return

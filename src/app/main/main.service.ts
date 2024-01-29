@@ -48,8 +48,8 @@ export class MainService {
     return this.pageName.value
   }
 
-  async getProvidersCategories() {
-    let url = this.endPoint.concat('expense/provider-categories')
+  async getProvidersCategories(branchId: number) {
+    let url = this.endPoint.concat(`expense/provider-categories/${branchId}`)
     this.http.get(url).subscribe({
       next: (result: any) => {
         this.providersCategories.next(result)
@@ -60,8 +60,8 @@ export class MainService {
     })
   }
 
-  async getFoodCategories() {
-    let url = this.endPoint.concat('expense/food-categories')
+  async getFoodCategories(branchId: number) {
+    let url = this.endPoint.concat(`expense/food-categories/${branchId}`)
     this.http.get(url).subscribe({
       next: (result: any) => {
         this.foodCategories.next(result)

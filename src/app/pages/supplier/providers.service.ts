@@ -11,8 +11,8 @@ export class ProvidersService {
   constructor(private httpClient:HttpClient) {
   }
 
-  getProviders() {
-    let url = this.url.concat('expense/provider-categories')
+  getProviders(branchId: number) {
+    let url = this.url.concat(`expense/provider-categories/${branchId}`)
     return this.httpClient.get(url)
   }
 

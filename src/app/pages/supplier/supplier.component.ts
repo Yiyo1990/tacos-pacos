@@ -39,7 +39,7 @@ export class SupplierComponent {
 
   constructor(private mainService: MainService, private service: ProvidersService, private modalService: BsModalService, private toastr: ToastrService) {
     mainService.setPageName("Proveedores")
-    this.getProviders()
+    
     this.mainService.$foodCategories.subscribe((result: any) => {
       if (result) {
         this.foodCategories = result
@@ -48,6 +48,7 @@ export class SupplierComponent {
 
     this.mainService.$brandSelected.subscribe((result: any) => {
       this.brandSelected = JSON.parse(result)
+      this.getProviders()
     })
   }
   openModal(template: TemplateRef<any>) {
@@ -93,7 +94,7 @@ export class SupplierComponent {
   }
 
   getProviders() {
-    this.service.getProviders().subscribe({
+    this.service.getProviders(this.brandSelected.id).subscribe({
       next: (resp: any) => {
         this.providerList = resp
         const tmp = resp.map((item: any) => {

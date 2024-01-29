@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 
@@ -12,6 +12,7 @@ export class MenuComponent {
   isMenuOpen: boolean = true;
   usuario: any = {}
   marcaSeleccionada : any = {}
+  @Input() brand: any
 
   menuList = [
     {id: 1, nombre: 'Inicio', icon: 'fas fa-home', link: 'inicio'},
@@ -30,8 +31,6 @@ export class MenuComponent {
     this.usuario = JSON.parse(authService.getUserLogged())
     let marcaSeleccionada = sessionStorage.getItem('marcaSeleccionada') 
     this.marcaSeleccionada = JSON.parse(marcaSeleccionada == null ? '': marcaSeleccionada)
-
-    console.log(this.marcaSeleccionada)
   }
 
   toggleMenu() {
@@ -45,5 +44,9 @@ export class MenuComponent {
 
   navigate(url: string, params: any) {
     this.router.navigate([`dashboard/${url}`], {state: params})
+  }
+
+  getSucursal() {
+    return this.brand.sucursal
   }
 }
