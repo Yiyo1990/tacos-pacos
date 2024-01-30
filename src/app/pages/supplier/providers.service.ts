@@ -16,6 +16,12 @@ export class ProvidersService {
     return this.httpClient.get(url)
   }
 
+  getFoodCategoriesByProvider(id: number, branchId: number) {
+    let url = this.url.concat(`expense/food-categories-by-provider-id/${id}/${branchId}`)
+    return this.httpClient.get(url)
+  }
+
+
   saveProvider(data: any, branchId: number) {
     let url = this.url.concat(`expense/provider?branchId=${branchId}`)
     return this.httpClient.post(url, data)
@@ -25,4 +31,5 @@ export class ProvidersService {
     let url = this.url.concat(`expense/provider?branchId=${branchId}&id=${id}`)
     return this.httpClient.delete(url)
   }
+
 }

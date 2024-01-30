@@ -19,8 +19,8 @@ export class ExpenseService {
     return this.httpClient.get(url)
   }
 
-  getProviderByCategory(categoryId: number) {
-    let url = this.endPoint.concat(`expense/provider-categories-by-category-id/${categoryId}`)
+  getProviderByCategory(categoryId: number, branchId: number) {
+    let url = this.endPoint.concat(`expense/provider-categories-by-category-id/${categoryId}/${branchId}`)
     return this.httpClient.get(url)
   }
 

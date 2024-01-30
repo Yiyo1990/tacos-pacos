@@ -72,6 +72,7 @@ export class MainService {
     })
   }
 
+
   async getOperationsCategories() {
     let url = this.endPoint.concat('expense/operations-categories')
     this.http.get(url).subscribe({

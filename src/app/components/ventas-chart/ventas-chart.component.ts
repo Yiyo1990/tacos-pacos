@@ -37,6 +37,8 @@ export class VentasChartComponent implements OnChanges, OnInit {
 
     pieChartOptions: ChartOptions = pieChartOptions
 
+    commerces: any[] = []
+
     ngOnInit(): void {
         this.typeFilterBarChart = this.isResultadosScreen ? 1 : 2
     }
@@ -45,6 +47,7 @@ export class VentasChartComponent implements OnChanges, OnInit {
     ngOnChanges(changes: SimpleChanges): void {
         this.getPaymentType()
         this.fillDonughtChart()
+        this.getCommerces()
     }
 
 
@@ -200,5 +203,9 @@ export class VentasChartComponent implements OnChanges, OnInit {
         this.paymentType.totalPayment = Number(totalPayment.toFixed(2))
         this.paymentType.percentParrot = percentParrot ? `${Math.round(percentParrot)}%` : '0%'
         this.paymentType.percentPayment = percentPayment ? `${Math.round(percentPayment)}%` : '0%'
+    }
+
+    getCommerces() {
+        this.commerces = this.brandSelected?.sucursal.commerces.map((c: any) => {return {...c, total: 0, percent: '100%'}})
     }
 }

@@ -46,6 +46,7 @@ export class ResultsComponent implements OnInit {
   isBtnParrotActive: number = 2
   private typeFilterAppBarChart = 1
   private chartColors = Charts.chartColors
+  commerces: any[] = []
 
   //--- EXPENSES ---
   totalExpenses: number = 0
@@ -55,6 +56,7 @@ export class ResultsComponent implements OnInit {
 
   //-----PROFITS -----
   profitByDay: number[] = []
+
 
   constructor(private mainService: MainService, private activeRouter: ActivatedRoute, private salesService: SalesService, private toast: ToastrService, private expenseService: ExpenseService) {
 
@@ -304,6 +306,9 @@ export class ResultsComponent implements OnInit {
     this.fillBarChartDays()
   }
 
+  getProfitPercent() {
+    return Math.round((this.getProfit() / this.getTotalSales())* 100)
+  }
 
   /**
    * ---- EXPENSES ----
@@ -428,5 +433,9 @@ export class ResultsComponent implements OnInit {
       c.chart?.update()
     })
   }
+
+  getCommerces() {
+    this.commerces = this.brandSelected?.sucursal.commerces.map((c: any) => {return {...c, total: 0, percent: '100%'}})
+}
 
 }
