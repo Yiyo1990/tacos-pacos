@@ -53,10 +53,10 @@
     </div>
 
     <div class="row">
-        <div class="col-5 md-5 sm-12">
+        <div class="col-4 md-4 sm-12">
             <div class="row" style="margin-top: 8%;" *ngIf="isBtnParrotActive == 1 || isBtnParrotActive == 2">
-                <div class="col-1 md-1 sm-12"> </div>
-                <div class="col-6 md-6 sm-12">
+                
+                <div class="col-7 md-7 sm-12">
                     <div style="margin: auto; margin-top: 3%;">
 
                         <div style="display: flex;">
@@ -108,7 +108,7 @@
                     </div>
                 </div>
 
-                <div class="col-4 md-4 sm-12">
+                <div class="col-5 md-5 sm-12">
                     <canvas baseChart class="chart" [data]="salesDonutChartData" [type]="'pie'"
                         [options]="pieChartOptions" [plugins]="pieChartPlugins">
                     </canvas>
@@ -142,17 +142,20 @@
             </div>
 
         </div>
-
+        <div class="col-1 md-1 sm-12"></div>
         <div class="col-7 md-7 sm-12">
 
             <div class="row" style="margin-top: 5%;">
-                <div class="col-3 md-3 sm-12">
-                    <div style="display: flex;">
-                        <input type="checkbox" checked>
-                        <label style="margin-left: 5%;">Tacos Pacos</label>
+                <div class="col-5 md-5 sm-12">
+                    <div class="row" style="font-weight: bold;">
+                        <div class="col-6 md-6"></div>
+                        <div class="col-4 md-4" ><label>Venta</label></div>
+                        <div class="col-2 md-2" style="text-align: center;"><label>%</label></div>
                     </div>
+                    <row-total-negocio *ngFor="let commerce of commerces" [id]="commerce.id" [name]="commerce.name" [total]="commerce.total" [percent]="commerce.percent"></row-total-negocio>
                 </div>
-                <div class="col-9 md-9 sm-12">
+                <div class="col-1 md-1 sm-12"></div>
+                <div class="col-6 md-6 sm-12">
 
                     <canvas baseChart class="chart" style="height: 100px !important;" [data]="barChartData"
                         [options]="barChartOptions" [type]="barChartType"></canvas>
@@ -168,7 +171,7 @@
 
 <div *ngIf="isResultadosScreen">
     <div class="row">
-        <div class="col-2 md-2 sm-12"></div>
+        <div class="col-3 md-3 sm-12"></div>
         <div class="col-2 md-2 sm-12">
             <div class="row">
                 <div class="col-11 md-11 sm-12">
@@ -184,7 +187,6 @@
                 </div>
             </div>
         </div>
-
 
 
         <div class="col-4 md-3 sm-12">
@@ -207,27 +209,27 @@
     </div>
 
     <div class="row">
-        <div class="col-8 md-8 sm-12">
-
+        <div class="col-9 md-9 sm-12">
             <div class="row" style="margin-top: 5%;">
-                <div class="col-3 md-3 sm-12">
-                    <div style="display: flex;">
-                        <input type="checkbox" checked>
-                        <label style="margin-left: 5%;">Tacos Pacos</label>
+                <div class="col-4 md-4 sm-12">
+                    <div class="row" style="font-weight: bold;">
+                        <div class="col-6 md-6"></div>
+                        <div class="col-4 md-4" ><label>Venta</label></div>
+                        <div class="col-2 md-2" style="text-align: center;"><label>%</label></div>
                     </div>
+                    <row-total-negocio *ngFor="let commerce of commerces" [id]="commerce.id" [name]="commerce.name" [total]="commerce.total" [percent]="commerce.percent" />
                 </div>
-                <div class="col-9 md-9 sm-12">
-
+                <div class="col-8 md-8 sm-12">
                     <canvas baseChart class="chart" style="height: 100px !important;" [data]="barChartData"
                         [options]="barChartOptions" [type]="barChartType"></canvas>
                 </div>
             </div>
 
         </div>
-        <div class="col-4 md-4 sm-12">
+        <div class="col-3 md-3 sm-12">
             <div class="row" style="margin-top: 8%;" *ngIf="isBtnParrotActive == 1 || isBtnParrotActive == 2">
-                <div class="col-3 md-3 sm-12"></div>
-                <div class="col-6 md-6 sm-12">
+                <div class="col-1 md-1 sm-12"></div>
+                <div class="col-8 md-8 sm-12">
                     <canvas baseChart class="chart" [data]="salesDonutChartData" [type]="'pie'"
                         [options]="pieChartOptions" [plugins]="pieChartPlugins">
                     </canvas>
@@ -240,6 +242,7 @@
 
                     </div>
                 </div>
+                <div class="col-1 md-1 sm-12"></div>
             </div>
         </div>
     </div>

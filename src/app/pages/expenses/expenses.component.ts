@@ -256,7 +256,7 @@ export class BillsComponent implements OnInit {
    }
 
    getServiceProviderCategory(categoryId: number) {
-      this.service.getProviderByCategory(categoryId).subscribe({
+      this.service.getProviderByCategory(categoryId, this.brandSelected.id).subscribe({
          next: (res: any) => {
             if (Array.isArray(res) && res.length > 0) {
                this.providerCategories = res

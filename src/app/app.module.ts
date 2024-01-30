@@ -43,6 +43,7 @@ import { HeaderTblSalesComponent } from './components/header-tbl-sales/header-tb
 import { VentasChartComponent } from './components/ventas-chart/ventas-chart.component';
 import { GastosChartComponent } from './components/gastos-chart/gastos-chart.component';
 import { GastosCheckComponent } from './components/gastos-check/gastos-check.component';
+import { RowTotalNegocioComponent } from './components/row-total-negocio/row-total-negocio.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { GastosCheckComponent } from './components/gastos-check/gastos-check.com
     HeaderTblSalesComponent,
     VentasChartComponent,
     GastosChartComponent,
-    GastosCheckComponent
+    GastosCheckComponent,
+    RowTotalNegocioComponent
   ],
   imports: [
     BrowserModule,
