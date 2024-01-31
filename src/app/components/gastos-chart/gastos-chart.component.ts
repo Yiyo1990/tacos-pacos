@@ -97,4 +97,8 @@ export class GastosChartComponent implements OnChanges {
 
     this.fillCategoriesChart(dataArray)
   }
+
+  onchangeCategory(value: any) {
+    
+  }
 }
