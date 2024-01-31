@@ -307,7 +307,7 @@ export class ResultsComponent implements OnInit {
   }
 
   getProfitPercent() {
-    return Math.round((this.getProfit() / this.getTotalSales())* 100)
+    return Math.round((this.getProfit() / this.getTotalSales()) * 100)
   }
 
   /**
@@ -435,7 +435,21 @@ export class ResultsComponent implements OnInit {
   }
 
   getCommerces() {
-    this.commerces = this.brandSelected?.sucursal.commerces.map((c: any) => {return {...c, total: 0, percent: '100%'}})
-}
+    this.commerces = this.brandSelected?.sucursal.commerces.map((c: any) => { return { ...c, total: 0, percent: '100%' } })
+  }
+
+  getFoodSupplier() {
+    let expensesByProviderFood : Array<any> = []
+    let expenses = this.expenses.filter((e: any) => e.foodCategories.code == 'food.alimentos').map((e: any) => {return {...e, provider: e.providerCategories.name}})
+    let groupedByProvider = groupArrayByKey(expenses, 'provider')
+    
+    Object.keys(groupedByProvider).map((k: any) => {
+      let provider: Array<any> = groupedByProvider[k]
+      let total = provider.reduce((total: number, obj: any) => total + obj.amount, 0)
+      expensesByProviderFood.push({name: k, total})
+    }) 
+
+    return expensesByProviderFood
+  }
 
 }
