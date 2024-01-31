@@ -40,11 +40,11 @@ export class SupplierComponent {
   constructor(private mainService: MainService, private service: ProvidersService, private modalService: BsModalService, private toastr: ToastrService) {
     mainService.setPageName("Proveedores")
     
-    /*this.mainService.$foodCategories.subscribe((result: any) => {
+    this.mainService.$foodCategories.subscribe((result: any) => {
       if (result) {
         this.foodCategories = result
       }
-    })*/
+    })
 
     this.mainService.$brandSelected.subscribe((result: any) => {
       this.brandSelected = JSON.parse(result)
