@@ -4,9 +4,10 @@
             <div class="col-12">
                 <accordion>
                     <!-- ///////////  BALANCE ////////////-->
-                    <accordion-group class="title-accordion" style="background-color: crimson;" [isOpen]="true">
+                    <accordion-group [isOpen]="true">
                         <span accordion-heading>
-                            <label style="font-size: 15pt; font-weight: bold;">Balance</label> &nbsp; <i   style="float: right;" class='fa fa-chevron-down'></i>
+                            <label style="font-size: 15pt; font-weight: bold;">Balance</label> &nbsp; <i
+                                style="float: right;" class='fa fa-chevron-down'></i>
                         </span>
                         <div class="row">
                             <div class="col-2 sm-12 md-2">
@@ -21,7 +22,9 @@
                                 <app-primary-button description="PROFIT" icon="money-bill-trend-up"
                                     total="{{getProfit() | currency}}" backgrounColor="greenBtn"
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
-                                    <div style="text-align: center;"><i class="fas fa-chart-simple" style="color: #3c8be6;" aria-hidden="true"></i>&nbsp;<label style="color: #60bb60; font-weight: bold;">{{getProfitPercent()}}%</label></div>
+                                <div style="text-align: center;"><i class="fas fa-chart-simple" style="color: #3c8be6;"
+                                        aria-hidden="true"></i>&nbsp;<label
+                                        style="color: #60bb60; font-weight: bold;">{{getProfitPercent()}}%</label></div>
                             </div>
 
 
@@ -103,9 +106,10 @@
                     </accordion-group>
 
                     <!-- ///////////  VENTAS ////////////-->
-                    <accordion-group [isOpen]="true">
+                    <accordion-group [isOpen]="false">
                         <span accordion-heading>
-                            <label style="font-size: 15pt; font-weight: bold;">Ventas</label> &nbsp; <i style="float: right;" class='fa fa-chevron-down'></i>
+                            <label style="font-size: 15pt; font-weight: bold;">Ventas</label> &nbsp; <i
+                                style="float: right;" class='fa fa-chevron-down'></i>
                         </span>
                         <ventas-chart [sales]="sales" [isResultadosScreen]="true"
                             (typeFilterEvent)="filterCharts($event)" [brandSelected]="brandSelected" />
@@ -153,16 +157,37 @@
                     </accordion-group>
 
                     <!-- ///////////  GASTOS ////////////-->
-                    <accordion-group class="title-accordion" style="background-color: crimson;" [isOpen]="true">
+                    <accordion-group [isOpen]="false">
                         <span accordion-heading>
-                            <label style="font-size: 15pt; font-weight: bold;">Gastos</label> &nbsp; <i style="float: right;" class='fa fa-chevron-down'></i>
+                            <label style="font-size: 15pt; font-weight: bold;">Gastos</label> &nbsp; <i
+                                style="float: right;" class='fa fa-chevron-down'></i>
                         </span>
                         <gastos-chart [expenses]="expenses" [foodCategories]="foodCategories" />
 
-                        <div class="row">
-
+                        <div class="row" style="margin-top: 1rem;" *ngIf="getFoodSupplier().length > 0">
+                            <div class="col-12 md-12 sm-12">
+                                <div class="row">
+                                    <div class="col-12 md-12 sm-12 line-title">
+                                        <label>Proveedores de Alimentos</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 md-12 sm-12">
+                                        <div style="display: flex; max-width: 100%; flex-wrap: wrap; align-items: center;">
+                                            <div *ngFor="let sup of getFoodSupplier()" style="display: flex; text-align: center; width: calc(100% / 6); margin: 1rem;">
+                                                <div class="ellipsis"
+                                                    style="width: 50%; background-color: #d1d1d1; padding: 5px; color: #e68c38; font-weight: bold;">
+                                                    {{sup.name}}
+                                                </div>
+                                                <label style="margin-left: 10px; margin-top: 2%;">{{sup.total | currency}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </accordion-group>
+                
                 </accordion>
             </div>
 
