@@ -10,7 +10,7 @@
          </div>
       </div>
 
-      <gastos-chart [expenses]="expensesList"  [foodCategories]="foodCategories" />
+      <gastos-chart [expenses]="expensesOriginal"  [foodCategories]="foodCategories" (onChangeCategoryEvent)="onFilterCategory($event)"/>
 
       <div class="row" style="margin: 2%;">
          <div class="col-4 md-4 sm-12"></div>

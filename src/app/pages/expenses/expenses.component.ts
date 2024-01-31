@@ -22,6 +22,7 @@ import { Location } from '@angular/common';
 })
 export class BillsComponent implements OnInit {
    brandSelected: any
+   expensesOriginal: any[] = []
    expensesList: any = []
    dateFilter: any
    currentYear: number = new Dates().getCurrentYear()
@@ -122,7 +123,8 @@ export class BillsComponent implements OnInit {
    async getExpenses() {
       if (this.brandSelected) {
          this.service.getExpenses(this.brandSelected.id).subscribe({
-            next: (result) => {
+            next: (result: any) => {
+               this.expensesOriginal = result
                this.fillTblExpenses(result)
             },
             error: () => { this.toastr.error("Ha ocurrido un error", "Error") }
@@ -142,6 +144,7 @@ export class BillsComponent implements OnInit {
       this.mainService.isLoading(true)
       this.service.searchExpense(this.brandSelected.id, this.dateFilter.start, this.dateFilter.end, search).subscribe({
          next: (res: any) => {
+            this.expensesOriginal = res
             this.fillTblExpenses(res)
          },
          error: (e) => {
@@ -324,12 +327,8 @@ export class BillsComponent implements OnInit {
       this.chart?.update()
    }
 
-   /*
-   public chartHovered({ event, active }: { event?: ChartEvent; active?: object[] }): void {
-      console.log(event, active);
+   onFilterCategory(id: any) {
+      //let filterExpenses = id == 0 ? this.expensesOriginal : this.expensesOriginal.filter((e: any) => e.foodCategories.id == id)
+      //this.fillTblExpenses(filterExpenses)
    }
-
-   public chartClicked({ event, active }: { event?: ChartEvent; active?: object[] }): void {
-      console.log(event, active);
-   } */
 }
