@@ -53,10 +53,11 @@ export class ResultsComponent implements OnInit {
   expenses: any[] = []
   expensesByDay: number[] = []
   foodCategories: any = []
+  foodSupplier: any[] = []
+  foodCategorySelected: any = 0
 
   //-----PROFITS -----
   profitByDay: number[] = []
-
 
   constructor(private mainService: MainService, private activeRouter: ActivatedRoute, private salesService: SalesService, private toast: ToastrService, private expenseService: ExpenseService) {
 
@@ -64,6 +65,7 @@ export class ResultsComponent implements OnInit {
       mainService.setPageName(params.nombre)
     })
   }
+
   ngOnInit(): void {
     this.mainService.$brandSelected.subscribe((result: any) => {
       if (result) {
@@ -320,6 +322,7 @@ export class ResultsComponent implements OnInit {
       next: (res: any) => {
         this.expenses = res
         this.getExpensesByDay()
+        this.onChangeCategory(0)
       },
       error: (e) => {
         this.toast.error("Ha ocurrido un error", "Error")
@@ -438,18 +441,27 @@ export class ResultsComponent implements OnInit {
     this.commerces = this.brandSelected?.sucursal.commerces.map((c: any) => { return { ...c, total: 0, percent: '100%' } })
   }
 
-  getFoodSupplier() {
-    let expensesByProviderFood : Array<any> = []
-    let expenses = this.expenses.filter((e: any) => e.foodCategories.code == 'food.alimentos').map((e: any) => {return {...e, provider: e.providerCategories.name}})
+  getFoodSupplier(categorycode: string) {
+    this.foodSupplier = []
+    let expenses = categorycode == 'ALL' ? this.expenses.map((e: any) => {return {...e, provider: e.providerCategories.name}}) : this.expenses.filter((e: any) => e.foodCategories.code == categorycode).map((e: any) => {return {...e, provider: e.providerCategories.name}})
     let groupedByProvider = groupArrayByKey(expenses, 'provider')
     
     Object.keys(groupedByProvider).map((k: any) => {
       let provider: Array<any> = groupedByProvider[k]
       let total = provider.reduce((total: number, obj: any) => total + obj.amount, 0)
-      expensesByProviderFood.push({name: k, total})
+      this.foodSupplier.push({name: k, total})
     }) 
+  }
 
-    return expensesByProviderFood
+  onChangeCategory(idCategory: any) {
+    if(idCategory == 0) {
+      this.foodCategorySelected = 'Todos los proveedores'
+      this.getFoodSupplier('ALL')
+    } else {
+      let category = this.foodCategories.find((c: any) => c.id == idCategory)
+      this.foodCategorySelected = `Proveedores de ${category.name}`
+      this.getFoodSupplier(category.code)
+    }
   }
 
 }
