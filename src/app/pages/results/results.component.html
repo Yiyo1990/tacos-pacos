@@ -162,19 +162,19 @@
                             <label style="font-size: 15pt; font-weight: bold;">Gastos</label> &nbsp; <i
                                 style="float: right;" class='fa fa-chevron-down'></i>
                         </span>
-                        <gastos-chart [expenses]="expenses" [foodCategories]="foodCategories" />
+                        <gastos-chart [expenses]="expenses" [foodCategories]="foodCategories" (onChangeCategoryEvent)="onChangeCategory($event)" />
 
-                        <div class="row" style="margin-top: 1rem;" *ngIf="getFoodSupplier().length > 0">
+                        <div class="row" style="margin-top: 1rem;" *ngIf="foodSupplier.length > 0">
                             <div class="col-12 md-12 sm-12">
                                 <div class="row">
                                     <div class="col-12 md-12 sm-12 line-title">
-                                        <label>Proveedores de Alimentos</label>
+                                        <label>{{ foodCategorySelected }}</label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12 md-12 sm-12">
                                         <div style="display: flex; max-width: 100%; flex-wrap: wrap; align-items: center;">
-                                            <div *ngFor="let sup of getFoodSupplier()" style="display: flex; text-align: center; width: calc(100% / 6); margin: 1rem;">
+                                            <div *ngFor="let sup of foodSupplier" style="display: flex; text-align: center; width: calc(100% / 6); margin: 1rem;">
                                                 <div class="ellipsis"
                                                     style="width: 50%; background-color: #d1d1d1; padding: 5px; color: #e68c38; font-weight: bold;">
                                                     {{sup.name}}
@@ -186,6 +186,13 @@
                                 </div>
                             </div>
                         </div>
+                    </accordion-group>
+
+                    <accordion-group [isOpen]="false">
+                        <span accordion-heading>
+                            <label style="font-size: 15pt; font-weight: bold;">Cuentas por Cobrar</label> &nbsp; <i
+                                style="float: right;" class='fa fa-chevron-down'></i>
+                        </span>
                     </accordion-group>
                 
                 </accordion>

@@ -328,7 +328,7 @@ export class BillsComponent implements OnInit {
    }
 
    onFilterCategory(id: any) {
-      //let filterExpenses = id == 0 ? this.expensesOriginal : this.expensesOriginal.filter((e: any) => e.foodCategories.id == id)
-      //this.fillTblExpenses(filterExpenses)
+      let filterExpenses = id == 0 ? this.expensesOriginal : this.expensesOriginal.filter((e: any) => e.foodCategories.id == id)
+      this.fillTblExpenses(filterExpenses)
    }
 }
