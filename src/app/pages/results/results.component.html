@@ -171,7 +171,7 @@
                                         <label>{{ foodCategorySelected }}</label>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row" *ngIf="typeFilterExpenses != 'ALL'">
                                     <div class="col-12 md-12 sm-12">
                                         <div style="display: flex; max-width: 100%; flex-wrap: wrap; align-items: center;">
                                             <div *ngFor="let sup of foodSupplier" style="display: flex; text-align: center; width: calc(100% / 6); margin: 1rem;">
@@ -184,8 +184,15 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row" style="margin-top: 1%;" *ngIf="typeFilterExpenses == 'ALL'">
+                                    <div class="col-3"  *ngFor="let sup of foodSupplier" style="margin-bottom: 1%;" >
+                                        <category-supplier-card [nameCategory]="sup.name" [providers]="sup.providers"></category-supplier-card>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                       
+                        
                     </accordion-group>
 
                     <accordion-group [isOpen]="false">

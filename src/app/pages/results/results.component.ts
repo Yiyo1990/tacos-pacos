@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ChartData, ChartOptions, ChartType, Color } from 'chart.js';
 import { MainService } from 'src/app/main/main.service';
 import { Dates } from 'src/app/util/Dates';
-import { ReportChannel, barChartOptions, firstUpperCase, fixedData, groupArrayByKey, lineChartOptions } from 'src/app/util/util';
+import { ReportChannel, barChartOptions, firstUpperCase, fixedData, groupArrayByKey, lineChartOptions, sortByKey } from 'src/app/util/util';
 import { SalesService } from '../sales/sales-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { ExpenseService } from '../expenses/expenses.service';
@@ -55,6 +55,8 @@ export class ResultsComponent implements OnInit {
   foodCategories: any = []
   foodSupplier: any[] = []
   foodCategorySelected: any = 0
+
+  typeFilterExpenses: string = 'ALL'
 
   //-----PROFITS -----
   profitByDay: number[] = []
@@ -441,27 +443,41 @@ export class ResultsComponent implements OnInit {
     this.commerces = this.brandSelected?.sucursal.commerces.map((c: any) => { return { ...c, total: 0, percent: '100%' } })
   }
 
-  getFoodSupplier(categorycode: string) {
-    this.foodSupplier = []
-    let expenses = categorycode == 'ALL' ? this.expenses.map((e: any) => {return {...e, provider: e.providerCategories.name}}) : this.expenses.filter((e: any) => e.foodCategories.code == categorycode).map((e: any) => {return {...e, provider: e.providerCategories.name}})
-    let groupedByProvider = groupArrayByKey(expenses, 'provider')
-    
-    Object.keys(groupedByProvider).map((k: any) => {
-      let provider: Array<any> = groupedByProvider[k]
+  getFoodSupplier(categorycode: string, groupedBy: string) {
+    let foodSupplier: Array<any> = []
+
+    let expenses = categorycode == 'ALL' ? this.expenses.map((e: any) => { return { ...e, provider: e.providerCategories.name, foodCategory: e.foodCategories.name } }) : this.expenses.filter((e: any) => e.foodCategories.code == categorycode).map((e: any) => { return { ...e, provider: e.providerCategories.name, foodCategory: e.foodCategories.name } })
+    let groupedByKey = groupArrayByKey(expenses, groupedBy)
+
+    Object.keys(groupedByKey).map((k: any) => {
+      let provider: Array<any> = groupedByKey[k]
+      let providerGrouped = groupArrayByKey(provider, 'provider')
+      let providers: Array<any> = []
+
+      Object.keys(providerGrouped).map((pk: any) => {
+        let total = providerGrouped[pk].reduce((total: number, obj: any) => total + obj.amount, 0)
+        providers.push({ name: pk, total: Math.round(total) })
+      })
+
       let total = provider.reduce((total: number, obj: any) => total + obj.amount, 0)
-      this.foodSupplier.push({name: k, total})
-    }) 
+      foodSupplier.push({ name: k, total, providers: sortByKey(providers, 'total') })
+    })
+
+    this.foodSupplier = sortByKey(foodSupplier, 'total')
   }
 
   onChangeCategory(idCategory: any) {
-    if(idCategory == 0) {
+    if (idCategory == 0) {
       this.foodCategorySelected = 'Todos los proveedores'
-      this.getFoodSupplier('ALL')
+      this.typeFilterExpenses = 'ALL'
+      this.getFoodSupplier('ALL', 'foodCategory')
     } else {
       let category = this.foodCategories.find((c: any) => c.id == idCategory)
+      this.typeFilterExpenses = category.name
       this.foodCategorySelected = `Proveedores de ${category.name}`
-      this.getFoodSupplier(category.code)
+      this.getFoodSupplier(category.code, 'provider')
     }
+
   }
 
 }

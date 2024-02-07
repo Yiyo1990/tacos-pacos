@@ -32,6 +32,10 @@ const groupArrayByKey = (sales: Array<any>, keyName: string): Array<any> => {
   return grouped
 }
 
+const sortByKey = (array: Array<any>, keyName: string) : Array<any> => {
+  return array.sort((a: any,b: any) => {return a[keyName] < b[keyName] ? 0 : -1})
+}
+
 const fixedData = (data: any) => {
   data.commission = data.commission.toFixed(2)
   data.sale = data.sale.toFixed(2)
@@ -114,4 +118,4 @@ enum ReportChannel {
   DIDI_FOOD = 'DIDI_FOOD'
 }
 
-export { configDropdown, firstUpperCase, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions, groupArrayByKey, ReportChannel, fixedData }
+export { configDropdown, firstUpperCase, sortByKey, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions, groupArrayByKey, ReportChannel, fixedData }

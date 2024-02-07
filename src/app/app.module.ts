@@ -44,6 +44,7 @@ import { VentasChartComponent } from './components/ventas-chart/ventas-chart.com
 import { GastosChartComponent } from './components/gastos-chart/gastos-chart.component';
 import { GastosCheckComponent } from './components/gastos-check/gastos-check.component';
 import { RowTotalNegocioComponent } from './components/row-total-negocio/row-total-negocio.component';
+import { CategorySupplierCardComponent } from './components/category-supplier-card/category-supplier-card.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import { RowTotalNegocioComponent } from './components/row-total-negocio/row-tot
     VentasChartComponent,
     GastosChartComponent,
     GastosCheckComponent,
-    RowTotalNegocioComponent
+    RowTotalNegocioComponent,
+    CategorySupplierCardComponent
   ],
   imports: [
     BrowserModule,

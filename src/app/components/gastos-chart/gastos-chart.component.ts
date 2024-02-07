@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ChartConfiguration, ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { barChartOptions, donutChartOptions, groupArrayByKey } from 'src/app/util/util';
+import { barChartOptions, donutChartOptions, groupArrayByKey, sortByKey } from 'src/app/util/util';
 
 @Component({
   selector: 'gastos-chart',
@@ -11,7 +11,7 @@ import { barChartOptions, donutChartOptions, groupArrayByKey } from 'src/app/uti
 export class GastosChartComponent implements OnChanges {
   @Input() foodCategories: any = []
   @Input() expenses: any = []
-  @Output() onChangeCategoryEvent : EventEmitter<any> = new EventEmitter()
+  @Output() onChangeCategoryEvent: EventEmitter<any> = new EventEmitter()
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
@@ -26,11 +26,12 @@ export class GastosChartComponent implements OnChanges {
   billingChartData: any = {}
   expensesByCategory: any[] = []
   expensesFiltered: any[] = []
+  categorySelected: number = 0
 
   ngOnChanges(changes: SimpleChanges): void {
     this.expensesByCategory = this.addPropertiesOnExpenses(this.expenses)
     this.fillOperationsType()
-    this.fillCategoriesChart(this.expensesByCategory)
+    this.fillCategoriesChart(this.expensesByCategory, this.categorySelected)
     this.fillBillingChart(this.expensesByCategory)
   }
 
@@ -39,19 +40,29 @@ export class GastosChartComponent implements OnChanges {
     return Number(totalSum.toFixed(2))
   }
 
-  fillCategoriesChart(expenses: any) {
+  fillCategoriesChart(expenses: any, typeFilter: number) {
     let categoriesName: any = []
     let amountCategories: any = []
 
     let categoriesArray: any[] = []
-    this.foodCategories.map((category: any) => {
-      let expCategories = expenses.filter((e: any) => e.foodCategories.id == category.id)
-      let sum = expCategories.reduce((total: any, value: any) => total + value.amount, 0)
-      categoriesArray.push({ name: category.name, total: sum })
-    })
+    if (typeFilter == 0) {
+      this.foodCategories.map((category: any) => {
+        let expCategories = expenses.filter((e: any) => e.foodCategories.id == category.id)
+        let sum = expCategories.reduce((total: any, value: any) => total + value.amount, 0)
+        categoriesArray.push({ name: category.name, total: sum })
+      })
+    } else {
+      let grouped = groupArrayByKey(expenses, 'provider')
+      Object.keys(grouped).map((k: any) => {
+        let providers = grouped[k]
+        let total = providers.reduce((total: number, obj: any) => total + obj.amount, 0)
+        categoriesArray.push({ name: k, total })
+      })
+    }
+
 
     let categories: any[] = []
-    categories = categoriesArray.sort((a: any, b: any) => b.total - a.total)
+    categories = sortByKey(categoriesArray, 'total') //categoriesArray.sort((a: any, b: any) => b.total - a.total)
 
     categories.map(a => {
       categoriesName.push(a.name)
@@ -65,7 +76,7 @@ export class GastosChartComponent implements OnChanges {
 
   addPropertiesOnExpenses(expenses: any[]) {
     expenses = expenses.map((e: any) => {
-      return { ...e, operation: e.operationType.name }
+      return { ...e, operation: e.operationType.name, provider: e.providerCategories.name }
     })
     return expenses
   }
@@ -94,7 +105,7 @@ export class GastosChartComponent implements OnChanges {
 
   onOperationChecked(e: any) {
     let expenses = this.getOperationChecked(e, this.expensesByCategory)
-    this.fillCategoriesChart(expenses)
+    this.fillCategoriesChart(expenses, this.categorySelected)
     this.fillBillingChart(expenses)
   }
 
@@ -119,18 +130,19 @@ export class GastosChartComponent implements OnChanges {
   }
 
   onChangeCategory(value: any) {
+    this.categorySelected = value
     this.onChangeCategoryEvent.emit(value)
     if (value == 0) {
       let expenses = this.addPropertiesOnExpenses(this.expenses)
       this.expensesByCategory = expenses
-      this.fillCategoriesChart(this.expensesByCategory)
+      this.fillCategoriesChart(this.expensesByCategory, 0)
       this.fillBillingChart(this.expensesByCategory)
       this.fillOperationsType()
     } else {
       let expenses = this.expenses.filter((e: any) => e.foodCategories.id == value)
       expenses = this.addPropertiesOnExpenses(expenses)
       this.expensesByCategory = expenses
-      this.fillCategoriesChart(this.expensesByCategory)
+      this.fillCategoriesChart(this.expensesByCategory, value)
       this.fillBillingChart(this.expensesByCategory)
       this.fillOperationsType()
     }

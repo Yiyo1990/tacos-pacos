@@ -1,0 +1,39 @@
+<div class="row contenido">
+    <div class="col-12 md-12 sm-12">
+        <div class="row">
+            <div class="col-12" style="text-align: center; font-weight: bold; background-color: #a9a9a9;"><label>{{nameCategory}}</label></div>
+        </div>
+        <div *ngIf="isEditable">
+            <div class="row" >
+                <div class="col-4 md-4 sm-12">ID</div>
+                <div class="col-4 md-4 sm-12">Proveedor</div>
+                <div class="col-4 md-4 sm-12">Acciones</div>
+            </div>
+            <div class="row">
+                <div class="col-4 md-4 sm-12">1</div>
+                <div class="col-4 md-4 sm-12">Alba</div>
+                <div class="col-4 md-4 sm-12">
+                    <div class="row">
+                        <div class="col-6 md-6 sm-12"><i class="fa fa-solid"></i></div>
+                        <div class="col-6 md-6 sm-12"><i class="fa fa-trash"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!isEditable">
+            <div class="row" style="font-weight: bold;">
+                <div class="col-2 md-2 sm-12">#</div>
+                <div class="col-6 md-6 sm-12">Proveedor</div>
+                <div class="col-4 md-4 sm-12">Total</div>
+            </div>
+            
+            <div class="row" *ngFor="let provider of providers; let i = index; ">
+                <div class="col-2 md-2 sm-12">{{i+1}}</div>
+                <div class="col-6 md-6 sm-12">{{provider.name}}</div>
+                <div class="col-4 md-4 sm-12">
+                    <label>{{provider.total | currency}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
