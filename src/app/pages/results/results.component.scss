@@ -22,3 +22,27 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+table {
+    tbody {
+        font-size: 10pt;
+
+        tr {
+            height: 40px;
+
+            td {
+                margin-left: 5px;
+                margin-right: 5px;
+            }
+        }
+    }
+}
+
+
+.tr-hover {
+    cursor: pointer;
+}
+
+.tr-hover:hover {
+    background-color: #a0a0a0;
+}

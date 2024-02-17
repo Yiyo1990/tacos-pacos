@@ -73,7 +73,7 @@
                                                 style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #a0a0a0; text-align: center;">
                                                 <label style="margin: 0; color: #a0a0a0;">Por Cobrar</label>
                                             </div>
-                                            <label class="cards-total total">{{0 | currency}}</label>
+                                            <label class="cards-total total">{{getTotalPorCobrar() | currency}}</label>
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
@@ -162,7 +162,8 @@
                             <label style="font-size: 15pt; font-weight: bold;">Gastos</label> &nbsp; <i
                                 style="float: right;" class='fa fa-chevron-down'></i>
                         </span>
-                        <gastos-chart [expenses]="expenses" [foodCategories]="foodCategories" (onChangeCategoryEvent)="onChangeCategory($event)" />
+                        <gastos-chart [expenses]="expenses" [foodCategories]="foodCategories"
+                            (onChangeCategoryEvent)="onChangeCategory($event)" />
 
                         <div class="row" style="margin-top: 1rem;" *ngIf="foodSupplier.length > 0">
                             <div class="col-12 md-12 sm-12">
@@ -173,35 +174,77 @@
                                 </div>
                                 <div class="row" *ngIf="typeFilterExpenses != 'ALL'">
                                     <div class="col-12 md-12 sm-12">
-                                        <div style="display: flex; max-width: 100%; flex-wrap: wrap; align-items: center;">
-                                            <div *ngFor="let sup of foodSupplier" style="display: flex; text-align: center; width: calc(100% / 6); margin: 1rem;">
+                                        <div
+                                            style="display: flex; max-width: 100%; flex-wrap: wrap; align-items: center;">
+                                            <div *ngFor="let sup of foodSupplier"
+                                                style="display: flex; text-align: center; width: calc(100% / 6); margin: 1rem;">
                                                 <div class="ellipsis"
                                                     style="width: 50%; background-color: #d1d1d1; padding: 5px; color: #e68c38; font-weight: bold;">
                                                     {{sup.name}}
                                                 </div>
-                                                <label style="margin-left: 10px; margin-top: 2%;">{{sup.total | currency}}</label>
+                                                <label style="margin-left: 10px; margin-top: 2%;">{{sup.total |
+                                                    currency}}</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 1%;" *ngIf="typeFilterExpenses == 'ALL'">
-                                    <div class="col-3"  *ngFor="let sup of foodSupplier" style="margin-bottom: 1%;" >
-                                        <category-supplier-card [nameCategory]="sup.name" [providers]="sup.providers"></category-supplier-card>
+                                    <div class="col-3" *ngFor="let sup of foodSupplier" style="margin-bottom: 1%;">
+                                        <category-supplier-card [nameCategory]="sup.name"
+                                            [providers]="sup.providers"></category-supplier-card>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                       
-                        
+
                     </accordion-group>
+
+                    <!--************  CUENTAS POR COBRAR *************-->
 
                     <accordion-group [isOpen]="false">
                         <span accordion-heading>
                             <label style="font-size: 15pt; font-weight: bold;">Cuentas por Cobrar</label> &nbsp; <i
                                 style="float: right;" class='fa fa-chevron-down'></i>
                         </span>
+
+                        <div class="row">
+                            <div class="col-5 md-5 sm-12">
+                                <table style="width: 100%;">
+                                    <thead style="background-color: #a0a0a0; font-size: 11pt;">
+                                        <tr>
+                                            <th style="background-color: #a0a0a0; width: 5%;"></th>
+                                            <th style="width: 30%;">Concepto</th>
+                                            <th style="width: 30%;">Monto</th>
+                                            <th style="width: 20%;">Pago</th>
+                                            <th style="width: 15%;">Tipo de Pago</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="tr-hover" title="Editar" *ngFor="let cc of cuentasPorCobrar; let i = index;" (click)="editCuentasPorCobrar(cc, template)">
+                                            <td style="background-color: #a0a0a0;">{{i+1}}</td>
+                                            <td>{{cc.concept}}</td>
+                                            <td>{{cc.amount | currency}}</td>
+                                            <td>
+                                                {{cc.isPay?'SI':'NO'}}
+                                            </td>
+                                            <td>
+                                                {{!cc.operationType ? '-' : cc.operationType.name}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="row">
+                                    <div class="col-1">
+                                        <div
+                                            style=" border: solid 1px #d1d1d1; width: 25px; height: 25px; margin-top: 10px; border-radius: 5px; cursor: pointer;" title="Agregar">
+                                            <i style="font-size: 16pt;" class="fa fa-plus" (click)="openModal(template)"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3 md-3 sm-12"></div>
+                        </div>
                     </accordion-group>
-                
                 </accordion>
             </div>
 
@@ -209,3 +252,45 @@
     </div>
 
 </div>
+
+
+<ng-template #template >
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Cuentas por cobrar</h4>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-12 md-12 sm-12">
+                <label>Concepto</label>
+                <br>
+                <input type="text" class="form-control" [(ngModel)]="cuentaPorCobrar.concepto">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 md-12 sm-12">
+                <label>Monto</label>
+                <br>
+                <input type="text" class="form-control" [(ngModel)]="cuentaPorCobrar.monto" formatoMoneda>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 md-6 sm-12">
+                <label>Pago</label><br>
+                <select (change)="onChangePay($any($event.target).value)" class="form-selected form-control">
+                    <option [selected]="cuentaPorCobrar.pago == 'SI'"  value="SI">SI</option>
+                    <option [selected]="cuentaPorCobrar.pago == 'NO'" value="NO">NO</option>
+                </select>
+            </div>
+            <div class="col-6 md-6 sm-12"><label>*Tipo de pago</label>
+                <select (change)="onChangePayType($any($event.target).value)" class="form-selected form-control">
+                    <option *ngFor="let op of operationsCategories" [selected]="cuentaPorCobrar!.tipoPago.id == op.id"  value="{{op.id}}">{{op.name}}</option>
+                </select>
+            </div>
+        </div>
+        <br><br>
+        <button (click)="saveCuentaPorCobrar()">Guardar</button>
+    </div>
+</ng-template>
