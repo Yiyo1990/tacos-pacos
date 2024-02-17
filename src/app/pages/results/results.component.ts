@@ -1,15 +1,17 @@
-import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChartData, ChartOptions, ChartType, Color } from 'chart.js';
 import { MainService } from 'src/app/main/main.service';
 import { Dates } from 'src/app/util/Dates';
-import { ReportChannel, barChartOptions, firstUpperCase, fixedData, groupArrayByKey, lineChartOptions, sortByKey } from 'src/app/util/util';
+import { ReportChannel, barChartOptions, configDropdown, firstUpperCase, fixedData, groupArrayByKey, lineChartOptions, sortByKey } from 'src/app/util/util';
 import { SalesService } from '../sales/sales-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { ExpenseService } from '../expenses/expenses.service';
 import * as moment from 'moment';
 import { BaseChartDirective } from 'ng2-charts';
 import { Charts } from 'src/app/util/Charts';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { ResultService } from './result.service';
 
 @Component({
   selector: 'app-results',
@@ -18,6 +20,7 @@ import { Charts } from 'src/app/util/Charts';
 })
 export class ResultsComponent implements OnInit {
   @ViewChildren(BaseChartDirective) charts: QueryList<BaseChartDirective> | undefined;
+  @ViewChild('template', {static: true}) sampleModalRef!: TemplateRef<any>;
 
   lineChartOptions: ChartOptions = lineChartOptions
   dates = new Dates()
@@ -61,11 +64,35 @@ export class ResultsComponent implements OnInit {
   //-----PROFITS -----
   profitByDay: number[] = []
 
-  constructor(private mainService: MainService, private activeRouter: ActivatedRoute, private salesService: SalesService, private toast: ToastrService, private expenseService: ExpenseService) {
+  operationsCategories: Array<any> = []
+ 
+
+  //---- CUENTAS POR COBRAR ----
+  cuentasPorCobrar: Array<any> = []
+  modalRef?: BsModalRef;
+  readonly configDrodown = configDropdown
+  config = {
+    backdrop: true,
+    ignoreBackdropClick: true
+  };
+  cuentaPorCobrar = {
+    id: null,
+    concepto: '',
+    monto: "$0.00",
+    pago: 'NO',
+    tipoPago: {id: 0}
+  }
+
+  
+
+  constructor(private mainService: MainService, private activeRouter: ActivatedRoute, private salesService: SalesService, private toast: ToastrService, 
+    private expenseService: ExpenseService, private modalService: BsModalService, private service: ResultService) {
 
     this.activeRouter.queryParams.subscribe((params: any) => {
       mainService.setPageName(params.nombre)
     })
+
+    
   }
 
   ngOnInit(): void {
@@ -74,6 +101,14 @@ export class ResultsComponent implements OnInit {
         this.brandSelected = JSON.parse(result)
         this.onFilterDates()
         this.getFoodCategories()
+        
+      }
+    })
+
+    this.mainService.$operationCategories.subscribe((res: any) => {
+      if(res) {
+        res.unshift({id:0, name: '-'})
+        this.operationsCategories = res
       }
     })
   }
@@ -84,12 +119,14 @@ export class ResultsComponent implements OnInit {
       let dates = month.id == 0 ? this.dates.getStartAndEndYear(this.currentYear) : this.dates.getStartAndEndDayMonth(month.id, this.currentYear)
       this.filterDate = { start: dates.start, end: dates.end }
       this.getReportSalesByDateRange(dates.start, dates.end)
+      this.getCuentasPorCobrar()
     })
 
     this.mainService.$filterRange.subscribe((dates: any) => {
       if (dates) {
         this.filterDate = { start: dates.start, end: dates.end }
         this.getReportSalesByDateRange(dates.start, dates.end)
+        this.getCuentasPorCobrar()
       }
     })
 
@@ -98,6 +135,7 @@ export class ResultsComponent implements OnInit {
       let months = this.currentMonthSelected.id == 0 ? this.dates.getStartAndEndYear(year) : this.dates.getStartAndEndDayMonth(this.currentMonthSelected.id, year)
       this.filterDate = { start: months.start, end: months.end }
       this.getReportSalesByDateRange(months.start, months.end)
+      this.getCuentasPorCobrar()
     })
   }
 
@@ -122,7 +160,7 @@ export class ResultsComponent implements OnInit {
   */
 
 
-  getReportSalesByDateRange(startDate: string, endDate: string) {
+  async getReportSalesByDateRange(startDate: string, endDate: string) {
     this.mainService.isLoading(true)
     this.salesService.getReportSalesByDateRange(this.brandSelected.id, startDate, endDate).subscribe({
       next: (data: any) => {
@@ -480,4 +518,99 @@ export class ResultsComponent implements OnInit {
 
   }
 
+  /**  CUENTAS POR COBRAR */
+
+  onChangePay(e: any) {
+    this.cuentaPorCobrar.pago = e
+    console.log(e)
+    if(e == 'NO') this.cuentaPorCobrar.tipoPago.id = 0
+  }
+
+  onChangePayType(e: any) {
+    this.cuentaPorCobrar.tipoPago.id = e
+  }
+
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(this.sampleModalRef, this.config)
+  }
+  
+  saveCuentaPorCobrar() {
+    if(!this.cuentaPorCobrar.concepto || !this.cuentaPorCobrar.monto) {
+      this.toast.error("Ingresa todos los campos","Error")
+      return 
+    } else if(this.cuentaPorCobrar.pago == 'SI' && this.cuentaPorCobrar.tipoPago.id == 0){
+      this.toast.error("Seleccione un tipo de pago","Error")
+      return
+    } else {
+
+      let params = {
+        description: "",
+        id: this.cuentaPorCobrar.id,
+        concept: this.cuentaPorCobrar.concepto,
+        amount: Number(this.cuentaPorCobrar.monto.replace("$","")),
+        isPay: this.cuentaPorCobrar.pago == "SI" ? true: false,
+        branch: {
+          id: Number(this.brandSelected.id)
+        },
+        operationType: {
+          id: this.cuentaPorCobrar.tipoPago.id == 0 ? null : Number(this.cuentaPorCobrar.tipoPago.id)
+        }
+      }
+      this.mainService.isLoading(true)
+      this.service.saveCuentasPorCobrar(params).subscribe({
+        next: (value) => {
+        },
+        error: (e) => {
+          this.toast.error("Ha ocurrido un error", "Error")
+          this.mainService.isLoading(false)
+        },
+        complete: () => {
+          this.closeModal()
+          this.getCuentasPorCobrar()
+        }
+      })
+    }
+  }
+
+  async getCuentasPorCobrar(){
+    this.mainService.isLoading(true)
+    this.service.getCuentasPorCobrar(this.brandSelected.id, this.filterDate.start, this.filterDate.end).subscribe({
+      next: (res: any) => {
+        if(Array.isArray(res)) {
+          this.cuentasPorCobrar = sortByKey(res, "id")
+        }
+        this.mainService.isLoading(false)
+      },
+      error: (e) => {
+        console.error(e)
+        this.mainService.isLoading(false)
+        this.toast.error("Ha ocurrido un error", "Error")
+      }
+    })
+  }
+
+  closeModal() {
+    this.cuentaPorCobrar = {
+      id: null,
+      concepto: '',
+      monto: "$0.00",
+      pago: 'NO',
+      tipoPago: {id: 0}
+    }
+    this.modalRef?.hide()
+  }
+
+  editCuentasPorCobrar(cc: any, template: any) {
+    this.cuentaPorCobrar.id = cc.id
+    this.cuentaPorCobrar.concepto = cc.concept
+    this.cuentaPorCobrar.monto = `$${cc.amount.toFixed(2)}`
+    this.cuentaPorCobrar.pago = cc.isPay ? 'SI': 'NO'
+    this.cuentaPorCobrar.tipoPago.id = !cc.operationType ? 0: cc.operationType.id
+    this.openModal(template)
+  }
+
+  getTotalPorCobrar() {
+    let total = this.cuentasPorCobrar.filter((s: any) => !s.isPay).reduce((total: number, ob: any) => total + ob.amount, 0)
+    return total
+  }
 }

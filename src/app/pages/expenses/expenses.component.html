@@ -50,7 +50,7 @@
 
                <ng-container matColumnDef="Monto">
                   <mat-header-cell *matHeaderCellDef> Monto </mat-header-cell>
-                  <mat-cell *matCellDef="let item"> ${{ item.amount }} </mat-cell>
+                  <mat-cell *matCellDef="let item"> {{ item.amount | currency }} </mat-cell>
                </ng-container>
 
                <ng-container matColumnDef="Facturación">
