@@ -1,3 +1,11 @@
 .contenido {
     margin: 0.2%;
 }
+
+.hover {
+    cursor: pointer;
+}
+
+.rowHover:hover {
+    background-color: rgb(212, 212, 212);
+}

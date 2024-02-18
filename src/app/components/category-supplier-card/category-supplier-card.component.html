@@ -1,23 +1,29 @@
 <div class="row contenido">
-    <div class="col-12 md-12 sm-12">
+    <div class="col-12 md-12 sm-12" style="margin-bottom: 5%;">
         <div class="row">
             <div class="col-12" style="text-align: center; font-weight: bold; background-color: #a9a9a9;"><label>{{nameCategory}}</label></div>
         </div>
         <div *ngIf="isEditable">
-            <div class="row" >
-                <div class="col-4 md-4 sm-12">ID</div>
-                <div class="col-4 md-4 sm-12">Proveedor</div>
-                <div class="col-4 md-4 sm-12">Acciones</div>
+            <div class="row" style="font-weight: bold;">
+                <div class="col-2 md-2 sm-12">#</div>
+                <div class="col-6 md-6 sm-12">Proveedor</div>
+                <div class="col-4 md-4 sm-12" style="align-items: center; text-align: center;">Acciones</div>
             </div>
-            <div class="row">
-                <div class="col-4 md-4 sm-12">1</div>
-                <div class="col-4 md-4 sm-12">Alba</div>
+            <div class="row rowHover" *ngFor="let provider of providers; let i = index; ">
+                <div class="col-2 md-2 sm-12">{{i+1}}</div>
+                <div class="col-6 md-6 sm-12 ellipsis" title="{{provider.name}}">{{provider.name}}</div>
                 <div class="col-4 md-4 sm-12">
                     <div class="row">
-                        <div class="col-6 md-6 sm-12"><i class="fa fa-solid"></i></div>
-                        <div class="col-6 md-6 sm-12"><i class="fa fa-trash"></i></div>
+                        <div class="col-6 md-6 sm-12" (click)="onClickActions(1, provider)"><i class="fa fa-edit hover" title="Editar"></i></div>
+                        <div class="col-6 md-6 sm-12" (click)="onClickActions(0, provider)"><i class="fa fa-trash hover" title="Eliminar"></i></div>
                     </div>
                 </div>
+            </div>
+            <div style="border: solid 1px #d1d1d1; width: 25px; height: 25px; margin-top: 10px; border-radius: 5px; cursor: pointer;"
+                title="Agregar {{nameCategory}}"
+                (click)="onClickAddCategory()"
+                >
+                <i style="font-size: 16pt;" class="fa fa-plus" ></i>
             </div>
         </div>
         <div *ngIf="!isEditable">
