@@ -12,15 +12,15 @@
                         <div class="row">
                             <div class="col-2 sm-12 md-2">
                                 <app-primary-button description="VENTAS" icon="dollar-sign"
-                                    total="{{getTotalSales() | currency}}" backgrounColor="blueBtn"
+                                    total="{{totalSales | currency}}" backgrounColor="blueBtn"
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
 
                                 <app-primary-button description="GASTOS" icon="arrow-trend-down"
-                                    total="{{getTotalExpenses() | currency}}" backgrounColor="orangeBtn"
+                                    total="{{totalExpenses | currency}}" backgrounColor="orangeBtn"
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
 
                                 <app-primary-button description="PROFIT" icon="money-bill-trend-up"
-                                    total="{{getProfit() | currency}}" backgrounColor="greenBtn"
+                                    total="{{profit | currency}}" backgrounColor="greenBtn"
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
                                 <div style="text-align: center;"><i class="fas fa-chart-simple" style="color: #3c8be6;"
                                         aria-hidden="true"></i>&nbsp;<label
@@ -37,7 +37,7 @@
                                                 style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #478b47; text-align: center; opacity: 0.8;">
                                                 <label style="margin: 0; color: #60bb60;">Efectivo</label>
                                             </div>
-                                            <label class="cards-total total">{{getTotalCash() | currency}}</label>
+                                            <label class="cards-total total">{{totalCash | currency}}</label>
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
@@ -46,7 +46,7 @@
                                                 style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #c147cc; text-align: center;">
                                                 <label style="margin: 0; color: #c147cc;">Tarjeta</label>
                                             </div>
-                                            <label class="cards-total total">{{getTotalCard() | currency}}</label>
+                                            <label class="cards-total total">{{totalCard | currency}}</label>
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
@@ -55,7 +55,7 @@
                                                 style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #eb4949; text-align: center;">
                                                 <label style="margin: 0; color: #eb4949;">Pay</label>
                                             </div>
-                                            <label class="cards-total total">{{ getTotalPay() | currency}}</label>
+                                            <label class="cards-total total">{{ totalPay | currency}}</label>
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
@@ -64,7 +64,7 @@
                                                 style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #f8a130; text-align: center;">
                                                 <label style="margin: 0; color: #f8a130;">Apps</label>
                                             </div>
-                                            <label class="cards-total total">{{getTotalApps() | currency}}</label>
+                                            <label class="cards-total total">{{totalApps | currency}}</label>
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
@@ -73,7 +73,7 @@
                                                 style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #a0a0a0; text-align: center;">
                                                 <label style="margin: 0; color: #a0a0a0;">Por Cobrar</label>
                                             </div>
-                                            <label class="cards-total total">{{getTotalPorCobrar() | currency}}</label>
+                                            <label class="cards-total total">{{totalPorCobrar | currency}}</label>
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
@@ -82,7 +82,7 @@
                                                 style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #3c8be6; text-align: center;">
                                                 <label style="margin: 0; color: #3c8be6;">Total</label>
                                             </div>
-                                            <label class="cards-total total">{{ getTotal() | currency}}</label>
+                                            <label class="cards-total total">{{ total | currency}}</label>
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
@@ -91,7 +91,7 @@
                                                 style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #ffd341; text-align: center;">
                                                 <label style="margin: 0; color: #ffd341;">Gap</label>
                                             </div>
-                                            <label class="cards-total total">{{getTotalGap() | currency}}</label>
+                                            <label class="cards-total total">{{totalGap | currency}}</label>
                                         </div>
                                     </div>
                                 </div>

@@ -118,4 +118,10 @@ enum ReportChannel {
   DIDI_FOOD = 'DIDI_FOOD'
 }
 
-export { configDropdown, firstUpperCase, sortByKey, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions, groupArrayByKey, ReportChannel, fixedData }
+enum OperationType {
+  TRANSFER = 'type.operation.transferencia',
+  CASH = 'type.operation.efectivo',
+  BOX = 'type.operation.caja'
+}
+
+export { configDropdown, firstUpperCase, sortByKey, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions, groupArrayByKey, ReportChannel, fixedData, OperationType }
