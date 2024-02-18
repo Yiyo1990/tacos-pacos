@@ -2,7 +2,7 @@
   <div class="col-md-12">
     <div class="row" style="padding-bottom: 1rem;">
       <div class="col-4 sm-12 md-4">
-        <button (click)="openModal(template)">Registrar Proveedor</button>
+        <button (click)="onClickRegisterSup(template)">Registrar Proveedor</button>
       </div>
     </div>
 
@@ -31,7 +31,7 @@
   <div class="modal-body">
     <div class="row">
       <div class="col-12 md-12 sm-12"><label>*Categoria</label>
-        <ngx-select-dropdown [config]="configDrodown" [options]="foodCategories" [disabled]="true"
+        <ngx-select-dropdown [config]="configDrodown" [options]="foodCategories" [disabled]="!isEnabledRegisterSup"
           [(ngModel)]="provider!.foodCategories"></ngx-select-dropdown>
       </div>
     </div>

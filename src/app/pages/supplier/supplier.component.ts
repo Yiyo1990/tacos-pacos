@@ -1,4 +1,4 @@
-import { Component, TemplateRef } from '@angular/core';
+import { Component, OnChanges, SimpleChanges, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MainService } from 'src/app/main/main.service';
 import { ProvidersService } from './providers.service';
@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './supplier.component.html',
   styleUrls: ['./supplier.component.scss'],
 })
+
 export class SupplierComponent {
   modalRef?: BsModalRef;
   foodCategories: any = []
@@ -24,7 +25,7 @@ export class SupplierComponent {
   dates = new Dates()
   provider: any = { id: null, name: '', foodCategories: { id: null } }
   providerList: any = []
-
+  isEnabledRegisterSup: boolean = true
 
   constructor(private mainService: MainService, private service: ProvidersService, private modalService: BsModalService, private toastr: ToastrService) {
     mainService.setPageName("Proveedores")
@@ -40,7 +41,9 @@ export class SupplierComponent {
       this.getProviders()
     })
   }
-  openModal(template: TemplateRef<any>) {
+
+  openModal(template: TemplateRef<any>, isEnabledRegisterSup: boolean = true) {
+    this.isEnabledRegisterSup = isEnabledRegisterSup
     this.modalRef = this.modalService.show(template)
   }
 
@@ -147,6 +150,11 @@ export class SupplierComponent {
 
   onClickAddCategory(item: any, template: any) {
     this.provider.foodCategories = item.data[0].foodCategories
+    this.openModal(template, false)
+  }
+
+  onClickRegisterSup(template: any) {
+    this.resetProviderData()
     this.openModal(template)
   }
 }
