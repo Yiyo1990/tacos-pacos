@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ChartData, ChartOptions, ChartType, Color } from 'chart.js';
 import { MainService } from 'src/app/main/main.service';
 import { Dates } from 'src/app/util/Dates';
-import { ReportChannel, barChartOptions, configDropdown, firstUpperCase, fixedData, groupArrayByKey, lineChartOptions, sortByKey } from 'src/app/util/util';
+import { OperationType, ReportChannel, barChartOptions, configDropdown, firstUpperCase, fixedData, groupArrayByKey, lineChartOptions, sortByKey } from 'src/app/util/util';
 import { SalesService } from '../sales/sales-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { ExpenseService } from '../expenses/expenses.service';
@@ -30,7 +30,6 @@ export class ResultsComponent implements OnInit {
 
   brandSelected: any
 
-
   public lineChartColors: Color[] = []
   lineChartData: ChartData<'bar'> = {
     datasets: [],
@@ -41,7 +40,6 @@ export class ResultsComponent implements OnInit {
 
   //---- SALES ----
   sales: any[] = []
-  totalSales: number = 0
   salesByDay: number[] = []
   barChartData: ChartData<'bar'> = { labels: [], datasets: [] };
   barChartOptions: ChartOptions = barChartOptions
@@ -52,7 +50,6 @@ export class ResultsComponent implements OnInit {
   commerces: any[] = []
 
   //--- EXPENSES ---
-  totalExpenses: number = 0
   expenses: any[] = []
   expensesByDay: number[] = []
   foodCategories: any = []
@@ -83,16 +80,12 @@ export class ResultsComponent implements OnInit {
     tipoPago: {id: 0}
   }
 
-  
-
   constructor(private mainService: MainService, private activeRouter: ActivatedRoute, private salesService: SalesService, private toast: ToastrService, 
     private expenseService: ExpenseService, private modalService: BsModalService, private service: ResultService) {
 
     this.activeRouter.queryParams.subscribe((params: any) => {
       mainService.setPageName(params.nombre)
-    })
-
-    
+    }) 
   }
 
   ngOnInit(): void {
@@ -101,7 +94,6 @@ export class ResultsComponent implements OnInit {
         this.brandSelected = JSON.parse(result)
         this.onFilterDates()
         this.getFoodCategories()
-        
       }
     })
 
@@ -158,8 +150,6 @@ export class ResultsComponent implements OnInit {
   /** 
    * ----- SALES -----
   */
-
-
   async getReportSalesByDateRange(startDate: string, endDate: string) {
     this.mainService.isLoading(true)
     this.salesService.getReportSalesByDateRange(this.brandSelected.id, startDate, endDate).subscribe({
@@ -194,7 +184,6 @@ export class ResultsComponent implements OnInit {
 
           this.pushDataSalesChart()
           this.fillBarChartDays()
-          //this.sumTotalSales()
           this.callServiceSearchExpenses(startDate, endDate)
         }
       },
@@ -203,7 +192,6 @@ export class ResultsComponent implements OnInit {
       },
       complete: () => {
         this.mainService.isLoading(false)
-        this.getTotalCash()
       }
     })
   }
@@ -218,8 +206,7 @@ export class ResultsComponent implements OnInit {
     return { parrot: fixedData(parrot), uber: fixedData(uber), didi: fixedData(didi), rappi: fixedData(rappi) }
   }
 
-  getTotalSales() {
-
+  get totalSales(): number {
     let totalDinnigRoom = this.sales.reduce((total, sale) => total + Number(sale.diningRoom), 0)
     let totalDelivery = this.sales.reduce((total, sale) => total + Number(sale.delivery), 0)
     let totalPickUp = this.sales.reduce((total, sale) => total + Number(sale.pickUp), 0)
@@ -232,52 +219,50 @@ export class ResultsComponent implements OnInit {
     return (totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout + totalUber + totalDidi + totalRappi)
   }
 
-  //  descontar los gastos de 'efectivo y caja'
-  getTotalCash(): number {
-    let totalCash = this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.parrot.sale), 0)
-    return totalCash
+  get totalCash(): number {
+    let sales = this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.parrot.sale), 0)
+    return (sales + this.cuentaPagadaCash) - (this.expensesCash + this.expensesTransfer)
   }
 
-  getTotalCard(): number {
+  get totalCard(): number {
     let totalCard = this.sales.filter((a: any) => a.apps.parrot.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.parrot.income), 0)
     let totalApps = 0
     totalApps = totalApps + this.sales.filter((s: any) => s.apps.uber.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.uber.income), 0)
     totalApps = totalApps + this.sales.filter((s: any) => s.apps.didi.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.didi.income), 0)
     totalApps = totalApps + this.sales.filter((s: any) => s.apps.rappi.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.rappi.income), 0)
-    return (totalCard + totalApps)
+    return (totalCard + totalApps + this.cuentaPagadaTransfer) - (this.expensesTransfer)
   }
 
-  getTotalPay(): number {
+  get totalPay(): number {
     let totalCard = this.sales.filter((a: any) => !a.apps.parrot.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.parrot.income), 0)
     return totalCard
   }
 
-  getTotalApps(): number {
+  get totalApps(): number {
     let totalApps = 0
-    //  PAGADO NO
     totalApps = totalApps + this.sales.filter((s: any) => !s.apps.uber.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.uber.income), 0)
     totalApps = totalApps + this.sales.filter((s: any) => !s.apps.didi.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.didi.income), 0)
     totalApps = totalApps + this.sales.filter((s: any) => !s.apps.rappi.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.rappi.income), 0)
     return totalApps
   }
 
-  getTotal(): number {
-    return this.getTotalCash() + this.getTotalCard() + this.getTotalApps()
+  get total(): number {
+    return this.totalCash + this.totalCard + this.totalApps
   }
 
-  getTotalGap(): number {
-    return this.getTotal() - this.getProfit()
+  get totalGap(): number {
+    return this.total - this.profit
   }
 
-  getProfit(): number {
-    return this.getTotalSales() - this.getTotalExpenses()
+  get profit(): number {
+    return this.totalSales - this.totalExpenses
   }
 
   getTypePay() {
-    let total = this.getTotalCash() + this.getTotalCard()
-    let percentCard = (this.getTotalCard() * 100) / total
-    let percentCash = (this.getTotalCash() * 100) / total
-    return { cash: { total: this.getTotalCash(), percent: Math.round(percentCash) }, card: { total: this.getTotalCard(), percent: Math.round(percentCard) } }
+    let total = this.totalCash + this.totalCard
+    let percentCard = (this.totalCard * 100) / total
+    let percentCash = (this.totalCash * 100) / total
+    return { cash: { total: this.totalCash, percent: Math.round(percentCash) }, card: { total: this.totalCard, percent: Math.round(percentCard) } }
   }
 
   fillBarChartDays() {
@@ -349,7 +334,7 @@ export class ResultsComponent implements OnInit {
   }
 
   getProfitPercent() {
-    return Math.round((this.getProfit() / this.getTotalSales()) * 100)
+    return Math.round((this.profit / this.totalSales) * 100)
   }
 
   /**
@@ -373,11 +358,21 @@ export class ResultsComponent implements OnInit {
     })
   }
 
-  getTotalExpenses(): number {
+  get totalExpenses(): number {
     let totalSum = this.expenses.reduce((total: any, value: any) => total + value.amount, 0)
     return Number(totalSum.toFixed(2))
   }
 
+  get expensesCash(): number {
+    return this.expenses.filter((e:any) => e.operationType.code == OperationType.CASH ||  e.operationType.code == OperationType.BOX)
+    .reduce((total: number, obj: any) => total + obj.amount, 0)
+  }
+
+  get expensesTransfer(): number {
+    return this.expenses.filter((e:any) => e.operationType.code == OperationType.TRANSFER)
+    .reduce((total: number, obj: any) => total + obj.amount, 0)
+  }
+ 
   getExpensesByDay() {
     this.expensesByDay = []
     let expensesByDay: any[] = []
@@ -464,7 +459,7 @@ export class ResultsComponent implements OnInit {
         this.foodCategories.map((category: any) => {
           let expCategories = this.expenses.filter((e: any) => e.foodCategories.id == category.id)
           let sum = expCategories.reduce((total: any, value: any) => total + value.amount, 0)
-          let percent = (sum / this.getTotalExpenses()) * 100
+          let percent = (sum / this.totalExpenses) * 100
           return { id: category.id, name: category.name, amount: sum.toFixed(2), percent: percent.toFixed(2) }
         })
       }
@@ -484,7 +479,9 @@ export class ResultsComponent implements OnInit {
   getFoodSupplier(categorycode: string, groupedBy: string) {
     let foodSupplier: Array<any> = []
 
-    let expenses = categorycode == 'ALL' ? this.expenses.map((e: any) => { return { ...e, provider: e.providerCategories.name, foodCategory: e.foodCategories.name } }) : this.expenses.filter((e: any) => e.foodCategories.code == categorycode).map((e: any) => { return { ...e, provider: e.providerCategories.name, foodCategory: e.foodCategories.name } })
+    let expenses = categorycode == 'ALL' ? this.expenses.map((e: any) => { return { ...e, provider: e.providerCategories.name, foodCategory: e.foodCategories.name } }) 
+                    : this.expenses.filter((e: any) => e.foodCategories.code == categorycode).map((e: any) => { return { ...e, provider: e.providerCategories.name, foodCategory: e.foodCategories.name } })
+    
     let groupedByKey = groupArrayByKey(expenses, groupedBy)
 
     Object.keys(groupedByKey).map((k: any) => {
@@ -522,7 +519,6 @@ export class ResultsComponent implements OnInit {
 
   onChangePay(e: any) {
     this.cuentaPorCobrar.pago = e
-    console.log(e)
     if(e == 'NO') this.cuentaPorCobrar.tipoPago.id = 0
   }
 
@@ -578,6 +574,7 @@ export class ResultsComponent implements OnInit {
       next: (res: any) => {
         if(Array.isArray(res)) {
           this.cuentasPorCobrar = sortByKey(res, "id")
+          console.log(this.cuentasPorCobrar)
         }
         this.mainService.isLoading(false)
       },
@@ -609,8 +606,17 @@ export class ResultsComponent implements OnInit {
     this.openModal(template)
   }
 
-  getTotalPorCobrar() {
-    let total = this.cuentasPorCobrar.filter((s: any) => !s.isPay).reduce((total: number, ob: any) => total + ob.amount, 0)
-    return total
+  get totalPorCobrar() : number{
+    return this.cuentasPorCobrar.filter((s: any) => !s.isPay).reduce((total: number, ob: any) => total + ob.amount, 0)
   }
+
+  get cuentaPagadaCash(): number {
+    return this.cuentasPorCobrar.filter((c: any) => c.isPay && (c.operationType.code == OperationType.CASH || c.operationType.code ==  OperationType.BOX))
+    .reduce((total: number, obj: any) => total + obj.amount, 0)
+  }
+
+  get cuentaPagadaTransfer(): number {
+    return this.cuentasPorCobrar.filter((c: any) => c.isPay && c.operationType.code == OperationType.TRANSFER)
+    .reduce((total: number, obj: any) => total + obj.amount, 0)  }
 }
+
