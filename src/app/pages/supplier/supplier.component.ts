@@ -82,14 +82,17 @@ export class SupplierComponent {
   }
 
   getProviders() {
+    this.mainService.setLoading(true)
     this.service.getProviders(this.brandSelected.id).subscribe({
       next: (resp: any) => {
         const tmp = resp.map((item: any) => {
           return { ...item, categoryCode: item.foodCategories.code, categoryName: item.foodCategories.name, fecha: this.dates.getFormatDate(item.createdAt) }
         })
         this.providerList = tmp
+        this.mainService.setLoading(false)
       },
       error: () => {
+        this.mainService.setLoading(false)
         this.toastr.error("Ha ocurrido un error", "Error")
       }
     })
@@ -107,6 +110,7 @@ export class SupplierComponent {
     let providerFind = this.providerList.find((provider: any) => provider.id == item.id)
     let resp = confirm(`¿Esta seguro de eliminar el proveedor '${providerFind.name}'?`)
     if (resp) {
+      this.mainService.setLoading(true)
       this.service.deleteProvider(this.brandSelected.id, providerFind.id).subscribe({
         next: (res: any) => {
           if (res.acknowledge) {
@@ -114,9 +118,11 @@ export class SupplierComponent {
           } else {
             this.toastr.error("Ha ocurrido un error", "Error")
           }
+          this.mainService.setLoading(false)
         },
         error: () => {
           this.toastr.error("Ha ocurrido un error", "Error")
+          this.mainService.setLoading(false)
         },
         complete: () => {
           this.getProviders()

@@ -41,7 +41,6 @@ export class ExpenseService {
       'search': search,
       'branchId': brachId
     }
-    console.log("params",params)
     let url = this.endPoint.concat(`expense/search`)
     return this.httpClient.get(url, { params: params })
   }

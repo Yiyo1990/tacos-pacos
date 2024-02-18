@@ -141,7 +141,7 @@ export class BillsComponent implements OnInit {
    }
 
    callServiceSearchExpenses(search: string) {
-      this.mainService.isLoading(true)
+      this.mainService.setLoading(true)
       this.service.searchExpense(this.brandSelected.id, this.dateFilter.start, this.dateFilter.end, search).subscribe({
          next: (res: any) => {
             this.expensesOriginal = res
@@ -151,7 +151,7 @@ export class BillsComponent implements OnInit {
             this.toastr.error("Ha ocurrido un error", "Error")
          },
          complete:() => {
-            this.mainService.isLoading(false)
+            this.mainService.setLoading(false)
          }
       })
    }
@@ -195,7 +195,7 @@ export class BillsComponent implements OnInit {
          this.billRegister.branch.id = this.brandSelected.id
          this.billRegister.expenseDate = this.dates.formatDate(this.billRegister.date, 'yyyy-MM-DD')
 
-         this.mainService.isLoading(true)
+         this.mainService.setLoading(true)
          this.service.saveExpense(this.billRegister).subscribe({
             next: (res: any) => {
                if (res.acknowledge) {
@@ -212,7 +212,7 @@ export class BillsComponent implements OnInit {
                console.error(error)
             },
             complete: () => {
-               this.mainService.isLoading(false)
+               this.mainService.setLoading(false)
             }
          })
       } else {
@@ -224,7 +224,7 @@ export class BillsComponent implements OnInit {
    onDeleteExpense(item: any) {
       let resp = confirm(`¿Esta seguro de eliminar el gasto por la cantidad de $${item.amount}?`)
       if (resp) {
-         this.mainService.isLoading(true)
+         this.mainService.setLoading(true)
          this.service.deleteExpense(this.brandSelected.id, item.id).subscribe({
             next: (res: any) => {
                if (res.acknowledge) {
@@ -238,7 +238,7 @@ export class BillsComponent implements OnInit {
                this.toastr.error("Ha ocurrido un error", "Error")
             },
             complete: () => {
-               this.mainService.isLoading(false)
+               this.mainService.setLoading(false)
             }
          })
       }

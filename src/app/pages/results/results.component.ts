@@ -80,6 +80,8 @@ export class ResultsComponent implements OnInit {
     tipoPago: {id: 0}
   }
 
+  loadingServices: Array<any> = []
+
   constructor(private mainService: MainService, private activeRouter: ActivatedRoute, private salesService: SalesService, private toast: ToastrService, 
     private expenseService: ExpenseService, private modalService: BsModalService, private service: ResultService) {
 
@@ -150,8 +152,10 @@ export class ResultsComponent implements OnInit {
   /** 
    * ----- SALES -----
   */
-  async getReportSalesByDateRange(startDate: string, endDate: string) {
-    this.mainService.isLoading(true)
+  getReportSalesByDateRange(startDate: string, endDate: string) {
+    this.startLoading('sales')
+    this.salesByDay = []
+    this.sales = []
     this.salesService.getReportSalesByDateRange(this.brandSelected.id, startDate, endDate).subscribe({
       next: (data: any) => {
         if (Array.isArray(data)) {
@@ -191,7 +195,9 @@ export class ResultsComponent implements OnInit {
         this.toast.error("Ocurrio un error al intentar obtener las ventas")
       },
       complete: () => {
-        this.mainService.isLoading(false)
+        this.removeLoading('sales')
+        this.stopLoading()
+       // this.mainService.setLoading(false)
       }
     })
   }
@@ -342,7 +348,7 @@ export class ResultsComponent implements OnInit {
    */
 
   callServiceSearchExpenses(start: string, end: string, search: string = "") {
-    this.mainService.isLoading(true)
+    this.startLoading('expenses')
     this.expenseService.searchExpense(this.brandSelected.id, start, end, search).subscribe({
       next: (res: any) => {
         this.expenses = res
@@ -353,7 +359,8 @@ export class ResultsComponent implements OnInit {
         this.toast.error("Ha ocurrido un error", "Error")
       },
       complete: () => {
-        this.mainService.isLoading(false)
+        this.removeLoading('expenses')
+        this.stopLoading()
       }
     })
   }
@@ -552,13 +559,13 @@ export class ResultsComponent implements OnInit {
           id: this.cuentaPorCobrar.tipoPago.id == 0 ? null : Number(this.cuentaPorCobrar.tipoPago.id)
         }
       }
-      this.mainService.isLoading(true)
+      this.mainService.setLoading(true)
       this.service.saveCuentasPorCobrar(params).subscribe({
         next: (value) => {
         },
         error: (e) => {
           this.toast.error("Ha ocurrido un error", "Error")
-          this.mainService.isLoading(false)
+          this.mainService.setLoading(false)
         },
         complete: () => {
           this.closeModal()
@@ -569,17 +576,19 @@ export class ResultsComponent implements OnInit {
   }
 
   async getCuentasPorCobrar(){
-    this.mainService.isLoading(true)
+    this.startLoading('cuentas')
     this.service.getCuentasPorCobrar(this.brandSelected.id, this.filterDate.start, this.filterDate.end).subscribe({
       next: (res: any) => {
         if(Array.isArray(res)) {
           this.cuentasPorCobrar = sortByKey(res, "id")
         }
-        this.mainService.isLoading(false)
+        this.removeLoading('cuentas')
+        this.stopLoading()
       },
       error: (e) => {
         console.error(e)
-        this.mainService.isLoading(false)
+        this.removeLoading('cuentas')
+        this.stopLoading()
         this.toast.error("Ha ocurrido un error", "Error")
       }
     })
@@ -617,5 +626,24 @@ export class ResultsComponent implements OnInit {
   get cuentaPagadaTransfer(): number {
     return this.cuentasPorCobrar.filter((c: any) => c.isPay && c.operationType.code == OperationType.TRANSFER)
     .reduce((total: number, obj: any) => total + obj.amount, 0)  }
+
+
+  removeLoading(key: string) {
+    let index = this.loadingServices.indexOf(key)
+    if(index > -1) {
+      this.loadingServices.splice(index, 1)
+    }
+  }
+
+  startLoading(key: string) {
+    this.mainService.setLoading(true)
+    this.loadingServices.push(key)
+  }
+
+  stopLoading() {
+    if(this.loadingServices.length == 0) {
+      this.mainService.setLoading(false)
+    }
+  } 
 }
 

@@ -111,7 +111,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
   onFileUpload() {
     if (this.selectedFile) {
 
-      this.mainService.isLoading(true)
+      this.mainService.setLoading(true)
       const formData = new FormData();
       formData.append('file', this.selectedFile);
 
@@ -126,9 +126,9 @@ export class SalesComponent implements OnInit, AfterViewInit {
         },
         error: (e) => {
           this.toast.error(`Ocurrio un error al subir el archivo: ${e.error.message}`)
-          this.mainService.isLoading(false)
+          this.mainService.setLoading(false)
         }, complete: () => {
-          this.mainService.isLoading(false)
+          this.mainService.setLoading(false)
         }
       })
 
@@ -137,7 +137,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   getSales() {
-    this.mainService.isLoading(true)
+    this.mainService.setLoading(true)
     this.salesService.getSales(this.brandSelected.id).subscribe({
       next: (res) => {
         if (Array.isArray(res)) {
@@ -147,19 +147,19 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
           this.sumDataSales(groupArrayByKey(sales, 'date'))
 
-          this.mainService.isLoading(false)
+          this.mainService.setLoading(false)
         } else {
           this.toast.error("Ha ocurrido un error", "Error")
-          this.mainService.isLoading(false)
+          this.mainService.setLoading(false)
         }
       },
       error: (e) => {
-        this.mainService.isLoading(false)
+        this.mainService.setLoading(false)
         this.toast.error("Ha ocurrido un error", "Error")
         console.error(e)
       },
       complete: () => {
-        // this.mainService.isLoading(false)
+        // this.mainService.setLoading(false)
       }
     })
   }
@@ -184,7 +184,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   getReportSalesByDateRange(startDate: string, endDate: string) {
-    this.mainService.isLoading(true)
+    this.mainService.setLoading(true)
     this.salesService.getReportSalesByDateRange(this.brandSelected.id, startDate, endDate).subscribe({
       next: (data: any) => {
         if (Array.isArray(data)) {
@@ -224,7 +224,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
         this.toast.error("Ocurrio un error al intentar obtener las ventas")
       },
       complete: () => {
-        this.mainService.isLoading(false)
+        this.mainService.setLoading(false)
 
       }
     })
