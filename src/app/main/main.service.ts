@@ -101,8 +101,12 @@ export class MainService {
     this.filterRage.next(dates)
   }
 
-  isLoading(loading: boolean) {
+  setLoading(loading: boolean) {
     this.loading.next(loading)
+  }
+
+  get isLoaging() {
+    return this.loading.value
   }
 
 }
