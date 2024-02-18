@@ -156,7 +156,6 @@ export class ResultsComponent implements OnInit {
     this.salesService.getReportSalesByDateRange(this.brandSelected.id, startDate, endDate).subscribe({
       next: (data: any) => {
         if (Array.isArray(data)) {
-          console.log("ventas",data)
           this.lineChartData.datasets = []
           this.updateCharts()
           this.days = []
@@ -402,7 +401,6 @@ export class ResultsComponent implements OnInit {
   }
 
   pushDataSalesChart() {
-    console.log("ventas por dia",this.salesByDay)
     let index = this.getIndexFronDataChart('VENTAS')
     if (index < 0) {
       this.lineChartData.datasets.push({
