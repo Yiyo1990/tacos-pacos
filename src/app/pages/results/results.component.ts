@@ -636,9 +636,7 @@ export class ResultsComponent implements OnInit {
   }
 
   startLoading(key: string) {
-    //if(!this.mainService.isLoaging) {
-      this.mainService.setLoading(true)
-    //}
+    this.mainService.setLoading(true)
     this.loadingServices.push(key)
   }
 
