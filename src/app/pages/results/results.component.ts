@@ -574,7 +574,6 @@ export class ResultsComponent implements OnInit {
       next: (res: any) => {
         if(Array.isArray(res)) {
           this.cuentasPorCobrar = sortByKey(res, "id")
-          console.log(this.cuentasPorCobrar)
         }
         this.mainService.isLoading(false)
       },

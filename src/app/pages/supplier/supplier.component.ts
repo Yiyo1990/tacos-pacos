@@ -2,27 +2,15 @@ import { Component, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MainService } from 'src/app/main/main.service';
 import { ProvidersService } from './providers.service';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatButtonModule } from '@angular/material/button';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { NgFor, NgIf } from '@angular/common';
 import { Dates } from 'src/app/util/Dates';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { SelectDropDownModule } from 'ngx-select-dropdown';
-import { configDropdown } from 'src/app/util/util';
+import { configDropdown, groupArrayByKey, sortByKey } from 'src/app/util/util';
 import { ToastrService } from 'ngx-toastr';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-supplier',
   templateUrl: './supplier.component.html',
   styleUrls: ['./supplier.component.scss'],
-  standalone: true,
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatButtonModule, MatTooltipModule, MatIconModule, NgFor, NgIf, MatButtonToggleModule, SelectDropDownModule, FormsModule]
 })
 export class SupplierComponent {
   modalRef?: BsModalRef;
@@ -36,6 +24,7 @@ export class SupplierComponent {
   dates = new Dates()
   provider: any = { id: null, name: '', foodCategories: { id: null } }
   providerList: any = []
+
 
   constructor(private mainService: MainService, private service: ProvidersService, private modalService: BsModalService, private toastr: ToastrService) {
     mainService.setPageName("Proveedores")
@@ -57,10 +46,6 @@ export class SupplierComponent {
 
   closeModal() {
     this.modalRef?.hide()
-  }
-
-  onChangeCategory(e: any) {
-
   }
 
   saveSupplier() {
@@ -96,11 +81,10 @@ export class SupplierComponent {
   getProviders() {
     this.service.getProviders(this.brandSelected.id).subscribe({
       next: (resp: any) => {
-        this.providerList = resp
         const tmp = resp.map((item: any) => {
-          return { Id: item.id, Proveedor: item.name, Categoría: item.foodCategories.name, Fecha: this.dates.getFormatDate(item.createdAt) }
+          return { ...item, categoryCode: item.foodCategories.code, categoryName: item.foodCategories.name, fecha: this.dates.getFormatDate(item.createdAt) }
         })
-        this.dataTable = tmp
+        this.providerList = tmp
       },
       error: () => {
         this.toastr.error("Ha ocurrido un error", "Error")
@@ -109,7 +93,7 @@ export class SupplierComponent {
   }
 
   editProvider(item: any, template: any) {
-    let providerFind = this.providerList.find((provider: any) => provider.id == item.Id)
+    let providerFind = this.providerList.find((provider: any) => provider.id == item.id)
     this.provider.id = providerFind.id
     this.provider.name = providerFind.name
     this.provider.foodCategories = providerFind.foodCategories
@@ -117,7 +101,7 @@ export class SupplierComponent {
   }
 
   deleteProvider(item: any) {
-    let providerFind = this.providerList.find((provider: any) => provider.id == item.Id)
+    let providerFind = this.providerList.find((provider: any) => provider.id == item.id)
     let resp = confirm(`¿Esta seguro de eliminar el proveedor '${providerFind.name}'?`)
     if (resp) {
       this.service.deleteProvider(this.brandSelected.id, providerFind.id).subscribe({
@@ -136,5 +120,33 @@ export class SupplierComponent {
         }
       })
     }
+  }
+
+  get suppliersByCategory() : Array<any> {
+    
+    let checkOrder: Array<any> = []
+    let grouping = groupArrayByKey(this.providerList, "categoryName")
+    Object.keys(grouping).map((s: any) => {
+      checkOrder.push({name: s, lenght: grouping[s].length})
+    })
+
+    let orderArray = sortByKey(checkOrder, "lenght").map((k: any) => {
+      return {...k, data: grouping[k.name]}
+    })
+
+    return orderArray
+  }
+
+  onClickActionEvent($event: any, template: any) {
+    if($event.type == 0) {
+      this.deleteProvider($event.item)
+    } else {
+      this.editProvider($event.item, template)
+    }
+  }
+
+  onClickAddCategory(item: any, template: any) {
+    this.provider.foodCategories = item.data[0].foodCategories
+    this.openModal(template)
   }
 }

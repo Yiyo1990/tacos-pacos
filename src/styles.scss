@@ -96,3 +96,10 @@ bs-datepicker-container { z-index: 3000 !important;}
     font-weight: bold;
     color: $primaryColorBlack;
 }
+
+.ellipsis {
+    // width: 100%;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+ }

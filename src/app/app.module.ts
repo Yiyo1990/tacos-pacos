@@ -75,7 +75,8 @@ import { CategorySupplierCardComponent } from './components/category-supplier-ca
     GastosChartComponent,
     GastosCheckComponent,
     RowTotalNegocioComponent,
-    CategorySupplierCardComponent
+    CategorySupplierCardComponent,
+    SupplierComponent
   ],
   imports: [
     BrowserModule,
@@ -97,8 +98,7 @@ import { CategorySupplierCardComponent } from './components/category-supplier-ca
     MatTableModule,
     MatPaginatorModule,
     BsDatepickerModule,
-    BsDatepickerModule.forRoot(),
-    SupplierComponent
+    BsDatepickerModule.forRoot()
   ],
   providers: [BsLocaleService],
   bootstrap: [AppComponent]
