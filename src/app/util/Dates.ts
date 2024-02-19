@@ -85,9 +85,17 @@ export class Dates {
     }
 
     getWeekNumberDay(date: string) {
-        console.log(date)
         let r = new Date(date)
         return r.getDay()
+    }
+
+    public getMonthNumber(date: string, format: string = "M") {
+        try {
+            const dateM = moment(date, 'DD-MM-yyyy')
+            return dateM.format(format)
+        } catch (e) {
+            return 0
+        }
     }
 }
 

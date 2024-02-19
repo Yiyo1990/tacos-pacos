@@ -22,85 +22,19 @@
                                 <app-primary-button description="PROFIT" icon="money-bill-trend-up"
                                     total="{{profit | currency}}" backgrounColor="greenBtn"
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
-                                <!--<div style="text-align: center;"><i class="fas fa-chart-simple" style="color: #3c8be6;"
-                                        aria-hidden="true"></i>&nbsp;<label
-                                        style="color: #60bb60; font-weight: bold;">{{getProfitPercent()}}%</label></div>-->
                             </div>
 
-
-                            <!--<div class="col-10 md-10 sm-12">
-                                <div class="row">
-                                    <div class="sm-12" style="width: 14.2%;">
-                                        <div style="display: flex;">
-                                            <div class="cards-total"
-                                                style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #478b47; text-align: center; opacity: 0.8;">
-                                                <label style="margin: 0; color: #60bb60;">Efectivo</label>
-                                            </div>
-                                            <label class="cards-total total">{{totalCash | currency}}</label>
-                                        </div>
-                                    </div>
-                                    <div class="sm-12" style="width: 14.2%;">
-                                        <div style="display: flex;">
-                                            <div class="cards-total"
-                                                style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #c147cc; text-align: center;">
-                                                <label style="margin: 0; color: #c147cc;">Tarjeta</label>
-                                            </div>
-                                            <label class="cards-total total">{{totalCard | currency}}</label>
-                                        </div>
-                                    </div>
-                                    <div class="sm-12" style="width: 14.2%;">
-                                        <div style="display: flex;">
-                                            <div class="cards-total"
-                                                style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #eb4949; text-align: center;">
-                                                <label style="margin: 0; color: #eb4949;">Pay</label>
-                                            </div>
-                                            <label class="cards-total total">{{ totalPay | currency}}</label>
-                                        </div>
-                                    </div>
-                                    <div class="sm-12" style="width: 14.2%;">
-                                        <div style="display: flex;">
-                                            <div class="cards-total"
-                                                style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #f8a130; text-align: center;">
-                                                <label style="margin: 0; color: #f8a130;">Apps</label>
-                                            </div>
-                                            <label class="cards-total total">{{totalApps | currency}}</label>
-                                        </div>
-                                    </div>
-                                    <div class="sm-12" style="width: 14.2%;">
-                                        <div style="display: flex;">
-                                            <div class="cards-total"
-                                                style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #a0a0a0; text-align: center;">
-                                                <label style="margin: 0; color: #a0a0a0;">Por Cobrar</label>
-                                            </div>
-                                            <label class="cards-total total">{{totalPorCobrar | currency}}</label>
-                                        </div>
-                                    </div>
-                                    <div class="sm-12" style="width: 14.2%;">
-                                        <div style="display: flex;">
-                                            <div class="cards-total"
-                                                style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #3c8be6; text-align: center;">
-                                                <label style="margin: 0; color: #3c8be6;">Total</label>
-                                            </div>
-                                            <label class="cards-total total">{{ total | currency}}</label>
-                                        </div>
-                                    </div>
-                                    <div class="sm-12" style="width: 14.2%;">
-                                        <div style="display: flex;">
-                                            <div class="cards-total"
-                                                style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #ffd341; text-align: center;">
-                                                <label style="margin: 0; color: #ffd341;">Gap</label>
-                                            </div>
-                                            <label class="cards-total total">{{totalGap | currency}}</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row" style="margin-top: 3%;">
-                                    <div class="col-12 md-12 sm-12">
-                                        <canvas baseChart class="chart" [data]="lineChartData"
-                                            [options]="lineChartOptions" style="height: 60px;" [type]="'line'"></canvas>
-                                    </div>
-                                </div>
-                            </div>-->
+                            <div class="col-8 md-8 sm-12">
+                                <canvas
+                                    style="height: 80px;"
+                                    baseChart
+                                    class="chart"
+                                    [data]="barChartDataBalance"
+                                    [options]="barChartOptions"
+                                    [type]="'bar'"
+                                    >
+                                    </canvas>
+                            </div>
                         </div>
                     </accordion-group>
 
@@ -110,13 +44,15 @@
                             <label style="font-size: 15pt; font-weight: bold;">Ventas</label> &nbsp; <i
                                 style="float: right;" class='fa fa-chevron-down'></i>
                         </span>
-                        <!--<ventas-chart [sales]="sales" [isResultadosScreen]="true"
-                            (typeFilterEvent)="filterCharts($event)" [brandSelected]="brandSelected" />
+                        
+                        <ventas-chart [sales]="sales" [isResultadosScreen]="true"
+                        (typeFilterEvent)="filterCharts($event)" [brandSelected]="brandSelected" />
+                        
                         <div class="row" style="margin-top: 2rem;">
                             <div class="col-4 md-4 sm-12">
                                 <div class="line-title"><label>Venta Diaria</label></div>
-                                <canvas baseChart class="chart" style="height: 150px !important;" [data]="barChartData"
-                                    [options]="barChartOptions" [type]="barChartType"></canvas>
+                                <canvas baseChart class="chart" style="height: 150px !important;" [data]="barChartDataDaily"
+                                    [options]="barChartOptions" [type]="'bar'"></canvas>
                             </div>
                             <div class="col-2 md-2 sm-12">
                                 <div class="line-title"><label>Ticket Promedio</label></div>
@@ -152,7 +88,7 @@
                                     <div class="col-1 md-1 sm-12">{{getTypePay().card.percent}}%</div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
                     </accordion-group>
 
                     <!-- ///////////  GASTOS ////////////-->
@@ -161,41 +97,40 @@
                             <label style="font-size: 15pt; font-weight: bold;">Gastos</label> &nbsp; <i
                                 style="float: right;" class='fa fa-chevron-down'></i>
                         </span>
-                        <!--<gastos-chart [expenses]="expenses" [foodCategories]="foodCategories"
+                        <gastos-chart [expenses]="expenses" [foodCategories]="foodCategories"
                             (onChangeCategoryEvent)="onChangeCategory($event)" />
 
-                        <div class="row" style="margin-top: 1rem;" *ngIf="foodSupplier.length > 0">
-                            <div class="col-12 md-12 sm-12">
-                                <div class="row">
-                                    <div class="col-12 md-12 sm-12 line-title">
-                                        <label>{{ foodCategorySelected }}</label>
+                            <div class="row" style="margin-top: 1rem;" *ngIf="foodSupplier.length > 0">
+                                <div class="col-12 md-12 sm-12">
+                                    <div class="row">
+                                        <div class="col-12 md-12 sm-12 line-title">
+                                            <label>{{ foodCategorySelected }}</label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row" *ngIf="typeFilterExpenses != 'ALL'">
-                                    <div class="col-12 md-12 sm-12">
-                                        <div
-                                            style="display: flex; max-width: 100%; flex-wrap: wrap; align-items: center;">
-                                            <div *ngFor="let sup of foodSupplier"
-                                                style="display: flex; text-align: center; width: calc(100% / 6); margin: 1rem;">
-                                                <div class="ellipsis"
-                                                    style="width: 50%; background-color: #d1d1d1; padding: 5px; color: #e68c38; font-weight: bold;">
-                                                    {{sup.name}}
+                                    <div class="row" *ngIf="typeFilterExpenses != 'ALL'">
+                                        <div class="col-12 md-12 sm-12">
+                                            <div
+                                                style="display: flex; max-width: 100%; flex-wrap: wrap; align-items: center;">
+                                                <div *ngFor="let sup of foodSupplier"
+                                                    style="display: flex; text-align: center; width: calc(100% / 6); margin: 1rem;">
+                                                    <div class="ellipsis"
+                                                        style="width: 50%; background-color: #d1d1d1; padding: 5px; color: #e68c38; font-weight: bold;">
+                                                        {{sup.name}}
+                                                    </div>
+                                                    <label style="margin-left: 10px; margin-top: 2%;">{{sup.total |
+                                                        currency}}</label>
                                                 </div>
-                                                <label style="margin-left: 10px; margin-top: 2%;">{{sup.total |
-                                                    currency}}</label>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row" style="margin-top: 1%;" *ngIf="typeFilterExpenses == 'ALL'">
-                                    <div class="col-3" *ngFor="let sup of foodSupplier" style="margin-bottom: 1%;">
-                                        <category-supplier-card [nameCategory]="sup.name"
-                                            [providers]="sup.providers"></category-supplier-card>
+                                    <div class="row" style="margin-top: 1%;" *ngIf="typeFilterExpenses == 'ALL'">
+                                        <div class="col-3" *ngFor="let sup of foodSupplier" style="margin-bottom: 1%;">
+                                            <category-supplier-card [nameCategory]="sup.name"
+                                                [providers]="sup.providers"></category-supplier-card>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    -->
                     </accordion-group>
 
                     <!--************  CUENTAS POR COBRAR *************-->

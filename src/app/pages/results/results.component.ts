@@ -92,9 +92,7 @@ export class ResultsComponent implements OnInit {
     private service: ResultService,
     private loading: LoadingService) {
 
-    this.activeRouter.queryParams.subscribe((params: any) => {
-      mainService.setPageName(params.nombre)
-    }) 
+    mainService.setPageName("Resultados")
   }
 
   ngOnInit(): void {
@@ -418,7 +416,7 @@ export class ResultsComponent implements OnInit {
       this.lineChartData.datasets.push({
         label: 'VENTAS',
         data: this.salesByDay,
-        backgroundColor: '#3c8be6',
+        backgroundColor: this.chartColors.ventas,
         borderColor: '#3c8be6',
         pointStyle: 'circle'
       })
@@ -432,7 +430,7 @@ export class ResultsComponent implements OnInit {
       this.lineChartData.datasets.push({
         label: 'GASTOS',
         data: this.expensesByDay,
-        backgroundColor: '#f8a130',
+        backgroundColor: this.chartColors.gastos,
         borderColor: '#f8a130',
         pointStyle: 'circle'
       })
@@ -446,7 +444,7 @@ export class ResultsComponent implements OnInit {
       this.lineChartData.datasets.push({
         label: 'PROFIT',
         data: this.profitByDay,
-        backgroundColor: '#63f363',
+        backgroundColor: this.chartColors.profit,
         borderColor: '#63f363',
         pointStyle: 'circle'
       })
@@ -525,7 +523,6 @@ export class ResultsComponent implements OnInit {
       this.foodCategorySelected = `Proveedores de ${category.name}`
       this.getFoodSupplier(category.code, 'provider')
     }
-
   }
 
   /**  CUENTAS POR COBRAR */
