@@ -12,6 +12,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import { Charts } from 'src/app/util/Charts';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ResultService } from './result.service';
+import { LoadingService } from 'src/app/components/loading/loading.service';
 
 @Component({
   selector: 'app-results',
@@ -82,8 +83,14 @@ export class ResultsComponent implements OnInit {
 
   loadingServices: Array<any> = []
 
-  constructor(private mainService: MainService, private activeRouter: ActivatedRoute, private salesService: SalesService, private toast: ToastrService, 
-    private expenseService: ExpenseService, private modalService: BsModalService, private service: ResultService) {
+  constructor(private mainService: MainService, 
+    private activeRouter: ActivatedRoute, 
+    private salesService: SalesService, 
+    private toast: ToastrService, 
+    private expenseService: ExpenseService, 
+    private modalService: BsModalService, 
+    private service: ResultService,
+    private loading: LoadingService) {
 
     this.activeRouter.queryParams.subscribe((params: any) => {
       mainService.setPageName(params.nombre)
@@ -153,7 +160,7 @@ export class ResultsComponent implements OnInit {
    * ----- SALES -----
   */
   getReportSalesByDateRange(startDate: string, endDate: string) {
-    this.startLoading('sales')
+    this.loading.start()
     this.salesByDay = []
     this.sales = []
     this.salesService.getReportSalesByDateRange(this.brandSelected.id, startDate, endDate).subscribe({
@@ -192,12 +199,11 @@ export class ResultsComponent implements OnInit {
         }
       },
       error: (e) => {
+        this.loading.stop()
         this.toast.error("Ocurrio un error al intentar obtener las ventas")
       },
       complete: () => {
-        this.removeLoading('sales')
-        this.stopLoading()
-       // this.mainService.setLoading(false)
+        this.loading.stop()
       }
     })
   }
@@ -348,7 +354,7 @@ export class ResultsComponent implements OnInit {
    */
 
   callServiceSearchExpenses(start: string, end: string, search: string = "") {
-    this.startLoading('expenses')
+    this.loading.start()
     this.expenseService.searchExpense(this.brandSelected.id, start, end, search).subscribe({
       next: (res: any) => {
         this.expenses = res
@@ -356,11 +362,11 @@ export class ResultsComponent implements OnInit {
         this.onChangeCategory(0)
       },
       error: (e) => {
+        this.loading.stop()
         this.toast.error("Ha ocurrido un error", "Error")
       },
       complete: () => {
-        this.removeLoading('expenses')
-        this.stopLoading()
+        this.loading.stop()
       }
     })
   }
@@ -559,15 +565,16 @@ export class ResultsComponent implements OnInit {
           id: this.cuentaPorCobrar.tipoPago.id == 0 ? null : Number(this.cuentaPorCobrar.tipoPago.id)
         }
       }
-      this.mainService.setLoading(true)
+      this.loading.start()
       this.service.saveCuentasPorCobrar(params).subscribe({
         next: (value) => {
         },
         error: (e) => {
+          this.loading.stop()
           this.toast.error("Ha ocurrido un error", "Error")
-          this.mainService.setLoading(false)
         },
         complete: () => {
+          this.loading.stop()
           this.closeModal()
           this.getCuentasPorCobrar()
         }
@@ -576,20 +583,19 @@ export class ResultsComponent implements OnInit {
   }
 
   async getCuentasPorCobrar(){
-    this.startLoading('cuentas')
+    this.loading.start()
     this.service.getCuentasPorCobrar(this.brandSelected.id, this.filterDate.start, this.filterDate.end).subscribe({
       next: (res: any) => {
         if(Array.isArray(res)) {
           this.cuentasPorCobrar = sortByKey(res, "id")
         }
-        this.removeLoading('cuentas')
-        this.stopLoading()
       },
       error: (e) => {
-        console.error(e)
-        this.removeLoading('cuentas')
-        this.stopLoading()
+        this.loading.stop()
         this.toast.error("Ha ocurrido un error", "Error")
+      },
+      complete: () => {
+        this.loading.stop()
       }
     })
   }
@@ -625,25 +631,8 @@ export class ResultsComponent implements OnInit {
 
   get cuentaPagadaTransfer(): number {
     return this.cuentasPorCobrar.filter((c: any) => c.isPay && c.operationType.code == OperationType.TRANSFER)
-    .reduce((total: number, obj: any) => total + obj.amount, 0)  }
-
-
-  removeLoading(key: string) {
-    let index = this.loadingServices.indexOf(key)
-    if(index > -1) {
-      this.loadingServices.splice(index, 1)
-    }
+    .reduce((total: number, obj: any) => total + obj.amount, 0)  
   }
 
-  startLoading(key: string) {
-    this.mainService.setLoading(true)
-    this.loadingServices.push(key)
-  }
-
-  stopLoading() {
-    if(this.loadingServices.length == 0) {
-      this.mainService.setLoading(false)
-    }
-  } 
 }
 

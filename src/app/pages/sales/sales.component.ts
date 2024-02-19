@@ -3,13 +3,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MainService } from 'src/app/main/main.service';
 import { SalesService } from './sales-service.service';
-import { firstUpperCase, groupArrayByKey, barChartOptions, donutChartOptions, pieChartOptions, ReportChannel, fixedData } from 'src/app/util/util';
+import { firstUpperCase, groupArrayByKey, ReportChannel, fixedData } from 'src/app/util/util';
 import { ToastrService } from 'ngx-toastr';
 import { Dates } from 'src/app/util/Dates';
-import { ChartConfiguration, ChartData, ChartOptions, ChartType } from 'chart.js';
-import { Charts } from 'src/app/util/Charts';
-import { BaseChartDirective } from 'ng2-charts';
 import * as moment from 'moment';
+import { LoadingService } from 'src/app/components/loading/loading.service';
 
 @Component({
   selector: 'app-sales',
@@ -33,7 +31,10 @@ export class SalesComponent implements OnInit, AfterViewInit {
   isAnual: boolean = false
 
 
-  constructor(private mainService: MainService, private salesService: SalesService, private toast: ToastrService) {
+  constructor(private mainService: MainService, 
+    private salesService: SalesService, 
+    private toast: ToastrService,
+    private loading: LoadingService) {
     mainService.setPageName("Ventas")
   }
 
@@ -110,8 +111,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   onFileUpload() {
     if (this.selectedFile) {
-
-      this.mainService.setLoading(true)
+      this.loading.start()
       const formData = new FormData();
       formData.append('file', this.selectedFile);
 
@@ -126,9 +126,9 @@ export class SalesComponent implements OnInit, AfterViewInit {
         },
         error: (e) => {
           this.toast.error(`Ocurrio un error al subir el archivo: ${e.error.message}`)
-          this.mainService.setLoading(false)
+          this.loading.stop()
         }, complete: () => {
-          this.mainService.setLoading(false)
+          this.loading.stop()
         }
       })
 
@@ -137,29 +137,24 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   getSales() {
-    this.mainService.setLoading(true)
+    this.loading.start()
     this.salesService.getSales(this.brandSelected.id).subscribe({
       next: (res) => {
         if (Array.isArray(res)) {
           let sales = res.map(s => {
             return { ...s, date: s.createdAt.substring(0, 10) }
           })
-
           this.sumDataSales(groupArrayByKey(sales, 'date'))
-
-          this.mainService.setLoading(false)
         } else {
           this.toast.error("Ha ocurrido un error", "Error")
-          this.mainService.setLoading(false)
         }
       },
       error: (e) => {
-        this.mainService.setLoading(false)
         this.toast.error("Ha ocurrido un error", "Error")
-        console.error(e)
+        this.loading.stop()
       },
       complete: () => {
-        // this.mainService.setLoading(false)
+        this.loading.stop()
       }
     })
   }
@@ -184,7 +179,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   getReportSalesByDateRange(startDate: string, endDate: string) {
-    this.mainService.setLoading(true)
+    this.loading.start()
     this.salesService.getReportSalesByDateRange(this.brandSelected.id, startDate, endDate).subscribe({
       next: (data: any) => {
         if (Array.isArray(data)) {
@@ -222,10 +217,10 @@ export class SalesComponent implements OnInit, AfterViewInit {
       },
       error: (e) => {
         this.toast.error("Ocurrio un error al intentar obtener las ventas")
+        this.loading.stop()
       },
       complete: () => {
-        this.mainService.setLoading(false)
-
+        this.loading.stop()
       }
     })
   }

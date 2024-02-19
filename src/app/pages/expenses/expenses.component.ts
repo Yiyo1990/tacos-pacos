@@ -12,6 +12,7 @@ import { Dates } from 'src/app/util/Dates';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseChartDirective } from 'ng2-charts';
 import { Location } from '@angular/common';
+import { LoadingService } from 'src/app/components/loading/loading.service';
 //import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 //import { default as ChartDataLabels  } from 'chartjs-plugin-datalabels';
 
@@ -54,7 +55,11 @@ export class BillsComponent implements OnInit {
 
    public barChartData: ChartData<'bar'> = { labels: [], datasets: [{ data: [], label: '', backgroundColor: '#F06D2C' }] };
 
-   constructor(private service: ExpenseService, private mainService: MainService, private modalService: BsModalService, private toastr: ToastrService) {
+   constructor(private service: ExpenseService, 
+      private mainService: MainService, 
+      private modalService: BsModalService, 
+      private toastr: ToastrService,
+      private loading: LoadingService) {
       this.mainService.setPageName('Gastos')
 
       this.resetModalData()
@@ -141,17 +146,18 @@ export class BillsComponent implements OnInit {
    }
 
    callServiceSearchExpenses(search: string) {
-      this.mainService.setLoading(true)
+      this.loading.start()
       this.service.searchExpense(this.brandSelected.id, this.dateFilter.start, this.dateFilter.end, search).subscribe({
          next: (res: any) => {
             this.expensesOriginal = res
             this.fillTblExpenses(res)
          },
          error: (e) => {
+            this.loading.stop()
             this.toastr.error("Ha ocurrido un error", "Error")
          },
          complete:() => {
-            this.mainService.setLoading(false)
+            this.loading.stop()
          }
       })
    }
@@ -195,7 +201,7 @@ export class BillsComponent implements OnInit {
          this.billRegister.branch.id = this.brandSelected.id
          this.billRegister.expenseDate = this.dates.formatDate(this.billRegister.date, 'yyyy-MM-DD')
 
-         this.mainService.setLoading(true)
+         this.loading.start()
          this.service.saveExpense(this.billRegister).subscribe({
             next: (res: any) => {
                if (res.acknowledge) {
@@ -208,11 +214,11 @@ export class BillsComponent implements OnInit {
                }
             },
             error: (error) => {
+               this.loading.stop()
                this.toastr.error("Ha ocurrido un error", "Error")
-               console.error(error)
             },
             complete: () => {
-               this.mainService.setLoading(false)
+               this.loading.stop()
             }
          })
       } else {
@@ -224,7 +230,7 @@ export class BillsComponent implements OnInit {
    onDeleteExpense(item: any) {
       let resp = confirm(`¿Esta seguro de eliminar el gasto por la cantidad de $${item.amount}?`)
       if (resp) {
-         this.mainService.setLoading(true)
+         this.loading.start()
          this.service.deleteExpense(this.brandSelected.id, item.id).subscribe({
             next: (res: any) => {
                if (res.acknowledge) {
@@ -235,10 +241,11 @@ export class BillsComponent implements OnInit {
                }
             },
             error: () => {
+               this.loading.stop()
                this.toastr.error("Ha ocurrido un error", "Error")
             },
             complete: () => {
-               this.mainService.setLoading(false)
+               this.loading.stop()
             }
          })
       }

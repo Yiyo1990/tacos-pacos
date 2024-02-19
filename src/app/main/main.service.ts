@@ -34,9 +34,6 @@ export class MainService {
   private filterRage = new BehaviorSubject(null)
   $filterRange = this.filterRage.asObservable();
 
-  private loading = new BehaviorSubject(false)
-  $loading = this.loading.asObservable()
-
 
   constructor(private http: HttpClient) { }
 
@@ -99,14 +96,6 @@ export class MainService {
 
   onChangeFilterRange(dates: any) {
     this.filterRage.next(dates)
-  }
-
-  setLoading(loading: boolean) {
-    this.loading.next(loading)
-  }
-
-  get isLoaging() {
-    return this.loading.value
   }
 
 }
