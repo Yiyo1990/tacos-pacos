@@ -125,8 +125,8 @@ export class SalesComponent implements OnInit, AfterViewInit {
           }
         },
         error: (e) => {
-          this.toast.error(`Ocurrio un error al subir el archivo: ${e.error.message}`)
           this.loading.stop()
+          this.toast.error(`Ocurrio un error al subir el archivo: ${e.error.message}`)
         }, complete: () => {
           this.loading.stop()
         }
@@ -150,8 +150,8 @@ export class SalesComponent implements OnInit, AfterViewInit {
         }
       },
       error: (e) => {
-        this.toast.error("Ha ocurrido un error", "Error")
         this.loading.stop()
+        this.toast.error("Ha ocurrido un error", "Error")
       },
       complete: () => {
         this.loading.stop()
@@ -216,8 +216,8 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
       },
       error: (e) => {
-        this.toast.error("Ocurrio un error al intentar obtener las ventas")
         this.loading.stop()
+        this.toast.error("Ocurrio un error al intentar obtener las ventas")
       },
       complete: () => {
         this.loading.stop()
