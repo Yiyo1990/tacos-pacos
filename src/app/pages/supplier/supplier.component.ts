@@ -99,8 +99,8 @@ export class SupplierComponent {
         this.providerList = tmp
       },
       error: () => {
-        this.toastr.error("Ha ocurrido un error", "Error")
         this.loading.stop()
+        this.toastr.error("Ha ocurrido un error", "Error")
       },
       complete: () => {
         this.loading.stop()
@@ -130,8 +130,8 @@ export class SupplierComponent {
           }
         },
         error: () => {
-          this.toastr.error("Ha ocurrido un error", "Error")
           this.loading.stop()
+          this.toastr.error("Ha ocurrido un error", "Error")
         },
         complete: () => {
           this.loading.stop()
