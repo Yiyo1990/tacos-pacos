@@ -8,12 +8,11 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
-export class MainComponent implements AfterViewInit {
+export class MainComponent {
   currentPage: string = ""
   messageAlert: string = ""
   showAlert: boolean = true
   dates = new Dates()
-  isLoading!: boolean
 
   months: any[] = new Dates().getMonths()
   years: number[] = new Dates().getYears()
@@ -27,7 +26,6 @@ export class MainComponent implements AfterViewInit {
   brandData: any
 
   constructor(private service: MainService, private modalService: BsModalService) {
-    
    
     service.getOperationsCategories()
     service.setBranSelected(sessionStorage.getItem('marcaSeleccionada'))
@@ -38,11 +36,6 @@ export class MainComponent implements AfterViewInit {
     let minMaxDate = this.dates.getStartAndEndYear(this.dates.getCurrentYear())
     this.minDate = this.dates.convertToDate(minMaxDate.start)
     this.maxDate = this.dates.convertToDate(minMaxDate.end)
-    
-
-    service.$loading.subscribe((isLoading: boolean) => {
-      this.isLoading = isLoading
-    })
 
     this.service.$pageName.subscribe((name: string) => {
       this.currentPage = name
@@ -62,11 +55,6 @@ export class MainComponent implements AfterViewInit {
 
     this.service.onChangeYear(this.currentYear)
    
-  }
-
-  ngAfterViewInit(): void {
-    this.isLoading = false
-    
   }
 
   onChangeMonth(e: any) {

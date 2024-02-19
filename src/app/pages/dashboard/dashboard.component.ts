@@ -1,8 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Chart, ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { ToastrService } from 'ngx-toastr';
+import { LoadingService } from 'src/app/components/loading/loading.service';
 import { MainService } from 'src/app/main/main.service';
+import { SalesService } from '../sales/sales-service.service';
 
 //import { default as Annotation } from 'chartjs-plugin-annotation';
 
@@ -12,13 +15,20 @@ import { MainService } from 'src/app/main/main.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit{
   private newLabel?= 'New label';
   public lineChartType: ChartType = 'line';
+  brandSelected: any
+
+  sales: Array<any> = []
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
-  constructor(private mainService: MainService, private activeRouter: ActivatedRoute) {
+  constructor(private mainService: MainService, 
+      private activeRouter: ActivatedRoute, 
+      private loading: LoadingService, 
+      private toast: ToastrService,
+      private salesService: SalesService) {
 
     this.activeRouter.queryParams.subscribe((params: any) => {
       mainService.setPageName(params.nombre)
@@ -34,127 +44,95 @@ export class DashboardComponent {
     }
   }
 
-  public lineChartData: ChartConfiguration['data'] = {
-    datasets: [
-      {
-        data: [65, 59, 80, 81, 56, 55, 40],
-        label: 'Series A',
-        backgroundColor: 'rgba(0,0,0,0)',
-        borderColor: 'rgb(108, 187, 55)',
-        pointBackgroundColor: 'rgba(148,159,177,1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(148,159,177,0.8)',
-        fill: 'origin',
-      },
-      {
-        data: [28, 48, 40, 19, 86, 27, 90],
-        label: 'Series B',
-        backgroundColor: 'rgba(0,0,0,0)',
-        borderColor: 'rgb(36, 73, 236)',
-        pointBackgroundColor: 'rgba(77,83,96,1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(77,83,96,1)',
-        fill: 'origin',
-      },
-      {
-        data: [180, 480, 770, 90, 1000, 270, 400],
-        label: 'Series C',
-        yAxisID: 'y1',
-        backgroundColor: 'rgba(0,0,0,0)',
-        borderColor: 'rgb(238, 147, 29)',
-        pointBackgroundColor: 'rgba(148,159,177,1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(148,159,177,0.8)',
-        fill: 'origin',
-      },
-    ],
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-  };
-
-  public lineChartOptions: ChartConfiguration['options'] = {
-    elements: {
-      line: {
-        tension: 0.5,
-      },
-    },
-    scales: {
-      // We use this empty structure as a placeholder for dynamic theming.
-      y: {
-        position: 'left',
-      },
-      y1: {
-        position: 'right',
-        grid: {
-          color: 'rgba(255,0,0,0.3)',
-        },
-        ticks: {
-          color: 'red',
-        },
-      },
-    },
-
-    plugins: {
-      legend: { display: true }
-    },
-  };
-
-
-  public chartHovered({ event, active }: { event?: ChartEvent; active?: object[] }): void {
-    console.log(event, active);
+  ngOnInit(): void {
+    this.mainService.$brandSelected.subscribe((result: any) => {
+      if (result) {
+        this.brandSelected = JSON.parse(result)
+        this.getReportSalesByDateRange('01-01-2024', '31-12-2024')
+      }
+    })
   }
 
-  public chartClicked({ event, active }: { event?: ChartEvent; active?: object[] }): void {
-    console.log(event, active);
+  onCheckedEvent(data: any) {
+    /*if (!data.target) {
+      let filter = this.lineChartData.datasets.filter((d: any) => d.label != data.id)
+      this.lineChartData.datasets = filter
+      this.updateCharts()
+    } else {
+      if (data.id == 'VENTAS') {
+        this.pushDataSalesChart()
+      } else if (data.id == 'GASTOS') {
+        this.pushDataExpensesChart()
+      } else if (data.id == 'PROFIT') {
+        this.pushDataProfitChart()
+      }
+    }*/
   }
 
+  get totalSales(): number {
+    return  0
+  }
 
-  public doughnutChartLabels: string[] = [
-    'Comedor',
-    'Para llevar',
-    'Reparto',
-    'Uber',
-    'Didi',
-    'Rappi'
-  ];
-  public doughnutChartData: ChartData<'doughnut'> = {
-    labels: this.doughnutChartLabels,
-    datasets: [
-      { data: [350, 450, 100, 120, 100, 30] },
-    ],
-  };
-  public doughnutChartType: ChartType = 'doughnut';
+  get totalExpenses(): number {
+    return 0
+  }
 
+  get profit(): number {
+    return 0
+  }
 
+  /** VENTAS */
 
-  @ViewChild(BaseChartDirective) chart2: BaseChartDirective | undefined;
+  getReportSalesByDateRange(startDate: string, endDate: string) {
+    this.loading.start()
+    
+    this.sales = []
+    this.salesService.getReportSalesByDateRange(this.brandSelected.id, startDate, endDate).subscribe({
+      next: (data: any) => {
+        console.log("sales", data)
+        /*if (Array.isArray(data)) {
+          this.lineChartData.datasets = []
+          this.updateCharts()
+          this.days = []
+          let sales = data.map((s: any) => {
+            let diningRoom = s.diningRoom.toFixed(2)
+            let pickUp = s.pickUp.toFixed(2)
+            let takeout = s.takeout.toFixed(2)
+            let delivery = s.delivery.toFixed(2)
+            let totalDinnigRoom = s.diningRoom + s.pickUp + s.takeout + s.delivery
 
-  public barChartOptions: ChartConfiguration['options'] = {
-    responsive: true,
-    // We use these empty structures as placeholders for dynamic theming.
-    scales: {
-      x: {},
-      y: {
-        min: 10,
+            let day = firstUpperCase(s.day)
+            let month = this.dates.getMonthName(s.dateSale)
+            this.days.push(s.dateSale)
+
+            let apps = this.addPlatafformsData(s)
+
+            let totalApps = (Number(apps.uber.sale) + Number(apps.didi.sale) + Number(apps.rappi.sale))
+            let totalIncomeApps = (Number(apps.uber.income) + Number(apps.didi.income) + Number(apps.rappi.income))
+            let totalSale = (totalDinnigRoom + totalApps)
+            //this.salesByDay.push((totalDinnigRoom + totalIncomeApps))
+
+            return { ...s, totalSale: totalSale.toFixed(2), diningRoom, pickUp, takeout, delivery, totalDinnigRoom: totalDinnigRoom.toFixed(2), day, apps, totalApps: totalApps.toFixed(2), month }
+          })*/
+
+         // this.sales = sales
+         /* this.lineChartData.labels = this.days
+
+          this.pushDataSalesChart()
+          this.fillBarChartDays()
+          this.callServiceSearchExpenses(startDate, endDate)
+        }*/
       },
-    },
-    plugins: {
-      legend: {
-        display: true,
+      error: (e) => {
+        this.loading.stop()
+        this.toast.error("Ocurrio un error al intentar obtener las ventas")
       },
-    },
-  };
-  public barChartType: ChartType = 'bar';
-
-  public barChartData: ChartData<'bar'> = {
-    labels: ['2006', '2007', '2008', '2009', '2010', '2011', '2012'],
-    datasets: [
-      { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
-      { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' },
-    ],
-  };
+      complete: () => {
+        this.loading.stop()
+       // this.mainService.setLoading(false)
+      }
+    })
+  }
 
 
 }

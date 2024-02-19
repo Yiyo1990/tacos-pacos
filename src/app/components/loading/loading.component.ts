@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { LoadingService } from './loading.service';
 
 @Component({
   selector: 'app-loading',
@@ -6,6 +7,9 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./loading.component.scss']
 })
 export class LoadingComponent {
-  @Input() visible: boolean = false
+ // @Input() visible: boolean = true
 
+  constructor(public loader: LoadingService){
+    
+  }
 }

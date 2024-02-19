@@ -1,5 +1,5 @@
 <div class="main-content">
-  <app-loading [visible]="isLoading"></app-loading>
+  <app-loading></app-loading>
   <div class="header">
     <div class="menu-content">
       <div class="dashboard-menu">
@@ -37,11 +37,8 @@
   </div>
   <div id="content-body" class="content-body">
     <div class="body-main">
-      
       <router-outlet></router-outlet>
     </div>
-
-    
   </div>
 
   <ng-template #template>

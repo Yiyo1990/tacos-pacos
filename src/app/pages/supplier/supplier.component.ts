@@ -6,6 +6,7 @@ import { Dates } from 'src/app/util/Dates';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { configDropdown, groupArrayByKey, sortByKey } from 'src/app/util/util';
 import { ToastrService } from 'ngx-toastr';
+import { LoadingService } from 'src/app/components/loading/loading.service';
 
 @Component({
   selector: 'app-supplier',
@@ -27,7 +28,11 @@ export class SupplierComponent {
   providerList: any = []
   isEnabledRegisterSup: boolean = true
 
-  constructor(private mainService: MainService, private service: ProvidersService, private modalService: BsModalService, private toastr: ToastrService) {
+  constructor(private mainService: MainService, 
+    private service: ProvidersService, 
+    private modalService: BsModalService, 
+    private toastr: ToastrService,
+    private loading: LoadingService) {
     mainService.setPageName("Proveedores")
     
     this.mainService.$foodCategories.subscribe((result: any) => {
@@ -52,6 +57,7 @@ export class SupplierComponent {
   }
 
   saveSupplier() {
+    this.loading.start()
     if(!this.provider.name || Object.keys(this.provider.foodCategories).length == 0) {
       this.toastr.info("Favor de ingresar todos los datos", "Error")
     } else {
@@ -66,8 +72,10 @@ export class SupplierComponent {
         },
         error: () => {
           this.toastr.error("Ha ocurrido un error", "Error")
+          this.loading.stop()
         },
         complete: () => {
+          this.loading.stop()
           this.getProviders()
           this.resetProviderData()
         }
@@ -82,18 +90,20 @@ export class SupplierComponent {
   }
 
   getProviders() {
-    this.mainService.setLoading(true)
+    this.loading.start()
     this.service.getProviders(this.brandSelected.id).subscribe({
       next: (resp: any) => {
         const tmp = resp.map((item: any) => {
           return { ...item, categoryCode: item.foodCategories.code, categoryName: item.foodCategories.name, fecha: this.dates.getFormatDate(item.createdAt) }
         })
         this.providerList = tmp
-        this.mainService.setLoading(false)
       },
       error: () => {
-        this.mainService.setLoading(false)
         this.toastr.error("Ha ocurrido un error", "Error")
+        this.loading.stop()
+      },
+      complete: () => {
+        this.loading.stop()
       }
     })
   }
@@ -110,7 +120,7 @@ export class SupplierComponent {
     let providerFind = this.providerList.find((provider: any) => provider.id == item.id)
     let resp = confirm(`¿Esta seguro de eliminar el proveedor '${providerFind.name}'?`)
     if (resp) {
-      this.mainService.setLoading(true)
+      this.loading.start()
       this.service.deleteProvider(this.brandSelected.id, providerFind.id).subscribe({
         next: (res: any) => {
           if (res.acknowledge) {
@@ -118,13 +128,13 @@ export class SupplierComponent {
           } else {
             this.toastr.error("Ha ocurrido un error", "Error")
           }
-          this.mainService.setLoading(false)
         },
         error: () => {
           this.toastr.error("Ha ocurrido un error", "Error")
-          this.mainService.setLoading(false)
+          this.loading.stop()
         },
         complete: () => {
+          this.loading.stop()
           this.getProviders()
         }
       })
