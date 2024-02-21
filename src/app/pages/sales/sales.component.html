@@ -59,7 +59,7 @@
 
                                     <td style="width: 48px; background-color: #fff;"></td>
 
-                                    <td>{{sale?.totalApps | currency}}</td>
+                                    <td>{{sale?.totalIncome | currency}}</td>
                                     <td>{{sale?.apps.uber.sale | currency}}</td>
                                     <td> <input type="text" value="${{sale?.apps.uber.income}}"
                                             (blur)="setIncomePlatforms(sale.apps.uber, sale, sale.dateSale, $any($event.target).value, 1)"

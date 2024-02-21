@@ -24,16 +24,37 @@
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
                             </div>
 
-                            <div class="col-8 md-8 sm-12">
-                                <canvas
-                                    style="height: 80px;"
-                                    baseChart
-                                    class="chart"
-                                    [data]="barChartDataBalance"
-                                    [options]="barChartOptions"
-                                    [type]="'bar'"
-                                    >
-                                    </canvas>
+                            <div class="col-7 md-7 sm-12">
+                                <canvas style="height: 80px;" baseChart class="chart" [data]="barChartDataBalance"
+                                    [options]="barChartOptions" [type]="'bar'">
+                                </canvas>
+                            </div>
+
+                            <div class="col-1 md-1 sm-12">
+                                <div class="row" style="height: 25%; margin-bottom: 21.3%; text-align: end; align-content:center;">
+                                    <div class="col-12 md-12 sm-12">Ventas</div>
+                                </div>
+                                <div class="row" style="height: 25%; margin-bottom: 21.3%; text-align: end; align-content: center;">
+                                    <div class="col-12 md-12 sm-12">Profit</div>
+                                </div>
+                                <div class="row" style="height: 25%; text-align: end; align-content: center;">
+                                    <div class="col-12 md-12 sm-12 ellipsis" >Alimentos</div>
+                                </div>
+                            </div>
+
+                            <div class="col-2 md-2 sm-12">
+                                <div class="bar-chart-horizontal">
+                                    <div class="bar-horizontal" style="width: 100%; background-color: #707070;"[attr.data-value]="'450000' | currency"></div>
+                                    <div class="bar-horizontal" style="width: 30%;"[attr.data-value]="'30%'"></div>
+                                </div>
+                                <div class="bar-chart-horizontal">
+                                    <div class="bar-horizontal" style="width: 100%; background-color: #707070;"[attr.data-value]="'67000' | currency"></div>
+                                    <div class="bar-horizontal" style="width: 30%;"[attr.data-value]="'30%'"></div>
+                                </div>
+                                <div class="bar-chart-horizontal">
+                                    <div class="bar-horizontal" style="width: 100%; background-color: #707070;"[attr.data-value]="'180000' | currency"></div>
+                                    <div class="bar-horizontal" style="width: 30%;"[attr.data-value]="'30%'"></div>
+                                </div>
                             </div>
                         </div>
                     </accordion-group>
@@ -44,15 +65,15 @@
                             <label style="font-size: 15pt; font-weight: bold;">Ventas</label> &nbsp; <i
                                 style="float: right;" class='fa fa-chevron-down'></i>
                         </span>
-                        
+
                         <ventas-chart [sales]="sales" [isResultadosScreen]="true"
-                        (typeFilterEvent)="filterCharts($event)" [brandSelected]="brandSelected" />
-                        
+                            (typeFilterEvent)="filterCharts($event)" [brandSelected]="brandSelected" />
+
                         <div class="row" style="margin-top: 2rem;">
                             <div class="col-4 md-4 sm-12">
                                 <div class="line-title"><label>Venta Diaria</label></div>
-                                <canvas baseChart class="chart" style="height: 150px !important;" [data]="barChartDataDaily"
-                                    [options]="barChartOptions" [type]="'bar'"></canvas>
+                                <canvas baseChart class="chart" style="height: 150px !important;"
+                                    [data]="barChartDataDaily" [options]="barChartOptions" [type]="'bar'"></canvas>
                             </div>
                             <div class="col-2 md-2 sm-12">
                                 <div class="line-title"><label>Ticket Promedio</label></div>
@@ -100,37 +121,37 @@
                         <gastos-chart [expenses]="expenses" [foodCategories]="foodCategories"
                             (onChangeCategoryEvent)="onChangeCategory($event)" />
 
-                            <div class="row" style="margin-top: 1rem;" *ngIf="foodSupplier.length > 0">
-                                <div class="col-12 md-12 sm-12">
-                                    <div class="row">
-                                        <div class="col-12 md-12 sm-12 line-title">
-                                            <label>{{ foodCategorySelected }}</label>
-                                        </div>
+                        <div class="row" style="margin-top: 1rem;" *ngIf="foodSupplier.length > 0">
+                            <div class="col-12 md-12 sm-12">
+                                <div class="row">
+                                    <div class="col-12 md-12 sm-12 line-title">
+                                        <label>{{ foodCategorySelected }}</label>
                                     </div>
-                                    <div class="row" *ngIf="typeFilterExpenses != 'ALL'">
-                                        <div class="col-12 md-12 sm-12">
-                                            <div
-                                                style="display: flex; max-width: 100%; flex-wrap: wrap; align-items: center;">
-                                                <div *ngFor="let sup of foodSupplier"
-                                                    style="display: flex; text-align: center; width: calc(100% / 6); margin: 1rem;">
-                                                    <div class="ellipsis"
-                                                        style="width: 50%; background-color: #d1d1d1; padding: 5px; color: #e68c38; font-weight: bold;">
-                                                        {{sup.name}}
-                                                    </div>
-                                                    <label style="margin-left: 10px; margin-top: 2%;">{{sup.total |
-                                                        currency}}</label>
+                                </div>
+                                <div class="row" *ngIf="typeFilterExpenses != 'ALL'">
+                                    <div class="col-12 md-12 sm-12">
+                                        <div
+                                            style="display: flex; max-width: 100%; flex-wrap: wrap; align-items: center;">
+                                            <div *ngFor="let sup of foodSupplier"
+                                                style="display: flex; text-align: center; width: calc(100% / 6); margin: 1rem;">
+                                                <div class="ellipsis"
+                                                    style="width: 50%; background-color: #d1d1d1; padding: 5px; color: #e68c38; font-weight: bold;">
+                                                    {{sup.name}}
                                                 </div>
+                                                <label style="margin-left: 10px; margin-top: 2%;">{{sup.total |
+                                                    currency}}</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row" style="margin-top: 1%;" *ngIf="typeFilterExpenses == 'ALL'">
-                                        <div class="col-3" *ngFor="let sup of foodSupplier" style="margin-bottom: 1%;">
-                                            <category-supplier-card [nameCategory]="sup.name"
-                                                [providers]="sup.providers"></category-supplier-card>
-                                        </div>
+                                </div>
+                                <div class="row" style="margin-top: 1%;" *ngIf="typeFilterExpenses == 'ALL'">
+                                    <div class="col-3" *ngFor="let sup of foodSupplier" style="margin-bottom: 1%;">
+                                        <category-supplier-card [nameCategory]="sup.name"
+                                            [providers]="sup.providers"></category-supplier-card>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     </accordion-group>
 
                     <!--************  CUENTAS POR COBRAR *************-->
