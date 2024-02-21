@@ -47,3 +47,32 @@
   background-color: rgb(224, 224, 224);
   height: 2rem;
 }
+
+.bar-chart-horizontal {
+  width: 100%; /* Ancho total del gráfico de barras */
+  margin-bottom: 1.5rem;
+  border-left: solid 1px rgb(134, 134, 134);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.bar-horizontal {
+  height: 20px; /* Altura de cada barra */
+  margin: 5px 0; /* Espacio entre las barras */
+  background-color: #007bff; /* Color de las barras */
+  transition: all 0.3s ease; /* Transición suave para efectos de hover o cambios */
+}
+
+.bar-horizontal:hover {
+  opacity: 0.7; /* Efecto al pasar el ratón por encima */
+}
+
+/* Opcional: Puedes añadir un pseudo-elemento para mostrar el valor de la barra */
+.bar-horizontal::after {
+  content: attr(data-value); /* Usa el valor del atributo data-value */
+  float: right;
+  margin-left: 10px; /* Espacio entre el texto y la barra */
+  height: 20px; /* Asegúrate de que esto coincida con la altura de la barra */
+  line-height: 20px; /* Centrar el texto verticalmente */
+  color: #fff; /* Color del texto */
+}

@@ -231,7 +231,7 @@ export class ResultsComponent implements OnInit {
 
   get totalCash(): number {
     let sales = this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.parrot.sale), 0)
-    return (sales + this.cuentaPagadaCash) - (this.expensesCash + this.expensesTransfer)
+    return (sales + this.cuentaPagadaCash) - (this.expensesCash )
   }
 
   get totalCard(): number {
