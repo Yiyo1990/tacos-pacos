@@ -10,8 +10,8 @@
                                 style="float: right;" class='fa fa-chevron-down'></i>
                         </span>
                         <div class="row">
-                            <div class="col-2 sm-12 md-2">
-                                <app-primary-button description="VENTAS" icon="dollar-sign"
+                            <div class="col-2 sm-12 md-2" style="padding-top: 1rem;">
+                                <app-primary-button  description="VENTAS" icon="dollar-sign"
                                     total="{{totalSales | currency}}" backgrounColor="blueBtn"
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
 
@@ -22,38 +22,104 @@
                                 <app-primary-button description="PROFIT" icon="money-bill-trend-up"
                                     total="{{profit | currency}}" backgrounColor="greenBtn"
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
+                                <div style="text-align: center;"><i class="fas fa-chart-simple" style="color: #3c8be6;"
+                                        aria-hidden="true"></i>&nbsp;<label
+                                        style="font-weight: bold;" [ngStyle]="{'color': chartColors.profit}">{{profitPercent}}</label></div>
                             </div>
 
-                            <div class="col-7 md-7 sm-12">
+                            <div class="col-8 md-8 sm-12">
                                 <canvas style="height: 80px;" baseChart class="chart" [data]="barChartDataBalance"
                                     [options]="barChartOptions" [type]="'bar'">
                                 </canvas>
-                            </div>
 
-                            <div class="col-1 md-1 sm-12">
-                                <div class="row" style="height: 25%; margin-bottom: 21.3%; text-align: end; align-content:center;">
-                                    <div class="col-12 md-12 sm-12">Ventas</div>
+                                <div *ngFor="let  data of barChartDataBalance.datasets">
+                                    <div
+                                        style="height: auto; margin-bottom: 0.5rem; margin-top: 0.5rem; display: flex;">
+                                        <div style="z-index: -10; width: auto; position: absolute; padding-left: 1rem;"
+                                            id="maxNumber">
+                                            <label style="color: transparent; font-size: 10pt;">{{maxNumber}}</label>
+                                        </div>
+                                        <div style="display: flex;" [ngStyle]="{'width': widthMxNumber}">
+                                            <div style="width: 8px; height: 8px; margin-top: 10%; margin-right: 2px;"
+                                                [ngStyle]="{'background-color': data.backgroundColor}"></div>
+                                            <div title="{{data.label}}" class="ellipsis"
+                                                style="font-size: 10pt; font-weight: bold;">
+                                                {{data.label}}
+                                            </div>
+                                        </div>
+                                        <div class="ellipsis" *ngFor="let total of data.data"
+                                            style="height: 100%; text-align: center; font-size: 9pt;"
+                                            [ngStyle]="{'width': maxWidthMaxNumberLabel }">
+                                            {{total | currency}}
+                                        </div>
+
+                                    </div>
                                 </div>
-                                <div class="row" style="height: 25%; margin-bottom: 21.3%; text-align: end; align-content: center;">
-                                    <div class="col-12 md-12 sm-12">Profit</div>
-                                </div>
-                                <div class="row" style="height: 25%; text-align: end; align-content: center;">
-                                    <div class="col-12 md-12 sm-12 ellipsis" >Alimentos</div>
+                                <div>
+                                    <div
+                                        style="height: auto; margin-bottom: 0.5rem; margin-top: 0.5rem; display: flex;">
+                                        <div style="width: auto;  padding-left: 1rem;" id="maxNumber">
+                                            <label style="color: transparent; font-size: 10pt;">{{maxNumber}}</label>
+                                        </div>
+                                        <div class="ellipsis" *ngFor="let profit of profitPercents"
+                                            style="height: 100%; text-align: center; font-size: 9pt; font-weight: bold;"
+                                            [ngStyle]="{'width': maxWidthMaxNumberLabel, 'color': chartColors.profit}">
+                                            {{profit}}
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="col-2 md-2 sm-12">
-                                <div class="bar-chart-horizontal">
-                                    <div class="bar-horizontal" style="width: 100%; background-color: #707070;"[attr.data-value]="'450000' | currency"></div>
-                                    <div class="bar-horizontal" style="width: 30%;"[attr.data-value]="'30%'"></div>
+                                <div class="row indicator-row">
+                                    <div class="col-3 md-3 sm-12 ellipsis" title="Ventas" style="text-align: end; ">
+                                        Ventas
+                                    </div>
+                                    <div class="col-9 md-9 sm-12">
+                                        <div class="bar-chart-horizontal">
+                                            <div class="bar-horizontal" style="width: 100%; background-color: #707070;"
+                                                [attr.data-value]="salesIndicator.total | currency"></div>
+                                            <div class="bar-horizontal"
+                                                [ngStyle]="{'width': salesIndicator.percent, 'background-color': chartColors.ventas }"
+                                                [attr.data-value]="salesIndicator.percent">
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
-                                <div class="bar-chart-horizontal">
-                                    <div class="bar-horizontal" style="width: 100%; background-color: #707070;"[attr.data-value]="'67000' | currency"></div>
-                                    <div class="bar-horizontal" style="width: 30%;"[attr.data-value]="'30%'"></div>
+                                <div class="row indicator-row">
+                                    <div class="col-3 md-3 sm-12 ellipsis" title="Profit"
+                                        style="text-align: end;  align-content:center;">
+                                        Profit
+                                    </div>
+                                    <div class="col-9 md-9 sm-12">
+                                        <div class="bar-chart-horizontal">
+                                            <div class="bar-horizontal" style="width: 100%; background-color: #707070;"
+                                                [attr.data-value]="profitIndicator.total | currency"></div>
+                                            <div class="bar-horizontal"
+                                                [ngStyle]="{'width': profitIndicator.percent, 'background-color': chartColors.profit}"
+                                                [attr.data-value]="profitIndicator.percent">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="bar-chart-horizontal">
-                                    <div class="bar-horizontal" style="width: 100%; background-color: #707070;"[attr.data-value]="'180000' | currency"></div>
-                                    <div class="bar-horizontal" style="width: 30%;"[attr.data-value]="'30%'"></div>
+                                <div class="row indicator-row">
+                                    <div class="col-3 md-3 sm-12 ellipsis" title="Alimentos"
+                                        style="text-align: end;  align-content:center;">
+                                        Alimentos
+                                    </div>
+                                    <div class="col-9 md-9 sm-12">
+                                        <div class="bar-chart-horizontal">
+                                            <div class="bar-horizontal" style="width: 100%; background-color: #707070;"
+                                                [attr.data-value]="foodIndicator.total | currency">
+                                            </div>
+                                            <div class="bar-horizontal"
+                                                [ngStyle]="{width: foodIndicator.percent, 'background-color': chartColors.gastos}"
+                                                [attr.data-value]="foodIndicator.percent">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

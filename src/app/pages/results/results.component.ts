@@ -343,8 +343,9 @@ export class ResultsComponent implements OnInit {
     this.fillBarChartDays()
   }
 
-  getProfitPercent() {
-    return Math.round((this.profit / this.totalSales) * 100)
+  get profitPercent() {
+    let percent = Math.round((this.profit / this.totalSales) * 100)
+    return `${percent ? percent : 0}%`
   }
 
   /**
@@ -417,7 +418,7 @@ export class ResultsComponent implements OnInit {
         label: 'VENTAS',
         data: this.salesByDay,
         backgroundColor: this.chartColors.ventas,
-        borderColor: '#3c8be6',
+        borderColor: this.chartColors.ventas,
         pointStyle: 'circle'
       })
       this.updateCharts()
@@ -431,7 +432,7 @@ export class ResultsComponent implements OnInit {
         label: 'GASTOS',
         data: this.expensesByDay,
         backgroundColor: this.chartColors.gastos,
-        borderColor: '#f8a130',
+        borderColor: this.chartColors.gastos,
         pointStyle: 'circle'
       })
       this.updateCharts()
@@ -445,7 +446,7 @@ export class ResultsComponent implements OnInit {
         label: 'PROFIT',
         data: this.profitByDay,
         backgroundColor: this.chartColors.profit,
-        borderColor: '#63f363',
+        borderColor: this.chartColors.profit,
         pointStyle: 'circle'
       })
       this.updateCharts()
