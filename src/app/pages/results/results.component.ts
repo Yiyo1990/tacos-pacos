@@ -244,8 +244,8 @@ export class ResultsComponent implements OnInit {
   }
 
   get totalPay(): number {
-    let totalCard = this.sales.filter((a: any) => !a.apps.parrot.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.parrot.income), 0)
-    return totalCard
+    let totalPay = this.sales.filter((a: any) => !a.apps.parrot.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.parrot.income), 0)
+    return totalPay
   }
 
   get totalApps(): number {
@@ -257,7 +257,7 @@ export class ResultsComponent implements OnInit {
   }
 
   get total(): number {
-    return this.totalCash + this.totalCard + this.totalApps
+    return this.totalCash + this.totalCard + this.totalApps + this.totalPay
   }
 
   get totalGap(): number {
