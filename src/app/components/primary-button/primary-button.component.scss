@@ -16,23 +16,26 @@
 .top-division {
   width: auto;
   color: #000;
-  padding: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //padding: 4px;
   height: 2.5rem;
   cursor: pointer;
   border: 1px solid #4d4d4d;
  // box-shadow: 3px 0px 6px 1px #252525;
   background-color: #ffffff;
-  font-size: 12pt;
+  font-size: 10pt;
   border-radius: 5px;
 }
 
 .icon {
-  margin-right: 10px;
+  margin-right: 0.5rem;
   font-size: 13pt;
 }
 
 .bottom-division {
   padding: 5px;
-  font-size: 12pt;
+  font-size: 10pt;
   font-weight: 600;
 }

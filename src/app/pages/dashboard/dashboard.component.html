@@ -6,7 +6,7 @@
                     <!-- ///////////  BALANCE ////////////-->
                     <accordion-group [isOpen]="true">
                         <span accordion-heading>
-                            <label style="font-size: 15pt; font-weight: bold;">Balance</label> &nbsp; <i
+                            <label style="font-size: 13pt; font-weight: bold;">Balance</label> &nbsp; <i
                                 style="float: right;" class='fa fa-chevron-down'></i>
                         </span>
                         <div class="row">
@@ -22,9 +22,10 @@
                                 <app-primary-button description="PROFIT" icon="money-bill-trend-up"
                                     total="{{profit | currency}}" backgrounColor="greenBtn"
                                     (checkedEvent)="onCheckedEvent($event)"></app-primary-button>
-                                <div style="text-align: center;"><i class="fas fa-chart-simple" style="color: #3c8be6;"
-                                        aria-hidden="true"></i>&nbsp;<label
-                                        style="font-weight: bold;" [ngStyle]="{'color': chartColors.profit}">{{profitPercent}}</label></div>
+                                <div style="text-align: center;">
+                                    <i class="fas fa-chart-simple" style="color: #3c8be6;" aria-hidden="true"></i>&nbsp;
+                                    <label style="font-weight: bold;" [ngStyle]="{'color': chartColors.profit}">{{profitPercent}}</label>
+                                </div>
                             </div>
 
                             <div class="col-8 md-8 sm-12">
@@ -43,13 +44,14 @@
                                             <div style="width: 8px; height: 8px; margin-top: 10%; margin-right: 2px;"
                                                 [ngStyle]="{'background-color': data.backgroundColor}"></div>
                                             <div title="{{data.label}}" class="ellipsis"
-                                                style="font-size: 10pt; font-weight: bold;">
+                                                style="font-size: 9pt; font-weight: bold;">
                                                 {{data.label}}
                                             </div>
                                         </div>
                                         <div class="ellipsis" *ngFor="let total of data.data"
-                                            style="height: 100%; text-align: center; font-size: 9pt;"
-                                            [ngStyle]="{'width': maxWidthMaxNumberLabel }">
+                                            style="height: 100%; text-align: center; font-size: 8pt; margin-right: 0.1rem; margin-top: 0.1rem;"
+                                            [ngStyle]="{'width': maxWidthMaxNumberLabel}"
+                                            title="{{total | currency}}">
                                             {{total | currency}}
                                         </div>
 
@@ -62,7 +64,7 @@
                                             <label style="color: transparent; font-size: 10pt;">{{maxNumber}}</label>
                                         </div>
                                         <div class="ellipsis" *ngFor="let profit of profitPercents"
-                                            style="height: 100%; text-align: center; font-size: 9pt; font-weight: bold;"
+                                            style="height: 100%; text-align: center; font-size: 8pt; font-weight: bold;"
                                             [ngStyle]="{'width': maxWidthMaxNumberLabel, 'color': chartColors.profit}">
                                             {{profit}}
                                         </div>
@@ -73,50 +75,50 @@
 
                             <div class="col-2 md-2 sm-12">
                                 <div class="row indicator-row">
-                                    <div class="col-3 md-3 sm-12 ellipsis" title="Ventas" style="text-align: end; ">
-                                        Ventas
+                                    <div class="col-4 md-4 sm-12 ellipsis" title="Ventas" style="text-align:end;align-content:center;font-size: 9pt;">
+                                        <strong>Ventas</strong>
                                     </div>
-                                    <div class="col-9 md-9 sm-12">
+                                    <div class="col-8 md-8 sm-12">
                                         <div class="bar-chart-horizontal">
-                                            <div class="bar-horizontal" style="width: 100%; background-color: #707070;"
+                                            <div class="bar-horizontal" style="width: 100%; background-color: #707070;font-size: 9pt;"
                                                 [attr.data-value]="salesIndicator.total | currency"></div>
                                             <div class="bar-horizontal"
                                                 [ngStyle]="{'width': salesIndicator.percent, 'background-color': chartColors.ventas }"
-                                                [attr.data-value]="salesIndicator.percent">
+                                                [attr.data-value]="salesIndicator.percent" style="font-size: 9pt;">
                                             </div>
                                         </div>
 
                                     </div>
                                 </div>
                                 <div class="row indicator-row">
-                                    <div class="col-3 md-3 sm-12 ellipsis" title="Profit"
-                                        style="text-align: end;  align-content:center;">
-                                        Profit
+                                    <div class="col-4 md-4 sm-12 ellipsis" title="Profit"
+                                        style="text-align:end;align-content:center;font-size: 9pt;">
+                                       <strong>Profit</strong>
                                     </div>
-                                    <div class="col-9 md-9 sm-12">
+                                    <div class="col-8 md-8 sm-12">
                                         <div class="bar-chart-horizontal">
-                                            <div class="bar-horizontal" style="width: 100%; background-color: #707070;"
+                                            <div class="bar-horizontal" style="width: 100%; background-color: #707070;font-size: 9pt;"
                                                 [attr.data-value]="profitIndicator.total | currency"></div>
                                             <div class="bar-horizontal"
                                                 [ngStyle]="{'width': profitIndicator.percent, 'background-color': chartColors.profit}"
-                                                [attr.data-value]="profitIndicator.percent">
+                                                [attr.data-value]="profitIndicator.percent" style="font-size: 9pt;">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row indicator-row">
-                                    <div class="col-3 md-3 sm-12 ellipsis" title="Alimentos"
-                                        style="text-align: end;  align-content:center;">
-                                        Alimentos
+                                    <div class="col-4 md-4 sm-12 ellipsis" title="Alimentos"
+                                        style="text-align:end;align-content:center;font-size: 9pt;">
+                                        <strong>Alimentos</strong>
                                     </div>
-                                    <div class="col-9 md-9 sm-12">
+                                    <div class="col-8 md-8 sm-12">
                                         <div class="bar-chart-horizontal">
-                                            <div class="bar-horizontal" style="width: 100%; background-color: #707070;"
+                                            <div class="bar-horizontal" style="width: 100%; background-color: #707070;font-size: 9pt;"
                                                 [attr.data-value]="foodIndicator.total | currency">
                                             </div>
                                             <div class="bar-horizontal"
                                                 [ngStyle]="{width: foodIndicator.percent, 'background-color': chartColors.gastos}"
-                                                [attr.data-value]="foodIndicator.percent">
+                                                [attr.data-value]="foodIndicator.percent" style="font-size: 9pt;">
                                             </div>
                                         </div>
                                     </div>
@@ -128,7 +130,7 @@
                     <!-- ///////////  VENTAS ////////////-->
                     <accordion-group [isOpen]="false">
                         <span accordion-heading>
-                            <label style="font-size: 15pt; font-weight: bold;">Ventas</label> &nbsp; <i
+                            <label style="font-size: 13pt; font-weight: bold;">Ventas</label> &nbsp; <i
                                 style="float: right;" class='fa fa-chevron-down'></i>
                         </span>
 
@@ -143,7 +145,7 @@
                             </div>
                             <div class="col-2 md-2 sm-12">
                                 <div class="line-title"><label>Ticket Promedio</label></div>
-                                <div class="row" style="font-size: 11pt; margin-top: 1rem;">
+                                <div class="row" style="font-size: 9pt; margin-top: 1rem;">
                                     <div class="col-8 md-8 sm-12">
                                         Tacos Pacos
                                     </div>
@@ -154,7 +156,7 @@
                             </div>
                             <div class="col-1 md-1 sm-12">
                                 <div class="line-title"><label># Ordenes</label></div>
-                                <div class="row" style="font-size: 11pt; margin-top: 1rem; text-align: center;">
+                                <div class="row" style="font-size: 9pt; margin-top: 1rem; text-align: center;">
                                     <div class="col-12 md-12 sm-12">
                                         0
                                     </div>
@@ -162,17 +164,17 @@
                             </div>
                             <div class="col-5 md-5 sm-12">
                                 <div class="line-title"><label>Tipo de Pago</label></div>
-                                <div class="row" style="font-size: 11pt; margin-top: 3%;">
+                                <div class="row" style="font-size: 9pt; margin-top: 3%;">
                                     <div class="col-2 md-2 sm-12"><span
-                                            style="background-color: rgb(224, 224, 224);; padding: 5px; color: #60bb60; font-weight: bold;">Efectivo</span>
+                                            style="background-color: rgb(224, 224, 224); padding: 5px; color: #60bb60; font-weight: bold;">Efectivo</span>
                                     </div>
-                                    <div class="col-3 md-3 sm-12">{{getTypePay().cash.total | currency}}</div>
-                                    <div class="col-1 md-1 sm-12"> {{getTypePay().cash.percent}}%</div>
+                                    <div class="col-2 md-2 sm-12 ellipsis" title="{{paymentType.cash.total | currency}}">{{paymentType.cash.total | currency}}</div>
+                                    <div class="col-2 md-2 sm-12"> {{paymentType.cash.percent}}</div>
                                     <div class="col-2 md-2 sm-12"><span
-                                            style="background-color: rgb(224, 224, 224);; padding: 5px; color: #e68c38; font-weight: bold;">Tarjeta</span>
+                                            style="background-color: rgb(224, 224, 224); padding: 5px; color: #e68c38; font-weight: bold;">Tarjeta</span>
                                     </div>
-                                    <div class="col-3 md-3 sm-12">{{getTypePay().card.total | currency}}</div>
-                                    <div class="col-1 md-1 sm-12">{{getTypePay().card.percent}}%</div>
+                                    <div class="col-2 md-2 sm-12 ellipsis" title="{{paymentType.card.total | currency}}">{{paymentType.card.total | currency}}</div>
+                                    <div class="col-2 md-2 sm-12">{{paymentType.card.percent}}</div>
                                 </div>
                             </div>
                         </div>
@@ -181,7 +183,7 @@
                     <!-- ///////////  GASTOS ////////////-->
                     <accordion-group [isOpen]="false">
                         <span accordion-heading>
-                            <label style="font-size: 15pt; font-weight: bold;">Gastos</label> &nbsp; <i
+                            <label style="font-size: 13pt; font-weight: bold;">Gastos</label> &nbsp; <i
                                 style="float: right;" class='fa fa-chevron-down'></i>
                         </span>
                         <gastos-chart [expenses]="expenses" [foodCategories]="foodCategories"
@@ -224,7 +226,7 @@
 
                     <accordion-group [isOpen]="false">
                         <span accordion-heading>
-                            <label style="font-size: 15pt; font-weight: bold;">Cuentas por Cobrar</label> &nbsp; <i
+                            <label style="font-size: 13pt; font-weight: bold;">Cuentas por cobrar</label> &nbsp; <i
                                 style="float: right;" class='fa fa-chevron-down'></i>
                         </span>
 
