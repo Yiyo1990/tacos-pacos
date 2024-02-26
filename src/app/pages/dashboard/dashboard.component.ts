@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from 'src/app/components/loading/loading.service';
 import { MainService } from 'src/app/main/main.service';
 import { SalesService } from '../sales/sales-service.service';
-import { OperationType, ReportChannel, barChartOptions, firstUpperCase, fixedData, groupArrayByKey, sortByKey } from 'src/app/util/util';
+import { BalanceType, OperationType, ReportChannel, barChartOptions, firstUpperCase, fixedData, groupArrayByKey, sortByKey } from 'src/app/util/util';
 import { Dates } from 'src/app/util/Dates';
 import { ExpenseService } from '../expenses/expenses.service';
 import { Charts } from 'src/app/util/Charts';
@@ -22,6 +22,8 @@ import { ResultService } from '../results/result.service';
 })
 export class DashboardComponent implements OnInit {
   @ViewChildren(BaseChartDirective) charts: QueryList<BaseChartDirective> | undefined;
+
+  readonly balanceType = BalanceType
 
   brandSelected: any
   dates = new Dates()
@@ -40,6 +42,7 @@ export class DashboardComponent implements OnInit {
   sales: Array<any> = []
   isBtnParrotActive: number = 2
   private typeFilterAppBarChart = 1
+  ticketsTargetList: Array<any> = []
 
   /** EXPENSES */
   expenses: Array<any> = []
@@ -71,33 +74,31 @@ export class DashboardComponent implements OnInit {
         let startEndFilter = this.dates.getStartAndEndYear(this.dates.getCurrentYear())
         this.getReportSalesByDateRange(startEndFilter.start, startEndFilter.end)
         this.callServiceSearchExpenses(startEndFilter.start, startEndFilter.end)
+        this.serviceTicketTarget(startEndFilter.start, startEndFilter.end)
+        this.getCuentasPorCobrar(startEndFilter.start, startEndFilter.end)
       }
     })
   }
 
   onCheckedEvent(data: any) {
-    /*if (!data.target) {
-      let filter = this.lineChartData.datasets.filter((d: any) => d.label != data.id)
-      this.lineChartData.datasets = filter
+    if (!data.target) {
+      let filter = this.barChartDataBalance.datasets.filter((d: any) => d.label != data.id)
+      this.barChartDataBalance.datasets = filter
       this.updateCharts()
-    } else {
-      if (data.id == 'VENTAS') {
-        this.pushDataSalesChart()
-      } else if (data.id == 'GASTOS') {
-        this.pushDataExpensesChart()
-      } else if (data.id == 'PROFIT') {
-        this.pushDataProfitChart()
-      }
-    }*/
+    }else {
+        this.fillBarChartBalance(data.id)
+    }
   }
 
-  fillBarChartBalance() {
+
+  fillBarChartBalance(filter: string = 'ALL') {
     let chartDataProfit: Array<number> = []
     let chartDataSales: Array<number> = []
     let chartDataExpenses: Array<number> = []
     let dataSales = this.salesDataChart
     let dataExpenses = this.expensesDataChart
-    this.barChartDataBalance.datasets = []
+    //this.barChartDataBalance.datasets = []
+    this.barChartDataBalance.labels = []
 
     dataSales.map((s: any) => {
       this.barChartDataBalance.labels?.push(s.month.replace(".", "").toUpperCase())
@@ -107,10 +108,23 @@ export class DashboardComponent implements OnInit {
       chartDataSales.push(s.total)
       chartDataExpenses.push(expense ? expense.total : 0)
     })
+    let existV = this.barChartDataBalance.datasets.find(s => s.label == this.balanceType.VENTAS)
+    let existG = this.barChartDataBalance.datasets.find(s => s.label == this.balanceType.GASTOS)
+    let existP = this.barChartDataBalance.datasets.find(s => s.label == this.balanceType.PROFIT)
 
-    this.barChartDataBalance.datasets.push({ data: chartDataSales, label: 'VENTAS', backgroundColor: this.chartColors.ventas })
-    this.barChartDataBalance.datasets.push({ data: chartDataExpenses, label: 'GASTOS', backgroundColor: this.chartColors.gastos })
-    this.barChartDataBalance.datasets.push({ data: chartDataProfit, label: 'PROFIT-LOSS', backgroundColor: this.chartColors.profit })
+    this.barChartDataBalance.datasets = []
+    
+    if (filter == this.balanceType.VENTAS || filter == 'ALL' || existV) {
+      this.barChartDataBalance.datasets.push({ data: chartDataSales, label: this.balanceType.VENTAS, backgroundColor: this.chartColors.ventas })
+    }
+
+    if (filter == this.balanceType.GASTOS || filter == 'ALL' || existG) {
+      this.barChartDataBalance.datasets.push({ data: chartDataExpenses, label: this.balanceType.GASTOS, backgroundColor: this.chartColors.gastos })
+    }
+
+    if (filter == this.balanceType.PROFIT || filter == 'ALL' || existP) {
+      this.barChartDataBalance.datasets.push({ data: chartDataProfit, label: this.balanceType.PROFIT, backgroundColor: this.chartColors.profit })
+    }
 
     this.updateCharts()
   }
@@ -150,8 +164,8 @@ export class DashboardComponent implements OnInit {
    * Obtiene el porcentaje de ventas del mes actual contra una cantidad definida (450,000)
    */
   get salesIndicator(): any {
-    let percent = Math.round((this.totalSalesCurrentMonth * 100)/450000)
-    return {total: 450000, percent: `${percent}%`}
+    let percent = Math.round((this.totalSalesCurrentMonth * 100) / 450000)
+    return { total: 450000, percent: `${percent}%` }
   }
 
   /**
@@ -160,7 +174,7 @@ export class DashboardComponent implements OnInit {
   get totalSalesCurrentMonth(): number {
     let currentMonth = this.dates.formatDate(new Date(), 'MMM')
     let sales = this.sales.filter((s: any) => s.shortMonth.toUpperCase() == currentMonth.toUpperCase())
-    
+
     return this.getTotalSalesByDelivery(sales)
   }
 
@@ -169,12 +183,12 @@ export class DashboardComponent implements OnInit {
    */
   get profitIndicator() {
     let currentMonth = this.dates.formatDate(new Date(), 'MMM')
-    currentMonth = currentMonth.toUpperCase().replace(".","")
-    let profits = this.barChartDataBalance.datasets.find(s => s.label == 'PROFIT-LOSS')
-    let index =   this.barChartDataBalance.labels?.indexOf(currentMonth)
+    currentMonth = currentMonth.toUpperCase().replace(".", "")
+    let profits = this.barChartDataBalance.datasets.find(s => s.label == this.balanceType.PROFIT)
+    let index = this.barChartDataBalance.labels?.indexOf(currentMonth)
     let profitCurrentMonth = profits?.data[index!]
     let percent = profitCurrentMonth ? Math.round((profitCurrentMonth! * 100) / 67000) : 0
-    return {total: 67000, percent: `${percent}%`} 
+    return { total: 67000, percent: `${percent}%` }
   }
 
   /**
@@ -186,18 +200,18 @@ export class DashboardComponent implements OnInit {
     let currentMonth = this.dates.formatDate(new Date(), 'MMM')
     let alimentoCategories = this.expenses.filter(e => e.foodCategories.code == 'food.alimentos').filter(e => e.shortMonth.toUpperCase() == currentMonth.toUpperCase())
     let totalExpense = alimentoCategories.reduce((total: number, exp: any) => total + exp.amount, 0)
-    let percentExpense = Math.round((totalExpense * 100)/percentCurrentMonth)
+    let percentExpense = Math.round((totalExpense * 100) / percentCurrentMonth)
 
     percentExpense = percentExpense ? percentExpense : 0
-    return {total: percentCurrentMonth, percent:`${percentExpense}%`}
+    return { total: percentCurrentMonth, percent: `${percentExpense}%` }
   }
 
   /**
    * Regresa un array de los porcentajes del profit por mes
    */
   get profitPercents() {
-    let sales = this.barChartDataBalance.datasets.find(s => s.label == 'VENTAS')
-    let profits = this.barChartDataBalance.datasets.find(s => s.label == 'PROFIT-LOSS')
+    let sales = this.barChartDataBalance.datasets.find(s => s.label == this.balanceType.VENTAS)
+    let profits = this.barChartDataBalance.datasets.find(s => s.label == this.balanceType.PROFIT)
     let profitsPercents: any = []
     sales?.data.map((s: number, i: number) => {
       let profit = profits?.data[i]
@@ -237,7 +251,7 @@ export class DashboardComponent implements OnInit {
             //this.days.push(s.dateSale)
 
             let apps = this.addPlatafformsData(s)
-            
+
 
             let totalApps = (Number(apps.uber.sale) + Number(apps.didi.sale) + Number(apps.rappi.sale))
             let totalIncomeApps = (Number(apps.uber.income) + Number(apps.didi.income) + Number(apps.rappi.income))
@@ -314,7 +328,7 @@ export class DashboardComponent implements OnInit {
    */
   get profitPercent(): string {
     let percent = Math.round((this.profit / this.totalSales) * 100)
-    return `${percent ? percent : 0 }%`
+    return `${percent ? percent : 0}%`
   }
 
   /**
@@ -442,6 +456,32 @@ export class DashboardComponent implements OnInit {
       cash: { total: Number(totalParrot.toFixed(2)), percent: percentParrot ? `${Math.round(percentParrot)}%` : '0%' }
     }
   }
+
+
+
+  async serviceTicketTarget(startDate: string, endDate: string) {
+    this.loading.start()
+    this.resultService.getTicketTarget(this.brandSelected.id, this.dates.formatDate(startDate, 'YYYY-MM-DD'), this.dates.formatDate(endDate, 'YYYY-MM-DD')).subscribe({
+      next: (res: any) => {
+        if (Array.isArray(res)) {
+          this.ticketsTargetList = res.map((s: any) => {
+            let name = firstUpperCase(s.channel.replace("_", " ").toLowerCase())
+            return {...s, name}
+          })
+        } else {
+          this.toast.error("Ha ocurrido un error al obtener el Ticket Promedio")
+        }
+      },
+      error: () => {
+        this.loading.stop()
+        this.toast.error("Ha ocurrido un error al obtener el Ticket Promedio")
+      },
+      complete: () => {
+        this.loading.stop()
+      }
+    })
+  }
+
   /** GASTOS */
 
   /**

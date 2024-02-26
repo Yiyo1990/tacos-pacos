@@ -191,7 +191,7 @@ export class BillsComponent implements OnInit {
    }
 
    onCheckedBilling(e: any) {
-      this.billRegister.selected = !this.billRegister.billing
+      this.billRegister.selected = e.target.checked
    }
 
    saveExpense() {
@@ -200,7 +200,7 @@ export class BillsComponent implements OnInit {
          this.billRegister.billing = this.billRegister.selected ? 'SI' : 'NO'
          this.billRegister.branch.id = this.brandSelected.id
          this.billRegister.expenseDate = this.dates.formatDate(this.billRegister.date, 'yyyy-MM-DD')
-
+         console.log(this.billRegister)
          this.loading.start()
          this.service.saveExpense(this.billRegister).subscribe({
             next: (res: any) => {
@@ -252,6 +252,7 @@ export class BillsComponent implements OnInit {
    }
 
    onEditExpense(item: any, template: TemplateRef<any>) {
+      console.log(item)
       this.billRegister.id = item.id
       this.billRegister.foodCategories = item.foodCategories
       this.billRegister.providerCategories = item.providerCategories

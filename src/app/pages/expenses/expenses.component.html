@@ -2,7 +2,7 @@
    <div class="col-12 sm-12 md-12">
       <div class="row" style="padding-bottom: 1rem;">
          <div class="col-4 sm-12 md-8">
-            <button (click)="openModal(template)">Registrar Gasto</button>
+            <button (click)="openModal(template)" style="font-size: 7pt;">Registrar Gasto</button>
          </div>
          <div class="col-4 sm-12 md-8"></div>
          <div class="col-4 sm-12 md-8">
@@ -138,7 +138,7 @@
          </div>
          <br>
          Factura:
-         <input class="form-check-input" type="checkbox" [checked]="billRegister!.selected"
+         <input class="form-check-input" type="checkbox"  [checked]="billRegister!.selected"
             (change)="onCheckedBilling($event)">
          <br><br>
          <button (click)="saveExpense()">Guardar</button>

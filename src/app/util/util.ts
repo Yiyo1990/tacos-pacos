@@ -124,4 +124,10 @@ enum OperationType {
   BOX = 'type.operation.caja'
 }
 
-export { configDropdown, firstUpperCase, sortByKey, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions, groupArrayByKey, ReportChannel, fixedData, OperationType }
+enum BalanceType {
+  VENTAS = 'VENTAS',
+  GASTOS = 'GASTOS',
+  PROFIT = 'PROFIT'
+}
+
+export { configDropdown, firstUpperCase, sortByKey, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions, groupArrayByKey, ReportChannel, fixedData, OperationType, BalanceType }
