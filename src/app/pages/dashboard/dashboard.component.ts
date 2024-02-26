@@ -75,6 +75,7 @@ export class DashboardComponent implements OnInit {
         this.getReportSalesByDateRange(startEndFilter.start, startEndFilter.end)
         this.callServiceSearchExpenses(startEndFilter.start, startEndFilter.end)
         this.serviceTicketTarget(startEndFilter.start, startEndFilter.end)
+        this.getCuentasPorCobrar(startEndFilter.start, startEndFilter.end)
       }
     })
   }
