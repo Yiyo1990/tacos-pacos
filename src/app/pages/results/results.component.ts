@@ -21,7 +21,7 @@ import { LoadingService } from 'src/app/components/loading/loading.service';
 })
 export class ResultsComponent implements OnInit {
   @ViewChildren(BaseChartDirective) charts: QueryList<BaseChartDirective> | undefined;
-  @ViewChild('template', {static: true}) sampleModalRef!: TemplateRef<any>;
+  @ViewChild('template', { static: true }) sampleModalRef!: TemplateRef<any>;
 
   lineChartOptions: ChartOptions = lineChartOptions
   dates = new Dates()
@@ -63,7 +63,7 @@ export class ResultsComponent implements OnInit {
   profitByDay: number[] = []
 
   operationsCategories: Array<any> = []
- 
+
 
   //---- CUENTAS POR COBRAR ----
   cuentasPorCobrar: Array<any> = []
@@ -78,17 +78,17 @@ export class ResultsComponent implements OnInit {
     concepto: '',
     monto: "$0.00",
     pago: 'NO',
-    tipoPago: {id: 0}
+    tipoPago: { id: 0 }
   }
 
   loadingServices: Array<any> = []
 
-  constructor(private mainService: MainService, 
-    private activeRouter: ActivatedRoute, 
-    private salesService: SalesService, 
-    private toast: ToastrService, 
-    private expenseService: ExpenseService, 
-    private modalService: BsModalService, 
+  constructor(private mainService: MainService,
+    private activeRouter: ActivatedRoute,
+    private salesService: SalesService,
+    private toast: ToastrService,
+    private expenseService: ExpenseService,
+    private modalService: BsModalService,
     private service: ResultService,
     private loading: LoadingService) {
 
@@ -105,8 +105,8 @@ export class ResultsComponent implements OnInit {
     })
 
     this.mainService.$operationCategories.subscribe((res: any) => {
-      if(res) {
-        res.unshift({id:0, name: '-'})
+      if (res) {
+        res.unshift({ id: 0, name: '-' })
         this.operationsCategories = res
       }
     })
@@ -119,6 +119,7 @@ export class ResultsComponent implements OnInit {
       this.filterDate = { start: dates.start, end: dates.end }
       this.getReportSalesByDateRange(dates.start, dates.end)
       this.getCuentasPorCobrar()
+      this.serviceTicketTarget()
     })
 
     this.mainService.$filterRange.subscribe((dates: any) => {
@@ -231,7 +232,7 @@ export class ResultsComponent implements OnInit {
 
   get totalCash(): number {
     let sales = this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.parrot.sale), 0)
-    return (sales + this.cuentaPagadaCash) - (this.expensesCash )
+    return (sales + this.cuentaPagadaCash) - (this.expensesCash)
   }
 
   get totalCard(): number {
@@ -268,11 +269,24 @@ export class ResultsComponent implements OnInit {
     return this.totalSales - this.totalExpenses
   }
 
-  getTypePay() {
-    let total = this.totalCash + this.totalCard
-    let percentCard = (this.totalCard * 100) / total
-    let percentCash = (this.totalCash * 100) / total
-    return { cash: { total: this.totalCash, percent: Math.round(percentCash) }, card: { total: this.totalCard, percent: Math.round(percentCard) } }
+  get paymentType() {
+
+    let data = this.sales
+    let totalParrot = data.reduce((total, sale) => total + Number(sale.apps.parrot.sale), 0)
+
+    let paymentUber = data.reduce((total, sale) => total + Number(sale.apps.uber.income), 0)
+    let paymentDidi = data.reduce((total, sale) => total + Number(sale.apps.didi.income), 0)
+    let paymentRappi = data.reduce((total, sale) => total + Number(sale.apps.rappi.income), 0)
+    let paymentParrot = data.reduce((total, sale) => total + Number(sale.apps.parrot.income), 0)
+
+    let totalPayment = (paymentUber + paymentDidi + paymentRappi + paymentParrot)
+    let percentParrot = (totalParrot * 100) / (totalParrot + totalPayment)
+    let percentPayment = (totalPayment * 100) / (totalParrot + totalPayment)
+
+    return {
+      card: { total: Number(totalPayment.toFixed(2)), percent: percentPayment ? `${Math.round(percentPayment)}%` : '0%' },
+      cash: { total: Number(totalParrot.toFixed(2)), percent: percentParrot ? `${Math.round(percentParrot)}%` : '0%' }
+    }
   }
 
   fillBarChartDays() {
@@ -348,6 +362,23 @@ export class ResultsComponent implements OnInit {
     return `${percent ? percent : 0}%`
   }
 
+  async serviceTicketTarget() {
+    this.loading.start()
+    this.service.getTicketTarget(this.brandSelected.id, this.filterDate.start, this.filterDate.end).subscribe({
+      next: (res) => {
+        console.log("Ticket promedio")
+        console.log(res)
+      },
+      error: () => {
+        this.loading.stop()
+        this.toast.error("Ha ocurrido un error al obtener el Ticket Promedio")
+      },
+      complete: () => {
+        this.loading.stop()
+      }
+    })
+  }
+
   /**
    * ---- EXPENSES ----
    */
@@ -376,15 +407,15 @@ export class ResultsComponent implements OnInit {
   }
 
   get expensesCash(): number {
-    return this.expenses.filter((e:any) => e.operationType.code == OperationType.CASH ||  e.operationType.code == OperationType.BOX)
-    .reduce((total: number, obj: any) => total + obj.amount, 0)
+    return this.expenses.filter((e: any) => e.operationType.code == OperationType.CASH || e.operationType.code == OperationType.BOX)
+      .reduce((total: number, obj: any) => total + obj.amount, 0)
   }
 
   get expensesTransfer(): number {
-    return this.expenses.filter((e:any) => e.operationType.code == OperationType.TRANSFER)
-    .reduce((total: number, obj: any) => total + obj.amount, 0)
+    return this.expenses.filter((e: any) => e.operationType.code == OperationType.TRANSFER)
+      .reduce((total: number, obj: any) => total + obj.amount, 0)
   }
- 
+
   getExpensesByDay() {
     this.expensesByDay = []
     let expensesByDay: any[] = []
@@ -491,9 +522,9 @@ export class ResultsComponent implements OnInit {
   getFoodSupplier(categorycode: string, groupedBy: string) {
     let foodSupplier: Array<any> = []
 
-    let expenses = categorycode == 'ALL' ? this.expenses.map((e: any) => { return { ...e, provider: e.providerCategories.name, foodCategory: e.foodCategories.name } }) 
-                    : this.expenses.filter((e: any) => e.foodCategories.code == categorycode).map((e: any) => { return { ...e, provider: e.providerCategories.name, foodCategory: e.foodCategories.name } })
-    
+    let expenses = categorycode == 'ALL' ? this.expenses.map((e: any) => { return { ...e, provider: e.providerCategories.name, foodCategory: e.foodCategories.name } })
+      : this.expenses.filter((e: any) => e.foodCategories.code == categorycode).map((e: any) => { return { ...e, provider: e.providerCategories.name, foodCategory: e.foodCategories.name } })
+
     let groupedByKey = groupArrayByKey(expenses, groupedBy)
 
     Object.keys(groupedByKey).map((k: any) => {
@@ -530,7 +561,7 @@ export class ResultsComponent implements OnInit {
 
   onChangePay(e: any) {
     this.cuentaPorCobrar.pago = e
-    if(e == 'NO') this.cuentaPorCobrar.tipoPago.id = 0
+    if (e == 'NO') this.cuentaPorCobrar.tipoPago.id = 0
   }
 
   onChangePayType(e: any) {
@@ -540,13 +571,13 @@ export class ResultsComponent implements OnInit {
   openModal(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(this.sampleModalRef, this.config)
   }
-  
+
   saveCuentaPorCobrar() {
-    if(!this.cuentaPorCobrar.concepto || !this.cuentaPorCobrar.monto) {
-      this.toast.error("Ingresa todos los campos","Error")
-      return 
-    } else if(this.cuentaPorCobrar.pago == 'SI' && this.cuentaPorCobrar.tipoPago.id == 0){
-      this.toast.error("Seleccione un tipo de pago","Error")
+    if (!this.cuentaPorCobrar.concepto || !this.cuentaPorCobrar.monto) {
+      this.toast.error("Ingresa todos los campos", "Error")
+      return
+    } else if (this.cuentaPorCobrar.pago == 'SI' && this.cuentaPorCobrar.tipoPago.id == 0) {
+      this.toast.error("Seleccione un tipo de pago", "Error")
       return
     } else {
 
@@ -554,8 +585,8 @@ export class ResultsComponent implements OnInit {
         description: "",
         id: this.cuentaPorCobrar.id,
         concept: this.cuentaPorCobrar.concepto,
-        amount: Number(this.cuentaPorCobrar.monto.replace("$","")),
-        isPay: this.cuentaPorCobrar.pago == "SI" ? true: false,
+        amount: Number(this.cuentaPorCobrar.monto.replace("$", "")),
+        isPay: this.cuentaPorCobrar.pago == "SI" ? true : false,
         branch: {
           id: Number(this.brandSelected.id)
         },
@@ -580,11 +611,11 @@ export class ResultsComponent implements OnInit {
     }
   }
 
-  async getCuentasPorCobrar(){
+  async getCuentasPorCobrar() {
     this.loading.start()
     this.service.getCuentasPorCobrar(this.brandSelected.id, this.filterDate.start, this.filterDate.end).subscribe({
       next: (res: any) => {
-        if(Array.isArray(res)) {
+        if (Array.isArray(res)) {
           this.cuentasPorCobrar = sortByKey(res, "id")
         }
       },
@@ -604,7 +635,7 @@ export class ResultsComponent implements OnInit {
       concepto: '',
       monto: "$0.00",
       pago: 'NO',
-      tipoPago: {id: 0}
+      tipoPago: { id: 0 }
     }
     this.modalRef?.hide()
   }
@@ -613,23 +644,49 @@ export class ResultsComponent implements OnInit {
     this.cuentaPorCobrar.id = cc.id
     this.cuentaPorCobrar.concepto = cc.concept
     this.cuentaPorCobrar.monto = `$${cc.amount.toFixed(2)}`
-    this.cuentaPorCobrar.pago = cc.isPay ? 'SI': 'NO'
-    this.cuentaPorCobrar.tipoPago.id = !cc.operationType ? 0: cc.operationType.id
+    this.cuentaPorCobrar.pago = cc.isPay ? 'SI' : 'NO'
+    this.cuentaPorCobrar.tipoPago.id = !cc.operationType ? 0 : cc.operationType.id
     this.openModal(template)
   }
 
-  get totalPorCobrar() : number{
+  deleteCuentaPorCobrar() {
+    let res = confirm(`¿Esta seguro de eliminar la cuenta por cobrar ${this.cuentaPorCobrar.concepto}?`)
+
+    if (res) {
+      this.loading.start()
+      this.service.deleteCuentasPorCobrar(this.cuentaPorCobrar.id, this.brandSelected.id).subscribe({
+        next: (res: any) => {
+          if (res.affected == 1) {
+            this.toast.success("La Cuenta por cobrar se ha eliminado exitosamente!", "Success")
+            this.getCuentasPorCobrar()
+            this.closeModal()
+          } else {
+            this.toast.error("Ocurrio un error, intente mas tarde")
+          }
+        },
+        error: () => {
+          this.loading.stop()
+          this.toast.error("Ocurrio un error, intente mas tarde")
+        },
+        complete: () => {
+          this.loading.stop()
+        }
+      })
+    }
+  }
+
+  get totalPorCobrar(): number {
     return this.cuentasPorCobrar.filter((s: any) => !s.isPay).reduce((total: number, ob: any) => total + ob.amount, 0)
   }
 
   get cuentaPagadaCash(): number {
-    return this.cuentasPorCobrar.filter((c: any) => c.isPay && (c.operationType.code == OperationType.CASH || c.operationType.code ==  OperationType.BOX))
-    .reduce((total: number, obj: any) => total + obj.amount, 0)
+    return this.cuentasPorCobrar.filter((c: any) => c.isPay && (c.operationType.code == OperationType.CASH || c.operationType.code == OperationType.BOX))
+      .reduce((total: number, obj: any) => total + obj.amount, 0)
   }
 
   get cuentaPagadaTransfer(): number {
     return this.cuentasPorCobrar.filter((c: any) => c.isPay && c.operationType.code == OperationType.TRANSFER)
-    .reduce((total: number, obj: any) => total + obj.amount, 0)  
+      .reduce((total: number, obj: any) => total + obj.amount, 0)
   }
 
 }

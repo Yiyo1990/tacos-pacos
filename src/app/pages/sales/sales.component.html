@@ -1,4 +1,4 @@
-<div id="hiddenHeader" class="row-body" style="visibility: hidden; margin-top: -10px; overflow: scroll; position: fixed; left: 14.6rem; width: calc(100% - 18.7rem)">
+<div id="hiddenHeader" class="row-body" style="visibility: hidden; margin-top: -10px; overflow: scroll; position: fixed; left: 11.3rem; width: calc(100% - 15.5rem)">
     <header-tbl-sales />
 </div>
 
@@ -10,11 +10,11 @@
                 <form (ngSubmit)="onFileUpload()" #fileUploadForm="ngForm">
                     <div style="display: grid; width: 50%;">
                         <button (click)="selectFile()"
-                            style="font-size: 10pt; margin-bottom: 2%; background-color: #666666;"
+                            style="font-size: 7pt; margin-bottom: 2%; background-color: #666666;"
                             type="submit">Seleccionar Archivo</button>
                         <input type="file" id="upfile" style="overflow: hidden; width: 0px; height: 0px;"
                             (change)="handleFileInput($event)" #fileInput>
-                        <button type="submit" style="font-size: 10pt;">Subir archivo</button>
+                        <button type="submit" style="font-size: 7pt;">Subir archivo</button>
                     </div>
                 </form>
             </div>
@@ -28,7 +28,7 @@
 
             <div id="desgloce" (click)="isOpenDesgloce = !isOpenDesgloce"
                 style="width: 100%; height: 40px; background-color: #dadada; margin-top: 5%; text-align: center; cursor: pointer; margin-bottom: 2%;">
-                <label style="font-weight: 600; color: #074877; font-size: 15pt;">Desglose de Ventas</label>
+                <label style="font-weight: 600; color: #074877; font-size: 12pt;">Desglose de Ventas</label>
                 <i [ngClass]="isOpenDesgloce ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down'"
                     style="font-size: large; float: right; margin-top: 0.5%;"></i>
             </div>

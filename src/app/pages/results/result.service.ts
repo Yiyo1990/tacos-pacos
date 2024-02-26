@@ -25,4 +25,19 @@ export class ResultService {
     let url = this.endPoint.concat(`cuentasPorCobrar`)
     return this.httpClient.post(url, params)
   }
-}
+
+  deleteCuentasPorCobrar(id: any, branchId: number) {
+    let url = this.endPoint.concat(`cuentasPorCobrar?branchId=${branchId}&id=${id}`)
+    return this.httpClient.delete(url)
+  }
+
+  getTicketTarget(branchId: number, startDate: string, endDate: string) {
+    let params: Params = {
+      'branchId': branchId,
+      'startDate': startDate,
+      'endDate': endDate
+    }
+    let url = this.endPoint.concat(`report/kpis/ticketAndCount?branchId=${branchId}&&startDate=${startDate}&&endDate=${endDate}`)
+    return this.httpClient.get(url)
+  }
+ }

@@ -183,12 +183,13 @@ export class DashboardComponent implements OnInit {
   get foodIndicator() {
     //Obtiene el 40% de las ventas del mes actual para obtener el % de gastos de alimentos
     let percentCurrentMonth = Math.round((this.totalSalesCurrentMonth * 40) / 100)
-
-    let alimentoCategories = this.expenses.filter(e => e.foodCategories.code == 'food.alimentos')
+    let currentMonth = this.dates.formatDate(new Date(), 'MMM')
+    let alimentoCategories = this.expenses.filter(e => e.foodCategories.code == 'food.alimentos').filter(e => e.shortMonth.toUpperCase() == currentMonth.toUpperCase())
     let totalExpense = alimentoCategories.reduce((total: number, exp: any) => total + exp.amount, 0)
     let percentExpense = Math.round((totalExpense * 100)/percentCurrentMonth)
+
     percentExpense = percentExpense ? percentExpense : 0
-    return {total: percentCurrentMonth, percent:`${percentExpense || percentExpense > 100 ?  100 : percentExpense}%`}
+    return {total: percentCurrentMonth, percent:`${percentExpense}%`}
   }
 
   /**
@@ -422,13 +423,25 @@ export class DashboardComponent implements OnInit {
    * Regresa datos de total de ventas y porcentaje por tipos de pago tarjeta y efectivo
    * @returns 
    */
-  getTypePay() {
-    let total = this.totalCash + this.totalCard
-    let percentCard = (this.totalCard * 100) / total
-    let percentCash = (this.totalCash * 100) / total
-    return { cash: { total: this.totalCash, percent: Math.round(percentCash) }, card: { total: this.totalCard, percent: Math.round(percentCard) } }
-  }
+  get paymentType() {
 
+    let data = this.sales
+    let totalParrot = data.reduce((total, sale) => total + Number(sale.apps.parrot.sale), 0)
+
+    let paymentUber = data.reduce((total, sale) => total + Number(sale.apps.uber.income), 0)
+    let paymentDidi = data.reduce((total, sale) => total + Number(sale.apps.didi.income), 0)
+    let paymentRappi = data.reduce((total, sale) => total + Number(sale.apps.rappi.income), 0)
+    let paymentParrot = data.reduce((total, sale) => total + Number(sale.apps.parrot.income), 0)
+
+    let totalPayment = (paymentUber + paymentDidi + paymentRappi + paymentParrot)
+    let percentParrot = (totalParrot * 100) / (totalParrot + totalPayment)
+    let percentPayment = (totalPayment * 100) / (totalParrot + totalPayment)
+
+    return {
+      card: { total: Number(totalPayment.toFixed(2)), percent: percentPayment ? `${Math.round(percentPayment)}%` : '0%' },
+      cash: { total: Number(totalParrot.toFixed(2)), percent: percentParrot ? `${Math.round(percentParrot)}%` : '0%' }
+    }
+  }
   /** GASTOS */
 
   /**

@@ -1,8 +1,8 @@
-<div class="row" style="margin-bottom: 0.5rem;">
+<div class="row" style="margin-bottom: 0.5rem; font-size: 9pt;">
     <div class="col-1 md-1 sm-12">
         <input type="checkbox" [checked]="isChecked">
     </div>
-    <div class="col-5 md-5 sm-12"><div class="ellipsis">{{name}}</div></div>
-    <div class="col-4 md-4 sm-12">{{total | currency}}</div>
-    <div class="col-2 md-2 sm-12">{{percent}}</div>
+    <div class="col-5 md-5 sm-12 ellipsis" title="{{name}}">{{name}}</div>
+    <div class="col-4 md-4 sm-12 ellipsis" title="{{total | currency}}">{{total | currency}}</div>
+    <div class="col-2 md-2 sm-12 ellipsis" title="{{percent}}">{{percent}}</div>
 </div>

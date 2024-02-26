@@ -7,13 +7,13 @@
                     <div style="display: flex; margin-top: 2%;">
                         <button class="button-switch"
                             [ngClass]="{'btn-active': isBtnParrotActive == 2, 'btn-inactive': isBtnParrotActive != 2}"
-                            (click)="fillDonughtChart(2)" style="font-size: 10pt;">Parrot</button>
+                            (click)="fillDonughtChart(2)" style="font-size: 8pt;">Parrot</button>
                         <button class="button-switch"
                             [ngClass]="{'btn-active': isBtnParrotActive == 1, 'btn-inactive': isBtnParrotActive != 1}"
-                            (click)="fillDonughtChart(1)" style="margin-left: 10px; font-size: 10pt;">Ingresos</button>
+                            (click)="fillDonughtChart(1)" style="margin-left: 10px; font-size: 8pt;">Ingresos</button>
                         <button class="button-switch"
                             [ngClass]="{'btn-active': isBtnParrotActive == 3, 'btn-inactive': isBtnParrotActive != 3}"
-                            (click)="fillDonughtChart(3)" style="margin-left: 10px; font-size: 10pt;">Tipo de
+                            (click)="fillDonughtChart(3)" style="margin-left: 10px; font-size: 8pt;">Tipo de
                             Pago</button>
                     </div>
                 </div>
@@ -25,15 +25,15 @@
                 <div style="display: flex; margin-top: 2%;">
                     <button class="button-switch"
                         [ngClass]="{'btn-active': isBtnMonthActive, 'btn-inactive': !isBtnMonthActive}"
-                        (click)="fillBarChart(1,0)" style="font-size: 10pt;">Mensual</button>
+                        (click)="fillBarChart(1,0)" style="font-size: 8pt;">Mensual</button>
                     <button class="button-switch"
                         [ngClass]="{'btn-active': !isBtnMonthActive, 'btn-inactive': isBtnMonthActive}"
-                        (click)="fillBarChart(2,0)" style="margin-left: 10px; font-size: 10pt;">Semanal</button>
+                        (click)="fillBarChart(2,0)" style="margin-left: 10px; font-size: 8pt;">Semanal</button>
                 </div>
             </div>
         </div>
 
-        <div class="col-4 md-3 sm-12">
+        <div class="col-4 md-3 sm-12" style="font-size: 10pt;">
             <div class="row" style="margin-top: 2%;">
                 <div class="col-6 md-6 sm-12" style="margin: auto;"><label style="font-weight: 600; float: right;">Punto
                         de Venta</label></div>
@@ -55,53 +55,53 @@
     <div class="row">
         <div class="col-4 md-4 sm-12">
             <div class="row" style="margin-top: 8%;" *ngIf="isBtnParrotActive == 1 || isBtnParrotActive == 2">
-                
+
                 <div class="col-7 md-7 sm-12">
                     <div style="margin: auto; margin-top: 3%;">
 
                         <div style="display: flex;">
                             <div style="width: 45%; padding: 5px;  padding-left: 15px;">
-                                <label style="font-size: 15pt; font-weight: 600;">Venta Total</label>
+                                <label style="font-size: 11pt; font-weight: 600;">Venta Total</label>
                             </div>
                             <label
-                                style="font-weight: bold; font-size: 16pt; padding-left: 25px;">{{(channelSales?.totalDinnigRoom
+                                style="font-weight: bold; font-size: 12pt; padding-left: 25px;">{{(channelSales?.totalDinnigRoom
                                 + channelSales?.totalUber + channelSales?.totalRappi + channelSales?.totalDidi) |
                                 currency}}</label>
                         </div>
 
-                        <div style="display: flex; margin-top: 7px;">
+                        <div style="display: flex;">
                             <div style="width: 45%; display: flex;">
-                                <div class="point" style="background-color: #3889EB;"></div><label>Sucursal</label>
-                            </div>
-                            <label style="font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDinnigRoom
+                                <div class="point" style="background-color: #3889EB;"></div><label style="font-size: 10pt;">Sucursal</label>
+                            </div>  
+                            <label style="font-size: 12pt; padding-left: 25px;">{{channelSales?.totalDinnigRoom
                                 | currency}}
                             </label>
                         </div>
 
-                        <div style="display: flex; margin-top: 7px;">
+                        <div style="display: flex;">
                             <div style="width: 45%; display: flex;">
-                                <div class="point" style="background-color: #31B968; margin-top: 5%;"></div><img
-                                    width="80" height="40" src="assets/uber.svg">
+                                <div class="point" style="background-color: #31B968; margin-top: 0.8rem !important;"></div><img
+                                    width="50" height="40" src="assets/uber.svg">
                             </div>
-                            <label style="font-size: 16pt; padding-left: 25px;">{{channelSales?.totalUber
+                            <label style="font-size: 12pt; padding-left: 25px; margin-top: 0.5rem;">{{channelSales?.totalUber
                                 | currency}}</label>
                         </div>
 
-                        <div style="display: flex; margin-top: 7px;">
+                        <div style="display: flex;">
                             <div style="width: 45%; display: flex;">
-                                <div class="point" style="background-color: #F31A86;"></div><img width="50" height="25"
+                                <div class="point" style="background-color: #F31A86; margin-top: 0.1rem !important;"></div><img width="40" height="18"
                                     src="assets/rappi.png">
                             </div>
-                            <label style="font-size: 16pt; padding-left: 25px;">{{channelSales?.totalRappi
+                            <label style="font-size: 12pt; padding-left: 25px;">{{channelSales?.totalRappi
                                 | currency}}</label>
                         </div>
 
-                        <div style="display: flex; margin-top: 7px;">
+                        <div style="display: flex;">
                             <div style="width: 45%; display: flex;">
-                                <div class="point" style="background-color: #F37D1A; margin-top: 5%;"></div><img
-                                    width="80" height="40" src="assets/didi.svg">
+                                <div class="point" style="background-color: #F37D1A; margin-top: 0.7rem !important;"></div><img
+                                    width="55" height="40" src="assets/didi.svg">
                             </div>
-                            <label style="font-size: 16pt; padding-left: 25px;">{{channelSales?.totalDidi
+                            <label style="font-size: 12pt; padding-left: 25px; margin-top: 0.4rem;">{{channelSales?.totalDidi
                                 | currency}}</label>
                         </div>
 
@@ -109,7 +109,7 @@
                 </div>
 
                 <div class="col-5 md-5 sm-12">
-                    <canvas baseChart class="chart" [data]="salesDonutChartData" [type]="'pie'"
+                    <canvas baseChart class="chart" style="margin-top: 2REM;" [data]="salesDonutChartData" [type]="'pie'"
                         [options]="pieChartOptions" [plugins]="pieChartPlugins">
                     </canvas>
                 </div>
@@ -144,19 +144,17 @@
         </div>
         <div class="col-1 md-1 sm-12"></div>
         <div class="col-7 md-7 sm-12">
-
             <div class="row" style="margin-top: 5%;">
-                <div class="col-5 md-5 sm-12">
-                    <div class="row" style="font-weight: bold;">
+                <div class="col-6 md-6 sm-12">
+                    <div class="row" style="font-weight: bold; font-size: 10pt;">
                         <div class="col-6 md-6"></div>
-                        <div class="col-4 md-4" ><label>Venta</label></div>
+                        <div class="col-4 md-4"><label>Venta</label></div>
                         <div class="col-2 md-2" style="text-align: center;"><label>%</label></div>
                     </div>
-                    <row-total-negocio *ngFor="let commerce of commerces" [id]="commerce.id" [name]="commerce.name" [total]="commerce.total" [percent]="commerce.percent"></row-total-negocio>
+                    <row-total-negocio *ngFor="let commerce of commerces" [id]="commerce.id" [name]="commerce.name"
+                        [total]="commerce.total" [percent]="commerce.percent"></row-total-negocio>
                 </div>
-                <div class="col-1 md-1 sm-12"></div>
                 <div class="col-6 md-6 sm-12">
-
                     <canvas baseChart class="chart" style="height: 100px !important;" [data]="barChartData"
                         [options]="barChartOptions" [type]="barChartType"></canvas>
                 </div>
@@ -209,40 +207,56 @@
     </div>
 
     <div class="row">
-        <div class="col-9 md-9 sm-12">
+        <div class="col-8 md-8 sm-12">
             <div class="row" style="margin-top: 5%;">
-                <div class="col-4 md-4 sm-12">
+                <div class="col-5 md-5 sm-12">
                     <div class="row" style="font-weight: bold;">
                         <div class="col-6 md-6"></div>
-                        <div class="col-4 md-4" ><label>Venta</label></div>
+                        <div class="col-4 md-4"><label>Venta</label></div>
                         <div class="col-2 md-2" style="text-align: center;"><label>%</label></div>
                     </div>
-                    <row-total-negocio *ngFor="let commerce of commerces" [id]="commerce.id" [name]="commerce.name" [total]="commerce.total" [percent]="commerce.percent" />
+                    <row-total-negocio *ngFor="let commerce of commerces" [id]="commerce.id" [name]="commerce.name"
+                        [total]="commerce.total" [percent]="commerce.percent" />
                 </div>
-                <div class="col-8 md-8 sm-12">
+                <div class="col-7 md-7 sm-12">
                     <canvas baseChart class="chart" style="height: 100px !important;" [data]="barChartData"
                         [options]="barChartOptions" [type]="barChartType"></canvas>
                 </div>
             </div>
 
         </div>
-        <div class="col-3 md-3 sm-12">
+        <div class="col-4 md-4 sm-12">
             <div class="row" style="margin-top: 8%;" *ngIf="isBtnParrotActive == 1 || isBtnParrotActive == 2">
                 <div class="col-1 md-1 sm-12"></div>
-                <div class="col-8 md-8 sm-12">
-                    <canvas baseChart class="chart" [data]="salesDonutChartData" [type]="'pie'"
-                        [options]="pieChartOptions" [plugins]="pieChartPlugins">
-                    </canvas>
-                    <div class="line-colors">
-
-                        <div style="display: flex;"><div class="point" style="background-color: #3889EB;"></div><label>Sucursal</label></div>
-                        <div style="display: flex;"><div class="point" style="background-color: #31B968;"></div><label>Uber</label></div>
-                        <div style="display: flex;"><div class="point" style="background-color: #F31A86;"></div><label>Rappi</label></div>
-                        <div style="display: flex;"><div class="point" style="background-color: #F37D1A;"></div><label>Didi</label></div>
-
+                <div class="col-11 md-11 sm-12">
+                    <div class="row">
+                        <div class="col-3 md-3 sm-12"></div>
+                        <div class="col-6 md-6 sm-12">
+                            <canvas baseChart class="chart" [data]="salesDonutChartData" [type]="'pie'"
+                                [options]="pieChartOptions" [plugins]="pieChartPlugins">
+                            </canvas>
+                        </div>
+                        <div class="col-2 md-2 sm-12"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3 md-3 sm-12 line-colors">
+                            <div class="point" style="background-color: #3889EB;"></div>
+                            <div class="ellipsis">Sucursal</div>
+                        </div>
+                        <div class="col-3 md-3 sm-12 line-colors">
+                            <div class="point" style="background-color: #31B968;"></div>
+                            <div class="ellipsis">Uber</div>
+                        </div>
+                        <div class="col-3 md-3 sm-12 line-colors">
+                            <div class="point" style="background-color: #F31A86;"></div>
+                            <div class="ellipsis">Rappi</div>
+                        </div>
+                        <div class="col-3 md-3 sm-12 line-colors">
+                            <div class="point" style="background-color: #F37D1A;"></div>
+                            <div class="ellipsis">Didi</div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-1 md-1 sm-12"></div>
             </div>
         </div>
     </div>

@@ -1,11 +1,11 @@
 
-<div class="row" style="margin-bottom: 0.1rem;">
+<div class="row" style="margin-bottom: 0.1rem; font-size: 10pt;">
    <div class="col-12 md-12 sm-12" style="display: flex; text-align: center;">
     <div style="width: 10%;">
         <input type="checkbox" (change)="onChecked($event)" [checked]="checked">
     </div>
-    <div style="width: 35%; text-align: left;">
-        <label>{{name}}</label>
+    <div class="ellipsis" title="{{name}}" style="width: 35%; text-align: left;">
+        {{name}}
     </div>
     <div style="width: 35%;">
         {{ammount | currency}}
