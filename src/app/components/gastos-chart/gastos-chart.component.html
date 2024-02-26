@@ -13,13 +13,13 @@
 </div>
 <div class="row">
     <div class="col-3 md-3 sm-12">
-        <div class="row" style="margin-left: 2rem; margin-right: 2rem;">
+        <div class="row" style="margin-left: 0.5rem; margin-right: 0.5rem;">
             <div class="col-12 sm-12 md-12" style="text-align: center;">
                 <label>Gasto Total</label><br>
                 <h4>{{getTotalGastos() | currency}}</h4>
             </div>
         </div>
-        <div class="row" style="margin-left: 2rem; margin-right: 2rem; margin-top: 0.5rem;"
+        <div class="row" style="margin-left: 0.5rem; margin-right: 0.5rem; margin-top: 0.5rem;"
             *ngFor="let op of operationsType">
             <div class="col-12 md-12 sm-12">
                 <gastos-check [name]="op.name" [ammount]="op.amount" [percent]="op.percent"

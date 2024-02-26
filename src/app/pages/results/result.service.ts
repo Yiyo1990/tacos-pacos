@@ -32,11 +32,7 @@ export class ResultService {
   }
 
   getTicketTarget(branchId: number, startDate: string, endDate: string) {
-    let params: Params = {
-      'branchId': branchId,
-      'startDate': startDate,
-      'endDate': endDate
-    }
+    console.log(startDate, endDate)
     let url = this.endPoint.concat(`report/kpis/ticketAndCount?branchId=${branchId}&&startDate=${startDate}&&endDate=${endDate}`)
     return this.httpClient.get(url)
   }

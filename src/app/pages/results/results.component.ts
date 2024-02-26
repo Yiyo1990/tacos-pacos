@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ChartData, ChartOptions, ChartType, Color } from 'chart.js';
 import { MainService } from 'src/app/main/main.service';
 import { Dates } from 'src/app/util/Dates';
-import { OperationType, ReportChannel, barChartOptions, configDropdown, firstUpperCase, fixedData, groupArrayByKey, lineChartOptions, sortByKey } from 'src/app/util/util';
+import { BalanceType, OperationType, ReportChannel, barChartOptions, configDropdown, firstUpperCase, fixedData, groupArrayByKey, lineChartOptions, sortByKey } from 'src/app/util/util';
 import { SalesService } from '../sales/sales-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { ExpenseService } from '../expenses/expenses.service';
@@ -20,6 +20,8 @@ import { LoadingService } from 'src/app/components/loading/loading.service';
   styleUrls: ['./results.component.scss']
 })
 export class ResultsComponent implements OnInit {
+  readonly balanceType = BalanceType
+
   @ViewChildren(BaseChartDirective) charts: QueryList<BaseChartDirective> | undefined;
   @ViewChild('template', { static: true }) sampleModalRef!: TemplateRef<any>;
 
@@ -49,6 +51,7 @@ export class ResultsComponent implements OnInit {
   private typeFilterAppBarChart = 1
   private chartColors = Charts.chartColors
   commerces: any[] = []
+  ticketsTargetList: Array<any> = []
 
   //--- EXPENSES ---
   expenses: any[] = []
@@ -145,11 +148,11 @@ export class ResultsComponent implements OnInit {
       this.lineChartData.datasets = filter
       this.updateCharts()
     } else {
-      if (data.id == 'VENTAS') {
+      if (data.id == this.balanceType.VENTAS) {
         this.pushDataSalesChart()
-      } else if (data.id == 'GASTOS') {
+      } else if (data.id == this.balanceType.GASTOS) {
         this.pushDataExpensesChart()
-      } else if (data.id == 'PROFIT') {
+      } else if (data.id == this.balanceType.PROFIT) {
         this.pushDataProfitChart()
       }
     }
@@ -364,10 +367,16 @@ export class ResultsComponent implements OnInit {
 
   async serviceTicketTarget() {
     this.loading.start()
-    this.service.getTicketTarget(this.brandSelected.id, this.filterDate.start, this.filterDate.end).subscribe({
-      next: (res) => {
-        console.log("Ticket promedio")
-        console.log(res)
+    this.service.getTicketTarget(this.brandSelected.id, this.dates.formatDate(this.filterDate.start, 'YYYY-MM-DD'), this.dates.formatDate(this.filterDate.end, 'YYYY-MM-DD')).subscribe({
+      next: (res: any) => {
+        if (Array.isArray(res)) {
+          this.ticketsTargetList = res.map((s: any) => {
+            let name = firstUpperCase(s.channel.replace("_", " ").toLowerCase())
+            return {...s, name}
+          })
+        } else {
+          this.toast.error("Ha ocurrido un error al obtener el Ticket Promedio")
+        }
       },
       error: () => {
         this.loading.stop()
@@ -378,6 +387,8 @@ export class ResultsComponent implements OnInit {
       }
     })
   }
+
+
 
   /**
    * ---- EXPENSES ----
@@ -443,10 +454,10 @@ export class ResultsComponent implements OnInit {
   }
 
   pushDataSalesChart() {
-    let index = this.getIndexFronDataChart('VENTAS')
+    let index = this.getIndexFronDataChart(this.balanceType.VENTAS)
     if (index < 0) {
       this.lineChartData.datasets.push({
-        label: 'VENTAS',
+        label: this.balanceType.VENTAS,
         data: this.salesByDay,
         backgroundColor: this.chartColors.ventas,
         borderColor: this.chartColors.ventas,
@@ -457,10 +468,10 @@ export class ResultsComponent implements OnInit {
   }
 
   pushDataExpensesChart() {
-    let index = this.getIndexFronDataChart('GASTOS')
+    let index = this.getIndexFronDataChart(this.balanceType.GASTOS)
     if (index < 0) {
       this.lineChartData.datasets.push({
-        label: 'GASTOS',
+        label: this.balanceType.GASTOS,
         data: this.expensesByDay,
         backgroundColor: this.chartColors.gastos,
         borderColor: this.chartColors.gastos,
@@ -471,10 +482,10 @@ export class ResultsComponent implements OnInit {
   }
 
   pushDataProfitChart() {
-    let index = this.getIndexFronDataChart('PROFIT')
+    let index = this.getIndexFronDataChart(this.balanceType.PROFIT)
     if (index < 0) {
       this.lineChartData.datasets.push({
-        label: 'PROFIT',
+        label: this.balanceType.PROFIT,
         data: this.profitByDay,
         backgroundColor: this.chartColors.profit,
         borderColor: this.chartColors.profit,
