@@ -29,7 +29,7 @@
                                     <th style="width: 1rem !important; background-color: #fff;"></th>
                                     <td style="background-color: #fff !important;">{{ dataRowSales.kpi }}</td>
                                     <th style="width: 1rem !important; background-color: #fff;"></th>
-                                    <td *ngFor="let month of dataRowSales.months" [ngStyle]="{'color': month.color}">
+                                    <td *ngFor="let month of dataRowSales.months" style="width: 100% - 12rem !important;" [ngStyle]="{'color': month.color}">
                                         {{month.total | currency}}
                                     </td>
                                 </tr>
@@ -43,7 +43,7 @@
                                     <th style="width: 1rem !important; background-color: #fff;"></th>
                                     <td style="background-color: #fff !important;">{{ data.kpi }}</td>
                                     <th style="width: 1rem !important; background-color: #fff;"></th>
-                                    <td *ngFor="let month of data.months" [ngStyle]="{'color': month.color}">
+                                    <td *ngFor="let month of data.months" style="width: 100% - 12rem !important;" [ngStyle]="{'color': month.color}">
                                         {{month.total | currency}}
                                     </td>
                                 </tr>
