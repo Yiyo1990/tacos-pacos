@@ -10,14 +10,14 @@
                                 style="float: right;" class='fa fa-chevron-down'></i>
                         </span>
 
-                        <table>
+                        <table style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <th style="background-color: #fff;"></th>
-                                    <th style="width: 1rem !important; background-color: #fff;"></th>
-                                    <th>KPI'S</th>
-                                    <th style="width: 1rem !important; background-color: #fff;"></th>
-                                    <th *ngFor="let month of months">{{month.name}}</th>
+                                    <th style="background-color: #fff; width: 6%;"></th>
+                                    <th style="width: 1% !important; background-color: #fff;"></th>
+                                    <th style="width: 6%;">KPI'S</th>
+                                    <th style="width: 1% !important; background-color: #fff;"></th>
+                                    <th [ngStyle]="{'width': 'calc((100% - 14%)/12)'}" *ngFor="let month of months">{{month.name}}</th>
                                 </tr>
                                 <tr style="height: 0.7rem;"></tr>
                             </thead>
@@ -26,10 +26,10 @@
                                     <td class="ellipsis"
                                         style="background-color: #fff !important; text-align: start !important; font-weight: bold; margin-bottom: 2rem !important;">
                                         {{dataRowSales.name}}</td>
-                                    <th style="width: 1rem !important; background-color: #fff;"></th>
+                                    <th style="background-color: #fff;"></th>
                                     <td style="background-color: #fff !important;">{{ dataRowSales.kpi }}</td>
-                                    <th style="width: 1rem !important; background-color: #fff;"></th>
-                                    <td *ngFor="let month of dataRowSales.months" style="width: 100% - 12rem !important;" [ngStyle]="{'color': month.color}">
+                                    <th style="background-color: #fff;"></th>
+                                    <td *ngFor="let month of dataRowSales.months" [ngStyle]="{'color': month.color}">
                                         {{month.total | currency}}
                                     </td>
                                 </tr>
@@ -40,10 +40,10 @@
                                     <td class="ellipsis"
                                         style="background-color: #fff !important; text-align: start !important; font-weight: bold; margin-bottom: 2rem !important;">
                                         {{data.name}}</td>
-                                    <th style="width: 1rem !important; background-color: #fff;"></th>
+                                    <th style="background-color: #fff;"></th>
                                     <td style="background-color: #fff !important;">{{ data.kpi }}</td>
-                                    <th style="width: 1rem !important; background-color: #fff;"></th>
-                                    <td *ngFor="let month of data.months" style="width: 100% - 12rem !important;" [ngStyle]="{'color': month.color}">
+                                    <th style="background-color: #fff;"></th>
+                                    <td *ngFor="let month of data.months" [ngStyle]="{'color': month.color}">
                                         {{month.total | currency}}
                                     </td>
                                 </tr>
@@ -53,9 +53,9 @@
                                     <td class="ellipsis"
                                         style="background-color: #fff !important; text-align: start !important; font-weight: bold; margin-bottom: 2rem !important;">
                                         {{dataRowProfit.name}}</td>
-                                    <th style="width: 1rem !important; background-color: #fff;"></th>
+                                    <th style="background-color: #fff;"></th>
                                     <td style="background-color: #fff !important;">{{ dataRowProfit.kpi }}</td>
-                                    <th style="width: 1rem !important; background-color: #fff;"></th>
+                                    <th style="background-color: #fff;"></th>
                                     <td *ngFor="let month of dataRowProfit.months" style="background-color: #85bcf585;"
                                         [ngStyle]="{'color': month.color}">
                                         {{month.total | currency}}
