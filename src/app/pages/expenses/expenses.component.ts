@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ChartConfiguration, ChartData, ChartEvent, ChartOptions, ChartType } from 'chart.js';
 import { MainService } from 'src/app/main/main.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { barChartOptions, configDropdown, donutChartOptions } from 'src/app/util/util';
+import { Pages, barChartOptions, configDropdown, donutChartOptions } from 'src/app/util/util';
 import { ExpenseService } from './expenses.service';
 import { Charts } from 'src/app/util/Charts';
 import { ToastrService } from 'ngx-toastr';
@@ -27,10 +27,10 @@ export class BillsComponent implements OnInit {
    expensesList: any = []
    dateFilter: any
    currentYear: number = new Dates().getCurrentYear()
-   currentMonth: any = {id: 0, name: 'Anual'}
+   currentMonth: any = { id: 0, name: 'Anual' }
    private dates: Dates = new Dates()
    @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
-   
+
    modalRef?: BsModalRef;
    readonly config = configDropdown
 
@@ -55,39 +55,43 @@ export class BillsComponent implements OnInit {
 
    public barChartData: ChartData<'bar'> = { labels: [], datasets: [{ data: [], label: '', backgroundColor: '#F06D2C' }] };
 
-   constructor(private service: ExpenseService, 
-      private mainService: MainService, 
-      private modalService: BsModalService, 
+   constructor(private service: ExpenseService,
+      private mainService: MainService,
+      private modalService: BsModalService,
       private toastr: ToastrService,
       private loading: LoadingService) {
-      this.mainService.setPageName('Gastos')
+      this.mainService.setPageName(Pages.EXPENSES)
 
       this.resetModalData()
       this.getCatalogs()
-      
+
       mainService.$filterMonth.subscribe((month: any) => {
-         if (month) {
-            this.currentMonth = month
-            this.dateFilter = month.id == 0 ? this.dates.getStartAndEndYear(this.currentYear) : this.dates.getStartAndEndDayMonth(month.id, this.currentYear)
-            this.callServiceSearchExpenses('')
+         if (this.mainService.currentPage == Pages.EXPENSES) {
+            if (month) {
+               this.currentMonth = month
+               this.dateFilter = month.id == 0 ? this.dates.getStartAndEndYear(this.currentYear) : this.dates.getStartAndEndDayMonth(month.id, this.currentYear)
+               this.callServiceSearchExpenses('')
+            }
          }
       })
 
       mainService.$yearsFilter.subscribe((year: number) => {
-         year = year == 0 ? this.currentYear : year
-         this.currentYear = year
-         if(this.currentMonth.id == 0) {
-            this.dateFilter = this.dates.getStartAndEndYear(year)
-            //console.log("dateFilter Year", this.dateFilter)
-            this.callServiceSearchExpenses('')
+         if (this.mainService.currentPage == Pages.EXPENSES) {
+            year = year == 0 ? this.currentYear : year
+            this.currentYear = year
+            if (this.currentMonth.id == 0) {
+               this.dateFilter = this.dates.getStartAndEndYear(year)
+               this.callServiceSearchExpenses('')
+            }
          }
       })
 
       this.mainService.$filterRange.subscribe((dates: any) => {
-         if (dates) {
-            this.dateFilter = dates
-            //console.log("dateFilter Range", this.dateFilter)
-            this.callServiceSearchExpenses('')
+         if (this.mainService.currentPage == Pages.EXPENSES) {
+            if (dates) {
+               this.dateFilter = dates
+               this.callServiceSearchExpenses('')
+            }
          }
       })
    }
@@ -106,21 +110,27 @@ export class BillsComponent implements OnInit {
 
    getCatalogs() {
       this.mainService.$foodCategories.subscribe((result: any) => {
-         if (result) {
-                        this.foodCategories = result
+         if (this.mainService.currentPage == Pages.EXPENSES) {
+            if (result) {
+               this.foodCategories = result
+            }
          }
+
       })
 
       this.mainService.$operationCategories.subscribe((result: any) => {
-         if (result) {
-            this.operationCategories = result
+         if (this.mainService.currentPage == Pages.EXPENSES) {
+            if (result) {
+               this.operationCategories = result
+            }
          }
       })
 
       this.mainService.$brandSelected.subscribe((result: any) => {
-         if(result) {
-            this.brandSelected = JSON.parse(result)
-            //this.callServiceSearchExpenses('')
+         if (this.mainService.currentPage == Pages.EXPENSES) {
+            if (result) {
+               this.brandSelected = JSON.parse(result)
+            }
          }
       })
    }
@@ -156,7 +166,7 @@ export class BillsComponent implements OnInit {
             this.loading.stop()
             this.toastr.error("Ha ocurrido un error", "Error")
          },
-         complete:() => {
+         complete: () => {
             this.loading.stop()
          }
       })
@@ -182,7 +192,7 @@ export class BillsComponent implements OnInit {
    async fillFacturationChart(data: any[]) {
       let countYes = data.filter(r => r.billing == 'SI').length
       let countNot = data.filter(r => r.billing == 'NO').length
-      this.facturationChartData = Charts.Donut(['SI', 'NO'], [countYes, countNot], ['#8EC948','#F71313'])
+      this.facturationChartData = Charts.Donut(['SI', 'NO'], [countYes, countNot], ['#8EC948', '#F71313'])
    }
 
    onChangeCategory(e: any) {

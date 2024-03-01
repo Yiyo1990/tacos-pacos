@@ -9,9 +9,6 @@ import { MainService } from 'src/app/main/main.service';
 })
 export class ProfitEstimatesComponent {
   constructor(private mainService: MainService, private activeRouter: ActivatedRoute){
-    
-    this.activeRouter.queryParams.subscribe((params: any) => {
-      mainService.setPageName(params.nombre)
-    })
+    mainService.setPageName("Estimaciones")
   }
 }

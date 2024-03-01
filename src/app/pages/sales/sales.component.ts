@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MainService } from 'src/app/main/main.service';
 import { SalesService } from './sales-service.service';
-import { firstUpperCase, groupArrayByKey, ReportChannel, fixedData } from 'src/app/util/util';
+import { firstUpperCase, groupArrayByKey, ReportChannel, fixedData, Pages } from 'src/app/util/util';
 import { ToastrService } from 'ngx-toastr';
 import { Dates } from 'src/app/util/Dates';
 import * as moment from 'moment';
@@ -31,11 +31,11 @@ export class SalesComponent implements OnInit, AfterViewInit {
   isAnual: boolean = false
 
 
-  constructor(private mainService: MainService, 
-    private salesService: SalesService, 
+  constructor(private mainService: MainService,
+    private salesService: SalesService,
     private toast: ToastrService,
     private loading: LoadingService) {
-    mainService.setPageName("Ventas")
+    mainService.setPageName(Pages.SALES)
   }
 
   ngAfterViewInit(): void {
@@ -77,27 +77,34 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   onFilterDates() {
     this.mainService.$filterMonth.subscribe((month: any) => {
-      this.currentMonthSelected = month
-      this.isAnual = month.id == 0
-      let dates = month.id == 0 ? this.dates.getStartAndEndYear(this.currentYear) : this.dates.getStartAndEndDayMonth(month.id, this.currentYear)
-      this.filterDate = { start: dates.start, end: dates.end }
-      this.getReportSalesByDateRange(dates.start, dates.end)
+      if (this.mainService.currentPage == Pages.SALES) {
+        this.currentMonthSelected = month
+        this.isAnual = month.id == 0
+        let dates = month.id == 0 ? this.dates.getStartAndEndYear(this.currentYear) : this.dates.getStartAndEndDayMonth(month.id, this.currentYear)
+        this.filterDate = { start: dates.start, end: dates.end }
+        this.getReportSalesByDateRange(dates.start, dates.end)
+      }
+
     })
 
     this.mainService.$filterRange.subscribe((dates: any) => {
-      if (dates) {
-        this.isAnual = false
-        this.filterDate = { start: dates.start, end: dates.end }
-        this.getReportSalesByDateRange(dates.start, dates.end)
+      if (this.mainService.currentPage == Pages.SALES) {
+        if (dates) {
+          this.isAnual = false
+          this.filterDate = { start: dates.start, end: dates.end }
+          this.getReportSalesByDateRange(dates.start, dates.end)
+        }
       }
     })
 
     this.mainService.$yearsFilter.subscribe((year: any) => {
-      this.currentYear = year;
-      this.isAnual = this.currentMonthSelected.id == 0
-      let months = this.currentMonthSelected.id == 0 ? this.dates.getStartAndEndYear(year) : this.dates.getStartAndEndDayMonth(this.currentMonthSelected.id, year)
-      this.filterDate = { start: months.start, end: months.end }
-      this.getReportSalesByDateRange(months.start, months.end)
+      if (this.mainService.currentPage == Pages.SALES) {
+        this.currentYear = year;
+        this.isAnual = this.currentMonthSelected.id == 0
+        let months = this.currentMonthSelected.id == 0 ? this.dates.getStartAndEndYear(year) : this.dates.getStartAndEndDayMonth(this.currentMonthSelected.id, year)
+        this.filterDate = { start: months.start, end: months.end }
+        this.getReportSalesByDateRange(months.start, months.end)
+      }
     })
   }
 
@@ -235,6 +242,13 @@ export class SalesComponent implements OnInit, AfterViewInit {
     return { parrot: fixedData(parrot), uber: fixedData(uber), didi: fixedData(didi), rappi: fixedData(rappi) }
   }
 
+  /**
+   * Llama servicio para guardar los ingresos de Parrot
+   * @param index index del row
+   * @param sale venta seleccionada
+   * @param value nuevo valor de ingresos
+   * @returns 
+   */
   setValueIncome(index: number, sale: any, value: any) {
     if (!value) return
 
@@ -256,6 +270,15 @@ export class SalesComponent implements OnInit, AfterViewInit {
     })
   }
 
+  /**
+   * Llama servicio para guardar el ingreso de las plataformas
+   * @param saleP 
+   * @param sale 
+   * @param dateSale 
+   * @param value 
+   * @param channel 
+   * @returns 
+   */
   setIncomePlatforms(saleP: any, sale: any, dateSale: string, value: any, channel: any) {
     if (!value) return
 

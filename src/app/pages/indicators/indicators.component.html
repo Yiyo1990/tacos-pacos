@@ -1,1 +1,90 @@
-<p>indicators works!</p>
+<div class="row" style=" margin: 0; width: 100% !important;">
+    <div class="col-12 sm-12 md-12">
+        <div class="row">
+            <div class="col-12">
+                <accordion>
+                    <!-- ///////////  INDICADORES ////////////-->
+                    <accordion-group [isOpen]="true">
+                        <span accordion-heading>
+                            <label style="font-size: 13pt; font-weight: bold;">Indicadores</label> &nbsp; <i
+                                style="float: right;" class='fa fa-chevron-down'></i>
+                        </span>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="background-color: #fff;"></th>
+                                    <th style="width: 1rem !important; background-color: #fff;"></th>
+                                    <th>KPI'S</th>
+                                    <th style="width: 1rem !important; background-color: #fff;"></th>
+                                    <th *ngFor="let month of months">{{month.name}}</th>
+                                </tr>
+                                <tr style="height: 0.7rem;"></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="ellipsis"
+                                        style="background-color: #fff !important; text-align: start !important; font-weight: bold; margin-bottom: 2rem !important;">
+                                        {{dataRowSales.name}}</td>
+                                    <th style="width: 1rem !important; background-color: #fff;"></th>
+                                    <td style="background-color: #fff !important;">{{ dataRowSales.kpi }}</td>
+                                    <th style="width: 1rem !important; background-color: #fff;"></th>
+                                    <td *ngFor="let month of dataRowSales.months" [ngStyle]="{'color': month.color}">
+                                        {{month.total | currency}}
+                                    </td>
+                                </tr>
+                                <tr style="height: 1rem;"></tr>
+                                <tr *ngFor="let data of listCategoryExpensesKpi; let i = index"
+                                    [ngStyle]="{'background-color': i%2 == 0 ? '#dfdfdf': '#fff' }">
+
+                                    <td class="ellipsis"
+                                        style="background-color: #fff !important; text-align: start !important; font-weight: bold; margin-bottom: 2rem !important;">
+                                        {{data.name}}</td>
+                                    <th style="width: 1rem !important; background-color: #fff;"></th>
+                                    <td style="background-color: #fff !important;">{{ data.kpi }}</td>
+                                    <th style="width: 1rem !important; background-color: #fff;"></th>
+                                    <td *ngFor="let month of data.months" [ngStyle]="{'color': month.color}">
+                                        {{month.total | currency}}
+                                    </td>
+                                </tr>
+
+                                <tr style="height: 1rem;"></tr>
+                                <tr>
+                                    <td class="ellipsis"
+                                        style="background-color: #fff !important; text-align: start !important; font-weight: bold; margin-bottom: 2rem !important;">
+                                        {{dataRowProfit.name}}</td>
+                                    <th style="width: 1rem !important; background-color: #fff;"></th>
+                                    <td style="background-color: #fff !important;">{{ dataRowProfit.kpi }}</td>
+                                    <th style="width: 1rem !important; background-color: #fff;"></th>
+                                    <td *ngFor="let month of dataRowProfit.months" style="background-color: #85bcf585;"
+                                        [ngStyle]="{'color': month.color}">
+                                        {{month.total | currency}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </accordion-group>
+
+                    <accordion-group>
+                        <span accordion-heading>
+                            <label style="font-size: 13pt; font-weight: bold;">Graficas</label> &nbsp; <i
+                                style="float: right;" class='fa fa-chevron-down'></i>
+                        </span>
+                        <div style="height: 2rem;"></div>
+                        <div class="row">
+                            <div class="col-3 md-3 sm-12" *ngFor="let data of dataTable">
+                                <div style="width: 100%; height: 1.5rem;" style="text-align: center; border: solid 2px;" [ngStyle]="{'border-color': data.color}">
+                                    {{data.name}}
+                                </div>
+                                <canvas baseChart class="chart" [data]="data.dataChart" [options]="barChartOptions"
+                                    [type]="'bar'">
+                                </canvas>
+                            </div>
+                        </div>
+                    </accordion-group>
+                </accordion>
+            </div>
+        </div>
+    </div>
+</div>

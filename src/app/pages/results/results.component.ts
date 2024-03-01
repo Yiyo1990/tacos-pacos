@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ChartData, ChartOptions, ChartType, Color } from 'chart.js';
 import { MainService } from 'src/app/main/main.service';
 import { Dates } from 'src/app/util/Dates';
-import { BalanceType, OperationType, ReportChannel, barChartOptions, configDropdown, firstUpperCase, fixedData, groupArrayByKey, lineChartOptions, sortByKey } from 'src/app/util/util';
+import { BalanceType, OperationType, Pages, ReportChannel, barChartOptions, configDropdown, firstUpperCase, fixedData, groupArrayByKey, lineChartOptions, sortByKey } from 'src/app/util/util';
 import { SalesService } from '../sales/sales-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { ExpenseService } from '../expenses/expenses.service';
@@ -95,15 +95,17 @@ export class ResultsComponent implements OnInit {
     private service: ResultService,
     private loading: LoadingService) {
 
-    mainService.setPageName("Resultados")
+    mainService.setPageName(Pages.RESULT)
   }
 
   ngOnInit(): void {
     this.mainService.$brandSelected.subscribe((result: any) => {
-      if (result) {
-        this.brandSelected = JSON.parse(result)
-        this.onFilterDates()
-        this.getFoodCategories()
+      if (this.mainService.currentPage == Pages.RESULT) {
+        if (result) {
+          this.brandSelected = JSON.parse(result)
+          this.onFilterDates()
+          this.getFoodCategories()
+        }
       }
     })
 
@@ -117,28 +119,35 @@ export class ResultsComponent implements OnInit {
 
   onFilterDates() {
     this.mainService.$filterMonth.subscribe((month: any) => {
-      this.currentMonthSelected = month
-      let dates = month.id == 0 ? this.dates.getStartAndEndYear(this.currentYear) : this.dates.getStartAndEndDayMonth(month.id, this.currentYear)
-      this.filterDate = { start: dates.start, end: dates.end }
-      this.getReportSalesByDateRange(dates.start, dates.end)
-      this.getCuentasPorCobrar()
-      this.serviceTicketTarget()
-    })
-
-    this.mainService.$filterRange.subscribe((dates: any) => {
-      if (dates) {
+      if (this.mainService.currentPage == Pages.RESULT) {
+        this.currentMonthSelected = month
+        let dates = month.id == 0 ? this.dates.getStartAndEndYear(this.currentYear) : this.dates.getStartAndEndDayMonth(month.id, this.currentYear)
         this.filterDate = { start: dates.start, end: dates.end }
         this.getReportSalesByDateRange(dates.start, dates.end)
         this.getCuentasPorCobrar()
+        this.serviceTicketTarget()
+      }
+
+    })
+
+    this.mainService.$filterRange.subscribe((dates: any) => {
+      if (this.mainService.currentPage == Pages.RESULT) {
+        if (dates) {
+          this.filterDate = { start: dates.start, end: dates.end }
+          this.getReportSalesByDateRange(dates.start, dates.end)
+          this.getCuentasPorCobrar()
+        }
       }
     })
 
     this.mainService.$yearsFilter.subscribe((year: any) => {
-      this.currentYear = year;
-      let months = this.currentMonthSelected.id == 0 ? this.dates.getStartAndEndYear(year) : this.dates.getStartAndEndDayMonth(this.currentMonthSelected.id, year)
-      this.filterDate = { start: months.start, end: months.end }
-      this.getReportSalesByDateRange(months.start, months.end)
-      this.getCuentasPorCobrar()
+      if (this.mainService.currentPage == Pages.RESULT) {
+        this.currentYear = year;
+        let months = this.currentMonthSelected.id == 0 ? this.dates.getStartAndEndYear(year) : this.dates.getStartAndEndDayMonth(this.currentMonthSelected.id, year)
+        this.filterDate = { start: months.start, end: months.end }
+        this.getReportSalesByDateRange(months.start, months.end)
+        this.getCuentasPorCobrar()
+      }
     })
   }
 
@@ -372,7 +381,7 @@ export class ResultsComponent implements OnInit {
         if (Array.isArray(res)) {
           this.ticketsTargetList = res.map((s: any) => {
             let name = firstUpperCase(s.channel.replace("_", " ").toLowerCase())
-            return {...s, name}
+            return { ...s, name }
           })
         } else {
           this.toast.error("Ha ocurrido un error al obtener el Ticket Promedio")
@@ -431,7 +440,6 @@ export class ResultsComponent implements OnInit {
     this.expensesByDay = []
     let expensesByDay: any[] = []
     this.days.map((day: any) => {
-
       let total = this.expenses.reduce((total: number, item: any) => moment(item.expenseDate, 'DD-MM-YYYY HH:mm:ss').isSame(moment(day, 'DD/MM/YYYY')) ? total + item.amount : total, 0)
       expensesByDay.push(total)
     })

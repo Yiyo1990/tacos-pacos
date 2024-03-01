@@ -45,6 +45,7 @@ import { GastosChartComponent } from './components/gastos-chart/gastos-chart.com
 import { GastosCheckComponent } from './components/gastos-check/gastos-check.component';
 import { RowTotalNegocioComponent } from './components/row-total-negocio/row-total-negocio.component';
 import { CategorySupplierCardComponent } from './components/category-supplier-card/category-supplier-card.component';
+import { CurrencyPipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -100,7 +101,7 @@ import { CategorySupplierCardComponent } from './components/category-supplier-ca
     BsDatepickerModule,
     BsDatepickerModule.forRoot()
   ],
-  providers: [BsLocaleService],
+  providers: [BsLocaleService, CurrencyPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

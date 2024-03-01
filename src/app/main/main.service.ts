@@ -41,7 +41,7 @@ export class MainService {
     this.pageName.next(name)
   }
 
-  getPageName() {
+  get currentPage() {
     return this.pageName.value
   }
 

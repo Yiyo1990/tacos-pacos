@@ -1,0 +1,27 @@
+@import '/src/styles.scss';
+
+table {
+    thead {
+        font-size: 10pt;
+        tr {
+            background-color: $primaryColor;
+            th {
+                text-align: center;
+                width: 5rem;
+                border-right: 1px solid #fff;
+                margin-left: 1px;
+                color: #fff;
+                margin-bottom: 1rem;
+            }
+        }
+    }
+    tbody {
+        font-size: 10pt;
+        tr {
+            height: 1.8rem;
+            td {
+                text-align: center;
+            }
+        }
+    }
+}

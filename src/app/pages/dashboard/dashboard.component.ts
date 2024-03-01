@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from 'src/app/components/loading/loading.service';
 import { MainService } from 'src/app/main/main.service';
 import { SalesService } from '../sales/sales-service.service';
-import { BalanceType, OperationType, ReportChannel, barChartOptions, firstUpperCase, fixedData, groupArrayByKey, sortByKey } from 'src/app/util/util';
+import { BalanceType, OperationType, Pages, ReportChannel, barChartOptions, firstUpperCase, fixedData, groupArrayByKey, sortByKey } from 'src/app/util/util';
 import { Dates } from 'src/app/util/Dates';
 import { ExpenseService } from '../expenses/expenses.service';
 import { Charts } from 'src/app/util/Charts';
@@ -63,7 +63,7 @@ export class DashboardComponent implements OnInit {
     private expenseService: ExpenseService,
     private resultService: ResultService) {
 
-    mainService.setPageName("Inicio")
+    mainService.setPageName(Pages.MAIN)
   }
 
   ngOnInit(): void {

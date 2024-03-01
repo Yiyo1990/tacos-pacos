@@ -4,9 +4,9 @@
   position:fixed;
   width: 10rem;
   height: 100%;
-  background-color: #090661;
+  background-color: $primaryColor;
   color: $fontColor;
-  border-right: solid 1px #090661;
+  border-right: solid 1px $primaryColor;
   font-size: 10pt;
 }
 .menu-header-logo {
@@ -21,7 +21,7 @@
   justify-content: center;
   align-items: center;
   padding: 0.2rem 0;
-  background-color: #090661;
+  background-color: $primaryColor;
 }
 .content-current-title {
   width: 10rem;
