@@ -231,8 +231,11 @@ export class IndicatorsComponent implements OnInit {
     Object.keys(grouping).map((k: any) => {
       let sales = grouping[k]
       let totalSale = this.getTotalSalesByDelivery(sales)
-      let color = sales[0].monthNumber <= (this.dates.getCurrentMonth() + 1) ? this.getKpiColor(profit, totalSale) : "#212529"
-      totalSalesByMonth.push({ month: sales[0].monthName.replace(".", ""), total: Number(totalSale), color, monthNumber: sales[0].monthNumber })
+      let kpiColorPercent = this.getKpiColorAndPercent(profit, totalSale)
+      let backgroundColor = sales[0].monthNumber <= (this.dates.getCurrentMonth() + 1) ? kpiColorPercent.backgroundColor : "#ededed"
+      let color = sales[0].monthNumber <= (this.dates.getCurrentMonth() + 1) ? kpiColorPercent.color : "#fff"
+
+      totalSalesByMonth.push({ month: sales[0].monthName.replace(".", ""), total: Number(totalSale), monthNumber: sales[0].monthNumber, color, backgroundColor, percent: kpiColorPercent.percent   })
     })
 
     return totalSalesByMonth
@@ -252,9 +255,11 @@ export class IndicatorsComponent implements OnInit {
     this.salesByMonth.map((sale: any) => {
       let expenses = groupingMonth[sale.month]
       let total = expenses ? expenses.reduce((total: number, obj: any) => total + obj.amount, 0) : 0
-      let color = this.getKpiColor(kpiIndicator, total, sale.total)
+      let kpiColorPercent = this.getKpiColorAndPercent(kpiIndicator, total, sale.total)
+      let backgroundColor = sale.monthNumber <= (this.dates.getCurrentMonth() + 1) ? kpiColorPercent.backgroundColor : "#ededed"
+      let color = sale.monthNumber <= (this.dates.getCurrentMonth() + 1) ? kpiColorPercent.color : "#fff"
 
-      totalMonths.push({ month: sale.month, total: Number(total.toFixed(2)), color })
+      totalMonths.push({ month: sale.month, total: Number(total.toFixed(2)), color, backgroundColor, percent: kpiColorPercent.percent})
     })
     return totalMonths
   }
@@ -275,8 +280,11 @@ export class IndicatorsComponent implements OnInit {
     this.salesByMonth.map((sale: any) => {
       let ex = expensesByMonth.find((s: any) => s.month == sale.month)
       let total = ex ? sale.total - ex.total : 0
-      let color = sale.monthNumber <= (this.dates.getCurrentMonth() + 1) ? this.getKpiColor(profit, total, salesKpi.value) : "#212529"
-      profitByMonth.push({ month: sale.month, total: Number(total.toFixed(2)), color })
+      let kpiColorPercent = this.getKpiColorAndPercent(profit, total, salesKpi.value) 
+      let backgroundColor = sale.monthNumber <= (this.dates.getCurrentMonth() + 1) ? kpiColorPercent.backgroundColor : "#ededed"
+      let color = sale.monthNumber <= (this.dates.getCurrentMonth() + 1) ? kpiColorPercent.color : "#fff"
+
+      profitByMonth.push({ month: sale.month, total: Number(total.toFixed(2)), color, backgroundColor, percent: kpiColorPercent.percent })
     })
 
     return profitByMonth
@@ -289,33 +297,44 @@ export class IndicatorsComponent implements OnInit {
    * @param totalSale total de la venta
    * @returns 
    */
-  getKpiColor(kpiIndicator: any, total: number, totalSale: number = 0) {
+  getKpiColorAndPercent(kpiIndicator: any, total: number, totalSale: number = 0) {
+    let backgroundColor = '#92d04f'
     let color = '#212529'
+    let percent = 100
     if (kpiIndicator.chart.includes("%")) {
-      let percent = kpiIndicator.value / 100;
-      let percentTotal = totalSale * percent
+      let percentKpi = (kpiIndicator.value / 100);
+      let percentTotal = totalSale * percentKpi
+      let calc = ((total * 100) / totalSale)
+      percent = calc > 1 ? Math.round(calc) : Number(calc.toFixed(1))
+      percent = percent ? percent : 0
+
       if (kpiIndicator.chart.includes(">")) {
         if (total > percentTotal) {
-          color = "#eb1331"
+          backgroundColor = "#eb1331"
+          color = '#fff'
         }
       } else {
         if (total < percentTotal) {
-          color = "#eb1331"
+          backgroundColor = "#eb1331"
+          color = '#fff'
         }
       }
     } else {
+      percent = Math.round((total * 100) / kpiIndicator.value)
       if (kpiIndicator.chart.includes(">")) {
         if (total > kpiIndicator.value) {
-          color = "#eb1331"
+          backgroundColor = "#eb1331"
+          color = '#fff'
         }
       } else {
         if (total < kpiIndicator.value) {
-          color = "#eb1331"
+          backgroundColor = "#eb1331"
+          color = '#fff'
         }
       }
     }
 
-    return color;
+    return {backgroundColor, color, percent};
   }
 
   /**
