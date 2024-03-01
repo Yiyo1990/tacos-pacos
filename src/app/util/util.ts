@@ -130,4 +130,17 @@ enum BalanceType {
   PROFIT = 'PROFIT'
 }
 
-export { configDropdown, firstUpperCase, sortByKey, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions, groupArrayByKey, ReportChannel, fixedData, OperationType, BalanceType }
+enum Pages {
+  MAIN = 'Inicio',
+  RESULT = 'Resultados',
+  INDICATOR = 'Indicadores KPI´S',
+  CASH = 'Cash Flow',
+  ESTIMATES = 'Estimaciones',
+  ANALISIS = 'Análisis',
+  EXPENSES = 'Gastos',
+  SUPPLIER = 'Proveedores',
+  SALES = 'Ventas',
+  INVENTARIO = 'Inventarios'
+}
+
+export { configDropdown, firstUpperCase, sortByKey, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions, groupArrayByKey, ReportChannel, fixedData, OperationType, BalanceType, Pages }

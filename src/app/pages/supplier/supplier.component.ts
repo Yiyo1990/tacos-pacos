@@ -4,7 +4,7 @@ import { MainService } from 'src/app/main/main.service';
 import { ProvidersService } from './providers.service';
 import { Dates } from 'src/app/util/Dates';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { configDropdown, groupArrayByKey, sortByKey } from 'src/app/util/util';
+import { Pages, configDropdown, groupArrayByKey, sortByKey } from 'src/app/util/util';
 import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from 'src/app/components/loading/loading.service';
 
@@ -33,7 +33,7 @@ export class SupplierComponent {
     private modalService: BsModalService, 
     private toastr: ToastrService,
     private loading: LoadingService) {
-    mainService.setPageName("Proveedores")
+    mainService.setPageName(Pages.SUPPLIER)
     
     this.mainService.$foodCategories.subscribe((result: any) => {
       if (result) {
