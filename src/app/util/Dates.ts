@@ -26,9 +26,9 @@ export class Dates {
         }
     }
 
-    formatDate(date: any, format: string = 'DD-MM-yyyy') {
-        const dateM = moment(date, 'DD-MM-yyyy HH:mm:ss')
-        return dateM.format(format)
+    formatDate(date: any, formatTo: string = 'DD-MM-yyyy', formatOf: string = 'DD-MM-yyyy HH:mm:ss') {
+        const dateM = moment(date, formatOf)
+        return dateM.format(formatTo)
     }
 
     convertToDate(date: any) {

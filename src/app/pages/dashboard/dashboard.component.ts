@@ -215,7 +215,7 @@ export class DashboardComponent implements OnInit {
     let profitsPercents: any = []
     sales?.data.map((s: number, i: number) => {
       let profit = profits?.data[i]
-      profit = profit ? profit : 0
+      profit = profit && profit! > 0 ? profit : 0
       let percent = Math.round((profit! / s) * 100)
       profitsPercents.push(`${percent ? percent : 0}%`)
     })
@@ -327,7 +327,7 @@ export class DashboardComponent implements OnInit {
    * Obtiene el porcentaje de profit anual
    */
   get profitPercent(): string {
-    let percent = Math.round((this.profit / this.totalSales) * 100)
+    let percent = this.profit > 0 ? Math.round((this.profit / this.totalSales) * 100): 0
     return `${percent ? percent : 0}%`
   }
 

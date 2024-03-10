@@ -1,0 +1,42 @@
+.cards-total {
+    font-size: 9pt;
+    margin-right: 0.4rem;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+table {
+    margin-top: 2rem;
+    thead {
+        color: #fff;
+        font-size: 9pt;
+        text-align: center;
+        tr {
+            height: 1.5rem;
+            th {
+                border-right: solid 1px #fff;
+            }
+        }
+    }
+
+    tbody {
+        font-size: 9pt;
+        text-align: center;
+        tr {
+            height: 1.5rem;
+            td {
+                border-right: solid 1px #fff;
+            }
+        }
+    }
+}
+
+table tbody tr td:first-child {
+    font-weight: bold;
+    text-align: start;
+    background-color: #fff !important;
+}
+
+table tbody tr td:last-child {
+    background-color: #ddebf7 !important;
+}

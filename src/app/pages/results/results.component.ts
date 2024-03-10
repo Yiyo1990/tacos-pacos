@@ -127,7 +127,6 @@ export class ResultsComponent implements OnInit {
         this.getCuentasPorCobrar()
         this.serviceTicketTarget()
       }
-
     })
 
     this.mainService.$filterRange.subscribe((dates: any) => {
@@ -370,7 +369,7 @@ export class ResultsComponent implements OnInit {
   }
 
   get profitPercent() {
-    let percent = Math.round((this.profit / this.totalSales) * 100)
+    let percent = this.profit > 0 ? Math.round((this.profit / this.totalSales) * 100) : 0
     return `${percent ? percent : 0}%`
   }
 

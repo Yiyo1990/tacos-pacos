@@ -46,6 +46,30 @@ const fixedData = (data: any) => {
   return data
 }
 
+
+const totalSalesByDelivery = (sales: Array<any>) => {
+  let totalDinnigRoom = sales.reduce((total: number, sale: any) => total + Number(sale.diningRoom), 0)
+  let totalDelivery = sales.reduce((total: number, sale: any) => total + Number(sale.delivery), 0)
+  let totalPickUp = sales.reduce((total: number, sale: any) => total + Number(sale.pickUp), 0)
+  let totalTakeout = sales.reduce((total: number, sale: any) => total + Number(sale.takeout), 0)
+
+  let totalUber = sales.reduce((total: number, sale: any) => total + Number(sale.apps.uber.income), 0)
+  let totalDidi = sales.reduce((total: number, sale: any) => total + Number(sale.apps.didi.income), 0)
+  let totalRappi = sales.reduce((total: number, sale: any) => total + Number(sale.apps.rappi.income), 0)
+
+  return (totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout + totalUber + totalDidi + totalRappi)
+}
+
+const addPlatafformInData = (sales: any)  => {
+  let parrot = sales.reportChannel.find((s: any) => s.channel == ReportChannel.PARROT)
+  let uber = sales.reportChannel.find((s: any) => s.channel == ReportChannel.UBER_EATS)
+
+  let didi = sales.reportChannel.find((s: any) => s.channel == ReportChannel.DIDI_FOOD)
+  let rappi = sales.reportChannel.find((s: any) => s.channel == ReportChannel.RAPPI)
+
+  return { parrot: fixedData(parrot), uber: fixedData(uber), didi: fixedData(didi), rappi: fixedData(rappi) }
+}
+
 const lineChartOptions = {
   responsive: true,
   legend: {
@@ -143,4 +167,5 @@ enum Pages {
   INVENTARIO = 'Inventarios'
 }
 
-export { configDropdown, firstUpperCase, sortByKey, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions, groupArrayByKey, ReportChannel, fixedData, OperationType, BalanceType, Pages }
+export { configDropdown, firstUpperCase, sortByKey, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions,
+   groupArrayByKey, ReportChannel, fixedData, OperationType, BalanceType, Pages, totalSalesByDelivery, addPlatafformInData }
