@@ -69,7 +69,6 @@ export class MainService {
     })
   }
 
-
   async getOperationsCategories() {
     let url = this.endPoint.concat('expense/operations-categories')
     this.http.get(url).subscribe({
@@ -84,6 +83,10 @@ export class MainService {
 
   setBranSelected(brand: any) {
     this.brandSelected.next(brand)
+  }
+
+  get currentBranch(): any {
+    return this.brandSelected.value
   }
 
   onChangeFilterMonth(month: any){

@@ -1,0 +1,24 @@
+@import '/src/styles.scss';
+
+.primary-color {
+    color: #fff;
+    background-color: $primaryColor;
+}
+
+
+.primary-text {
+    color: #657cad;
+    font-weight: bold;
+}
+
+.primary-card {
+    width: 100%;
+    height: 60px;
+    background-color: $primaryColor;
+}
+
+.txt-title{
+    font-size: 12pt; 
+    font-weight: bold; 
+    color: #fff;
+}

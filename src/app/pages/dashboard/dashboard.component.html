@@ -84,7 +84,7 @@
                                                 [attr.data-value]="salesIndicator.total | currency"></div>
                                             <div class="bar-horizontal"
                                                 [ngStyle]="{'width': salesIndicator.percent, 'background-color': chartColors.ventas }"
-                                                [attr.data-value]="salesIndicator.percent" style="font-size: 9pt;">
+                                                [attr.data-value]="salesIndicator.percent" title="{{salesIndicator.percent}}" style="font-size: 9pt;">
                                             </div>
                                         </div>
 
@@ -101,7 +101,7 @@
                                                 [attr.data-value]="profitIndicator.total | currency"></div>
                                             <div class="bar-horizontal"
                                                 [ngStyle]="{'width': profitIndicator.percent, 'background-color': chartColors.profit}"
-                                                [attr.data-value]="profitIndicator.percent" style="font-size: 9pt;">
+                                                [attr.data-value]="profitIndicator.percent" title="{{profitIndicator.percent}}" style="font-size: 9pt;">
                                             </div>
                                         </div>
                                     </div>
@@ -118,7 +118,7 @@
                                             </div>
                                             <div class="bar-horizontal"
                                                 [ngStyle]="{width: foodIndicator.percent, 'background-color': chartColors.gastos}"
-                                                [attr.data-value]="foodIndicator.percent" style="font-size: 9pt;">
+                                                [attr.data-value]="foodIndicator.percent"  title="{{foodIndicator.percent}}"  style="font-size: 9pt;">
                                             </div>
                                         </div>
                                     </div>

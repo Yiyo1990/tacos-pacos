@@ -82,7 +82,7 @@
                         <div style="height: 2rem;"></div>
                         <div class="row">
                             <div class="col-3 md-3 sm-12" *ngFor="let data of dataTable">
-                                <div style="width: 100%; height: 1.5rem;" style="text-align: center; border: solid 2px;">
+                                <div style="width: 100%; height: 1.5rem;" style="text-align: center; border: solid 2px;" [ngStyle]="{'border-color': data.color}">
                                     {{data.name}}
                                 </div>
                                 <canvas baseChart class="chart" [data]="data.dataChart" [options]="barChartOptions"

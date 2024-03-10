@@ -103,3 +103,9 @@ bs-datepicker-container { z-index: 3000 !important;}
      overflow: hidden;
      text-overflow: ellipsis;
  }
+
+ .center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

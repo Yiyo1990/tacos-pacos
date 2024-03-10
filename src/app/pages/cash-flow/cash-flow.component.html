@@ -1,1 +1,208 @@
-<p>cash-flow works!</p>
+<div class="row" style=" margin: 0; width: 100% !important;">
+    <div class="col-12 sm-12 md-12">
+        <div class="row">
+            <div class="col-2 md-2"></div>
+
+            <div class="col-10 md-10 sm-12">
+                <div class="row">
+                    <div class="sm-12" style="width: 14.2%;">
+                        <div style="display: flex;">
+                            <div class="cards-total"
+                                style="width: 5rem; height: auto; padding: 0.3%; border:solid 1px #478b47; text-align: center; opacity: 0.8;">
+                                <label style="margin: 0; color: #60bb60;">Efectivo</label>
+                            </div>
+                            <label class="cards-total total">{{2334 | currency}}</label>
+                        </div>
+                    </div>
+
+                    <div class="sm-12" style="width: 14.2%;">
+                        <div style="display: flex;">
+                            <div class="cards-total"
+                                style="width: 10rem; height: auto; padding: 0.3%; border:solid 1px #841899; text-align: center; opacity: 0.8;">
+                                <label style="margin: 0; color: #841899;">Tarjeta</label>
+                            </div>
+                            <label class="cards-total total">{{2334 | currency}}</label>
+                        </div>
+                    </div>
+
+                    <div class="sm-12" style="width: 14.2%;">
+                        <div style="display: flex;">
+                            <div class="cards-total"
+                                style="width: 10rem; height: auto; padding: 0.3%; border:solid 1px #5f5f5f; text-align: center; opacity: 0.8;">
+                                <label style="margin: 0; color: #5f5f5f;">Por Cobrar</label>
+                            </div>
+                            <label class="cards-total total">{{2334 | currency}}</label>
+                        </div>
+                    </div>
+
+                    <div class="sm-12" style="width: 14.2%;">
+                        <div style="display: flex;">
+                            <div class="cards-total"
+                                style="width: 10rem; height: auto; padding: 0.3%; border:solid 1px #3c8be6; text-align: center; opacity: 0.8;">
+                                <label style="margin: 0; color: #3c8be6;">Total</label>
+                            </div>
+                            <label class="cards-total total">{{2334 | currency}}</label>
+                        </div>
+                    </div>
+
+                    <div class="sm-12" style="width: 14.2%;">
+                        <div style="display: flex;">
+                            <div class="cards-total"
+                                style="width: 10rem; height: auto; padding: 0.3%; border:solid 1px #ffd341; text-align: center; opacity: 0.8;">
+                                <label style="margin: 0; color: #ffd341;">GAP</label>
+                            </div>
+                            <label class="cards-total total">{{2334 | currency}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 md-12 sm-12">
+
+                <table style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%;"></th>
+                            <th style="width: calc(90% / 13); background-color: #002060;"
+                                *ngFor="let month of headerData">{{month.name}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--:::::::::::  VENTAS :::::::::::-->
+                        <tr>
+                            <td style="width: 10%;">{{salesData.name}}</td>
+                            <td style="width: calc(90% / 13); background-color: #ddebf7;"
+                                *ngFor="let month of salesData.data">
+                                {{month.total | currency}}
+                            </td>
+                        </tr>
+                        <tr style="height: 1rem;"></tr>
+                        <tr>
+                            <td style="background-color: #fff !important;">Cuentas Por Cobrar</td>
+                        </tr>
+                        <!--:::::::::::  SALDO POR COBRAR :::::::::::-->
+                        <tr>
+                            <td style="font-weight: 300;">{{accountsReceivableData.name}}</td>
+                            <td *ngFor="let month of accountsReceivableData.data">
+                                {{month.total | currency}}
+                            </td>
+                        </tr>
+                        <!--:::::::::::  TOTAL CUENTAS POR COBRAR :::::::::::-->
+                        <tr>
+                            <td>
+                                <div class="ellipsis">{{totalAccountsReceivableData.name}}</div>
+                            </td>
+                            <td style="background-color: #ddebf7;"
+                                *ngFor="let month of totalAccountsReceivableData.data">
+                                {{month.total | currency}}
+                            </td>
+                        </tr>
+
+                        <tr style="height: 1rem;"></tr>
+                        <!--:::::::::::  TOTAL DISPONIBLE :::::::::::-->
+                        <tr>
+                            <td>{{totalAvailableData.name}}</td>
+                            <td style="background-color: #fff2cc;" *ngFor="let month of totalAvailableData.data">
+                                {{month.total | currency}}
+                            </td>
+                        </tr>
+
+                        <tr style="height: 1rem;"></tr>
+
+                        <tr>
+                            <td style="background-color: #fff !important; ">Cuentas Por Pagar</td>
+                        </tr>
+                        <!--:::::::::::  CUENTAS POR PAGAR :::::::::::-->
+                        <tr *ngFor="let category of expensesByCategoryData; let i = index;"
+                            [ngStyle]="{'background-color': i%2 == 0 ? '#fff': '#ededed'}">
+                            <td style="font-weight: 300;">
+                                <div style="display: flex;">
+                                    <div class="center" style="width: 15%; margin-right:2%; background-color: #ededed;">
+                                        {{i+1}}
+                                    </div>
+                                    <div class="ellipsis" style="width: 80%;">{{category.name}}</div>
+                                </div>
+                            </td>
+                            <td *ngFor="let month of category.data">
+                                {{month.total | currency}}
+                            </td>
+                        </tr>
+
+                        <tr style="height: 0.6rem;"></tr>
+                        <!--:::::::::::  TOTAL GASTOS :::::::::::-->
+                        <tr>
+                            <td>{{totalExpensesByMonth.name}}</td>
+                            <td style="background-color: #ddebf7;" *ngFor="let month of totalExpensesByMonth.data">
+                                {{month.total | currency}}
+                            </td>
+                        </tr>
+
+                        <tr style="height: 1rem;"></tr>
+                        <!--:::::::::::  TOTAL DISPONIBLE FIN MES :::::::::::-->
+                        <tr>
+                            <td style="background-color: #ededed !important;">
+                                <div class="ellipsis" style="width: 100%;">{{totalAvailableEndMonthData.name}}</div>
+                            </td>
+                            <td style="background-color: #ededed;"
+                                *ngFor="let month of totalAvailableEndMonthData.data">
+                                {{month.total | currency}}
+                            </td>
+                        </tr>
+
+                        <tr style="height: 1rem;"></tr>
+                        <!--:::::::::::  EFECTIVO :::::::::::-->
+                        <tr>
+                            <td style="background-color: #ededed !important;">
+                                <div class="ellipsis" style="width: 100%;">{{cashData.name}}</div>
+                            </td>
+                            <td style="background-color: #ededed;" *ngFor="let month of cashData.data">
+                                {{month.total | currency}}
+                            </td>
+                        </tr>
+                        <!--:::::::::::  TARJETA :::::::::::-->
+                        <tr>
+                            <td style="background-color: #ededed !important;">
+                                <div class="ellipsis" style="width: 100%;">{{cardData.name}}</div>
+                            </td>
+                            <td style="background-color: #ededed;" *ngFor="let month of cardData.data">
+                                {{month.total | currency}}
+                            </td>
+                        </tr>
+                        <!--:::::::::::  POR COBRAR :::::::::::-->
+                        <tr>
+                            <td style="background-color: #ededed !important;">
+                                <div class="ellipsis" style="width: 100%;">{{receivableData.name}}</div>
+                            </td>
+                            <td style="background-color: #ededed;" *ngFor="let month of receivableData.data">
+                                {{month.total | currency}}
+                            </td>
+                        </tr>
+                        <!--:::::::::::  TOTAL :::::::::::-->
+                        <tr>
+                            <td style="background-color: #ededed !important;">
+                                <div class="ellipsis" style="width: 100%;">{{totalData.name}}</div>
+                            </td>
+                            <td style="background-color: #ededed;" *ngFor="let month of totalData.data">
+                                {{month.total | currency}}
+                            </td>
+                        </tr>
+
+                        <tr style="height: 1rem;"></tr>
+                        <!--:::::::::::  GAP :::::::::::-->
+                        <tr>
+                            <td>
+                                <div class="ellipsis" style="width: 100%;">{{gapData.name}}</div>
+                            </td>
+                            <td style="background-color: #fff2cc;" *ngFor="let month of gapData.data">
+                                {{month.total | currency}}
+                            </td>
+                        </tr>
+                        <tr style="height: 2rem;"></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

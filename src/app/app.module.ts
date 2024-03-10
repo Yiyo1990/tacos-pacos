@@ -46,6 +46,7 @@ import { GastosCheckComponent } from './components/gastos-check/gastos-check.com
 import { RowTotalNegocioComponent } from './components/row-total-negocio/row-total-negocio.component';
 import { CategorySupplierCardComponent } from './components/category-supplier-card/category-supplier-card.component';
 import { CurrencyPipe } from '@angular/common';
+import { ProfitEstimatesComponent } from './pages/profit-estimates/profit-estimates.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +78,8 @@ import { CurrencyPipe } from '@angular/common';
     GastosCheckComponent,
     RowTotalNegocioComponent,
     CategorySupplierCardComponent,
-    SupplierComponent
+    SupplierComponent,
+    ProfitEstimatesComponent
   ],
   imports: [
     BrowserModule,
