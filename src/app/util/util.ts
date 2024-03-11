@@ -46,7 +46,11 @@ const fixedData = (data: any) => {
   return data
 }
 
-
+/**
+ * Obtiene el total de las ventas ingresos
+ * @param sales 
+ * @returns 
+ */
 const totalSalesByDelivery = (sales: Array<any>) => {
   let totalDinnigRoom = sales.reduce((total: number, sale: any) => total + Number(sale.diningRoom), 0)
   let totalDelivery = sales.reduce((total: number, sale: any) => total + Number(sale.delivery), 0)
