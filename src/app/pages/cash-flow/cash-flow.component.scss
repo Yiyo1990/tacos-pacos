@@ -1,9 +1,23 @@
+.container-card {
+    width: 20%;
+}
+
 .cards-total {
+    height: 1.5rem;
     font-size: 9pt;
     margin-right: 0.4rem;
     border-radius: 5px;
     font-weight: bold;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
+
+.total {
+    font-weight: 600;
+    font-size: 9pt;
+    margin-top: 1%;
+}
+
 
 table {
     margin-top: 2rem;

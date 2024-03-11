@@ -55,7 +55,7 @@ export class CashFlowComponent implements OnInit {
     })
   }
 
-  /** GASTOS */
+  /**:::::::::::::::::::::: GASTOS ::::::::::::::::::::*/
 
   /**
    * Servicio para obtener los gastos
@@ -109,7 +109,7 @@ export class CashFlowComponent implements OnInit {
       .reduce((total: number, obj: any) => total + obj.amount, 0)
   }
 
-  /** VENTAS */
+  /** ::::::::::::::::  VENTAS :::::::::::::::::*/
 
   /**
  * Servicio para obtener las ventas 
@@ -180,7 +180,7 @@ export class CashFlowComponent implements OnInit {
     return totalApps
   }
 
-  /** CUENTAS POR COBRAR */
+  /** ::::::::::::::::::: CUENTAS POR COBRAR :::::::::::::::::::::::::::*/
   /**
    * Servicio para obtener las cuentas por cobrar
    * @param startDate fecha inicio
@@ -227,6 +227,49 @@ export class CashFlowComponent implements OnInit {
       .reduce((total: number, obj: any) => total + obj.amount, 0)
   }
 
+
+  /** ::::::::::::::::::: TARJETAS PRINCIPALES :::::::::::::: */
+
+  /**
+   * Regresa el total de las Ventas en Efectivo del año
+   */
+  get totalCashIndicatorCard(): number {
+    let total = this.cashData.data.find(s => s.month == 'Total')?.total!
+    return total ? total : 0
+  }
+
+  /**
+   * Regresa el total de las Vents por tarjeta del año
+   */
+  get totalCardIndicatorCard(): number {
+    let total = this.cardData.data.find(s => s.month == 'Total')?.total!
+    return total ? total : 0
+  }
+
+  /**
+   * Regresa el total de las cuentas por cobrar del año
+   */
+  get totalReceivableIndicatorCard(): number {
+    let total = this.receivableData.data.find(s => s.month == 'Total')?.total!
+    return total ? total : 0
+  }
+
+  /**
+   * Regresa el total de la suma de las ventas(Efectivo, Tarjeta, Por Cobrar)
+   */
+  get totalIndicatorCard(): number {
+    let total = this.totalData.data.find(s => s.month == 'Total')?.total!
+    return total ? total : 0
+  }
+
+  /**
+   * Regresa la suma del GAP del año
+   */
+  get totalGAPIndicatorCard(): number {
+    let total = this.gapData.data.find(s => s.month == 'Total')?.total!
+    return total ? total : 0
+  }
+
   /**
    * Obtiene la suma total de las ventas
    */
@@ -252,11 +295,7 @@ export class CashFlowComponent implements OnInit {
     let byMonth = groupArrayByKey(this.sales, 'shortMonth')
     let salesMonth: Array<any> = []
     this.dates.getMonths().map((m: any) => {
-      let saleMonth = byMonth[m.name]
-      let total = 0
-      if (Array.isArray(saleMonth)) {
-        total = saleMonth.reduce((total: number, obj: any) => total + obj.totalSale, 0)
-      }
+      let total = Array.isArray(byMonth[m.name]) ? totalSalesByDelivery(byMonth[m.name]) : 0      
       salesMonth.push({ month: m.name, total: Number(total.toFixed(2)) })
     })
 
@@ -352,11 +391,12 @@ export class CashFlowComponent implements OnInit {
     return { name: 'Total Gastos', data: expesesMonth }
   }
 
+  
   /**
-   * Obtiene el total disponible (Fin Mes)
+   * Calcula el total Disponible (Fin mes)
+   * @returns 
    */
-
-  getAvailableByMonthEndMonth() {
+  getAvailableByMonthEndMonthRow() {
     let sales = this.getSalesByMonth()
     let expenses = this.getExpensesByMonth(this.expenses)
 
@@ -376,14 +416,18 @@ export class CashFlowComponent implements OnInit {
     return availableMonths
   }
 
+  /**
+   * Regresa los datos para la fila 'Total Disponible (Fin Mes)' de la tabla Cash flow
+   */
   get totalAvailableEndMonthData() {
-    return { name: 'Total Disponible (Fin Mes)', data: this.getAvailableByMonthEndMonth() }
+    return { name: 'Total Disponible (Fin Mes)', data: this.getAvailableByMonthEndMonthRow() }
   }
 
   /**
-  * Obtiene el total de Efectivo por mes
-  */
-  getTotalCash() {
+   * Suma las Ventas realizadas en Efectivo
+   * @returns Un listado del total de las ventas en efectivo por mes
+   */
+  getTotalCashRow() {
     let totalCash = this.dates.getMonths().map(m => {
       let salesCash = this.getSalesCashByMonth(m.name);
       let expensesCash = this.getExpensesCash(m.name);
@@ -397,20 +441,24 @@ export class CashFlowComponent implements OnInit {
     return totalCash
   }
 
+  /**
+   * Regresa los datos para la fila 'Efectivo' de la tabla Cash flow
+   */
   get cashData() {
-    return { name: 'Efectivo', data: this.getTotalCash() }
+    return { name: 'Efectivo', data: this.getTotalCashRow() }
   }
 
   /**
-  * Obtiene el total de Tarjeta por mes
-  */
-  getTotalCard() {
+   * Obtiene los calculos para las ventas con 'Tarjeta'
+   * @returns Una lista con el total de las ventas por mes
+   */
+  getTotalCardRow() {
     let totalCard =  this.dates.getMonths().map(m => {
       let totalCard = this.getSalesTransferByMonth(m.name)
       let totalApps = this.getSalesAppsByMonth(m.name)
       let totalCuentaTransfer = this.getCuentaPagadaTransfer(m.name)
       
-      let total = (totalCard + totalApps + totalCuentaTransfer) - this.getSalesTransferByMonth(m.name)
+      let total = (totalCard + totalApps + totalCuentaTransfer) - this.getExpensesTransfer(m.name)
       return { month: m.name, total: total }
     })
 
@@ -419,23 +467,27 @@ export class CashFlowComponent implements OnInit {
     return totalCard
   }
 
+  /**
+   *  Obtiene los datos para la fila 'Tarjeta' de la tabla cash flow
+   */
   get cardData() {
-    return { name: 'Tarjeta', data: this.getTotalCard() }
+    return { name: 'Tarjeta', data: this.getTotalCardRow() }
   }
 
   /**
-   * Obtiene el total Por Cobrar agrupado por mes
+   * Obtiene los datos para la fila 'Por Cobrar' de la tabla cash flow
    */
   get receivableData() {
     return { name: 'Por Cobrar', data: this.getAccountsReceivableByMonth() }
   }
 
   /**
-   * Obtiene el Total agrupado por mes
+   * Suma de las ventas 'Efectivo', 'Tarjeta' y 'Por Cobrar'
+   * @returns una lista con el total por mes
    */
-  getTotal() {
-    let totalCashM = this.getTotalCash()
-    let totalCardM = this.getTotalCard()
+  getTotalRow() {
+    let totalCashM = this.getTotalCashRow()
+    let totalCardM = this.getTotalCardRow()
     let totalPorCobrarM = this.getAccountsReceivableByMonth()
 
     let totalList =  this.headerData.map(m => {
@@ -453,17 +505,20 @@ export class CashFlowComponent implements OnInit {
     return totalList
   }
 
+  /**
+   * Regresa los datos para la fila 'Total' de la tabla Cash flow
+   */
   get totalData() {
-    return { name: 'Total', data: this.getTotal() }
+    return { name: 'Total', data: this.getTotalRow() }
   }
 
   /**
-   * Obtiene el GAP agrupado por mes
+   * Calcula el GAP con base a las Ventas totales y los Gastos
+   * @returns un listado del total por mes
    */
-  getGap() {
-
-    let availableEndMonth = this.getAvailableByMonthEndMonth()
-    let totalData = this.getTotal()
+  getGapRow() {
+    let availableEndMonth = this.getAvailableByMonthEndMonthRow()
+    let totalData = this.getTotalRow()
 
     return this.headerData.map(m => {
       let available = availableEndMonth.find((a: any) => a.month == m.name)
@@ -476,14 +531,10 @@ export class CashFlowComponent implements OnInit {
     })
   }
 
+  /**
+   * Regresa los datos para la fila 'GAP' de la tabla Cash flow
+   */
   get gapData() {
-    return { name: 'GAP', data: this.getGap() }
+    return { name: 'GAP', data: this.getGapRow() }
   }
 }
-
-/**
- * Total dsponible : Se duplica con total de ventas
- * Total Diponible Fin mes:  Total Ventas/Diponible - Total Gastos
- * 
- * 10,000 
- */

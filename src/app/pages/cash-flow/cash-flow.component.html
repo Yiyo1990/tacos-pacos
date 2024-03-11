@@ -1,57 +1,49 @@
 <div class="row" style=" margin: 0; width: 100% !important;">
     <div class="col-12 sm-12 md-12">
         <div class="row">
-            <div class="col-2 md-2"></div>
-
+            <div class="col-1 md-1"></div>
             <div class="col-10 md-10 sm-12">
                 <div class="row">
-                    <div class="sm-12" style="width: 14.2%;">
-                        <div style="display: flex;">
-                            <div class="cards-total"
-                                style="width: 5rem; height: auto; padding: 0.3%; border:solid 1px #478b47; text-align: center; opacity: 0.8;">
+                    <div class="col-12 md-12 sm-12" style="display: flex;">
+                        <div class="container-card" style="display: flex;">
+                            <div style="width: 40% !important;" class="cards-total"
+                                style="border:solid 1px #478b47; text-align: center; opacity: 0.8;">
                                 <label style="margin: 0; color: #60bb60;">Efectivo</label>
                             </div>
-                            <label class="cards-total total">{{2334 | currency}}</label>
+                            <label style="width: 60% !important;" class="total">{{totalCashIndicatorCard |
+                                currency}}</label>
                         </div>
-                    </div>
 
-                    <div class="sm-12" style="width: 14.2%;">
-                        <div style="display: flex;">
+                        <div class="container-card" style="display: flex;">
                             <div class="cards-total"
-                                style="width: 10rem; height: auto; padding: 0.3%; border:solid 1px #841899; text-align: center; opacity: 0.8;">
+                                style="border:solid 1px #841899; text-align: center; opacity: 0.8;">
                                 <label style="margin: 0; color: #841899;">Tarjeta</label>
                             </div>
-                            <label class="cards-total total">{{2334 | currency}}</label>
+                            <label class="total">{{totalCardIndicatorCard | currency}}</label>
                         </div>
-                    </div>
 
-                    <div class="sm-12" style="width: 14.2%;">
-                        <div style="display: flex;">
+                        <div class="container-card" style="display: flex;">
                             <div class="cards-total"
-                                style="width: 10rem; height: auto; padding: 0.3%; border:solid 1px #5f5f5f; text-align: center; opacity: 0.8;">
-                                <label style="margin: 0; color: #5f5f5f;">Por Cobrar</label>
+                                style="border:solid 1px #5f5f5f; text-align: center; opacity: 0.8;">
+                                <label class="ellipsis" style="margin: 0; color: #5f5f5f;">Por Cobrar</label>
                             </div>
-                            <label class="cards-total total">{{2334 | currency}}</label>
+                            <label class="total">{{totalReceivableIndicatorCard | currency}}</label>
                         </div>
-                    </div>
 
-                    <div class="sm-12" style="width: 14.2%;">
-                        <div style="display: flex;">
+                        <div class="container-card" style="display: flex;">
                             <div class="cards-total"
-                                style="width: 10rem; height: auto; padding: 0.3%; border:solid 1px #3c8be6; text-align: center; opacity: 0.8;">
+                                style="border:solid 1px #3c8be6; text-align: center; opacity: 0.8;">
                                 <label style="margin: 0; color: #3c8be6;">Total</label>
                             </div>
-                            <label class="cards-total total">{{2334 | currency}}</label>
+                            <label class="total">{{totalIndicatorCard | currency}}</label>
                         </div>
-                    </div>
 
-                    <div class="sm-12" style="width: 14.2%;">
-                        <div style="display: flex;">
+                        <div class="container-card" style="display: flex;">
                             <div class="cards-total"
-                                style="width: 10rem; height: auto; padding: 0.3%; border:solid 1px #ffd341; text-align: center; opacity: 0.8;">
+                                style="border:solid 1px #ffd341; text-align: center; opacity: 0.8;">
                                 <label style="margin: 0; color: #ffd341;">GAP</label>
                             </div>
-                            <label class="cards-total total">{{2334 | currency}}</label>
+                            <label class="total">{{totalGAPIndicatorCard | currency}}</label>
                         </div>
                     </div>
                 </div>
