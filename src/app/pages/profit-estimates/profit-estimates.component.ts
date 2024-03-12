@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MainService } from 'src/app/main/main.service';
 import { Pages } from 'src/app/util/util';
@@ -8,14 +8,31 @@ import { Pages } from 'src/app/util/util';
   templateUrl: './profit-estimates.component.html',
   styleUrls: ['./profit-estimates.component.scss']
 })
-export class ProfitEstimatesComponent {
+export class ProfitEstimatesComponent implements OnInit {
   //this.dates
  // private currentMonthSelected = 
+private foodCategoriesList: Array<any> = []
 
   constructor(private mainService: MainService, private activeRouter: ActivatedRoute){
     mainService.setPageName("Estimaciones")
   }
+  ngOnInit(): void {
+    this.mainService.$foodCategories.subscribe((resp: any) => {
+      if(Array.isArray(resp)) {
+        this.foodCategoriesList = resp
+      }
+      console.log(resp)
+    })
+  }
 
+  get foodCategories(){
+    return this.foodCategoriesList.map(item => {
+      return  {
+        id: item.id,
+        name: item.name
+      }
+    })
+  }
 
     /**
    * Cacha el evento cuando se cambia los filtros de fechas

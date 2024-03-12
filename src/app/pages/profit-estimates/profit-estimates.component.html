@@ -1,85 +1,112 @@
-<div class="row" style=" margin: 0; width: 100% !important;">
-    <div class="row">
-        <div class="col-2 sm-12 md-2">
-            <div class="primary-card center txt-title">
-                <label>Venta mañaneros</label>
-            </div>
-            <div class="center" style="width: 100%; height: 30px; background-color: #e31818; text-align: center;">
-                <label style="font-weight: bold; color: #fff;">FIJOS</label>
-            </div>
-        </div>
-
-        <!--Estiacion | Hoy-->
-        <div class="col-3 md-3 sm-12">
-            <table class="table" style="width: 100%;border: 1px solid brown;">
-                <tr style="height: 2rem;">
-                    <th class="primary-color text-center" style="border-right: 1px solid white;width:42%">Estimación</th>
-                    <th class="primary-color text-center" style="width:42%">Hoy</th>
-                    <th class="primary-color text-center" rowspan="2" style="width: 16%;">%</th>
-                </tr>
-                <tr style="height: 2rem;border: 1px solid black;width: 100%;">
-                    <td class="text-end" style="padding: 0 1rem; border-right: 1px solid black;">{{42906 | currency}}</td>
-                    <td class="text-end" style="padding: 0 0.5rem;background-color: bisque;">{{42906 | currency}}</td>
-                    <td></td>
-                </tr>
-                <tr style="height: 2rem;"></tr>
-                <tr style="height: 2rem;">
-                    <td class="text-end">{{42906 | currency}}</td>
-                    <td class="text-end">{{42906 | currency}}</td>
-                </tr>
-            </table>
-
-
-            <div class="primary-color" style="width: 100%; height: 100%;  display: flex; text-align: center;">
-                <div style="width: 45%; height: 100%;">
-                    <div style="width: 100%; height: 30px;"><label>Estimación</label></div>
-                    <div class="primary-text"
-                        style="width: 100%; height: 30px; background-color: #fff; border: solid 1px #303030;">
-                        {{42906 | currency}}
-                    </div>
-                </div>
-                <div style="width: 45%; height: 100%;">
-                    <div style="width: 100%; height: 30px;"><label>Hoy</label></div>
-                    <div class="primary-text"
-                        style="width: 100%; height: 30px; background-color: #fff; border: solid 1px #303030;">
-                        {{42906 | currency}}
-                    </div>
-                </div>
-                <div class="center" style="width: 10%; height: 100%; font-weight: bold; font-size: 11pt;">
-                    <label>%</label>
-                </div>
-            </div>
-            <div style="background-color: crimson;">
-                <table style="background-color: bisque;width: 100%;">
-                    <tr>
-                        <td style="border: 1px solid blueviolet;">{{2000 | currency}}</td>
-                        <td>{{149000 | currency}}</td>
-                        <td> 100%</td>
-                    </tr>
-                </table>
-                </div>
-        </div>
-        <div class="col-7 md-7 sm-12">
-            <div class="row">
-                <div class="col-12 md-12 sm-12">
-                    <div style="width: 100%; display: flex; overflow-x: hidden;">
-
-                        <div style="width: 13rem; height: 60px;" *ngFor="let estimation of estimations">
-                            <div class="primary-color" style="width: 100%; height: 30px;"></div>
-                            <div class="primary-text"
-                                style="width: 100%; height: 30px; background-color: #fff; border: solid 1px #303030; padding-left: 0.2rem; padding-right: 0.2rem;">
-                                {{estimation | currency}}
-                            </div>
-                        </div>
-                       
-                    </div>
-                    <div style="height: 30px; width: 100%; background-color: #e31818;"></div>
-                </div>
-                
-                
-            </div>
-
-        </div>
+<div class="row" style="margin: 0; width: 100% !important;">
+    <!--Venta mañaneros-->
+    <div class="col-2 sm-12 md-2">
+        <table class="table display" style="width: 100%;font-size:10pt;">
+            <tr>
+                <td style="width: 3rem;"></td>
+                <td class="primary-color txt-title" style="height:4rem;padding:0 0.5rem;">Venta mañaneros</td>
+            </tr>
+            <tr>
+                <td style="width:3rem;"></td>
+                <td style="font-weight:bold;color: #fff;background-color: #e31818;text-align:center;height:2rem;">FIJOS</td>
+            </tr>
+            <tr *ngFor="let item of foodCategories"> <!--Se repite-->
+                <td class="text-end" style="width:3rem;padding:0 0.5rem;height:2rem;"></td>
+                <td colspan="3" class="text-start" style="padding:0 0.5rem;height:2rem;">{{item.name}}</td>
+            </tr>
+            <tr style="background-color: #fff;height:2rem;"></tr>
+            <tr style="height:2rem;">
+                <td colspan="3" style="font-weight:bold;background-color:#2FD11C;text-align:center;">PROFIT</td>
+            </tr>
+            <tr style="background-color: #fff;height:2rem;"></tr>
+            <tr style="background-color: #fff;font-weight:bold;height:2rem;">
+                <td style="width:3rem;">45.0%</td>
+                <td class="text-center">Nestor</td>
+            </tr>
+            <tr style="background-color: #fff;font-weight:bold;height:2rem;">
+                <td style="width:3rem;">20.0%</td>
+                <td class="text-center">Adrian</td>
+            </tr>
+            <tr style="background-color: #fff;font-weight:bold;height:2rem;">
+                <td style="width:3rem;">25.0%</td>
+                <td class="text-center">Paco</td>
+            </tr>
+            <tr style="background-color: #fff;font-weight:bold;height:2rem;">
+                <td style="width:3rem;">10.0%</td>
+                <td class="text-center">Migueles</td>
+            </tr>
+        </table>
     </div>
-
+    <!--Estimacion | Hoy-->
+    <div class="col-3 md-3 sm-12">
+        <table class="table" style="width: 100%;font-size: 10pt;">
+            <tr style="height: 2rem;">
+                <th class="primary-color text-center" style="width:42%">Estimación</th>
+                <th class="primary-color text-center" style="width:42%">Hoy</th>
+                <th class="primary-color text-center" rowspan="2" style="width: 16%;">%</th>
+            </tr>
+            <tr style="height:2rem;border-left: 1px solid black;border-bottom: 1px solid black;width: 100%;">
+                <td class="text-end" style="padding: 0 1rem; border-right: 1px solid black;">{{429062 | currency}}</td>
+                <td class="text-end" style="padding: 0 1rem;">{{429062 | currency}}</td>
+            </tr>
+            <tr style="height: 2rem;"></tr>
+            <tr style="height: 2rem;width: 100%;"> <!--(ngFor)-->
+                <td class="text-end" style="padding: 0 1rem;">{{ 150171.70 | currency}}</td>
+                <td class="text-end" style="padding: 0 1rem;">{{ 149828.00 | currency}}</td>
+                <td class="text-center">50%</td>
+            </tr>
+            <tr style="background-color:#EFEFEF;height:2rem;">
+                <td colspan="3"></td>
+            </tr>
+            <tr style="height:2rem;"> <!--(ngFor)-->
+                <td class="primary-text text-end" style="padding: 0 1rem;border:1px solid black;">{{ 32082.51 | currency}}</td>
+                <td class="primary-text text-end" style="padding: 0 1rem;border:1px solid black;">{{ 147704 | currency}}</td>
+                <td class="primary-text text-center"></td>
+            </tr>
+            <tr style="height:2rem;"><!--(ngFor)-->
+                <td class="primary-text text-center" style="padding: 0 1rem;">7%</td>
+                <td class="primary-text text-center" style="padding: 0 1rem;">34%</td>
+                <td class="primary-text text-center"></td>
+            </tr>
+            <tr style="background-color:#EFEFEF;height:2rem;"></tr>
+            <tr style="height:2rem;background-color: lightblue;"><!--(ngFor)-->
+                <td class="text-end" style="padding: 0 1rem;">{{14437.13 | currency}}</td>
+                <td class="text-center" colspan="2">{{66466.80 | currency}}</td>
+            </tr>
+        </table>
+    </div>
+    <!--Other Table-->
+    <div class="col-7 md-7 sm-12">
+        <table class="table" style="width:100%;background: #fff;font-size: 11pt;">
+            <tr class="primary-color" style="height:2rem">
+                <th style="width: 100%;" colspan="17"></th>
+            </tr>
+            <tr style="height: 2rem;">
+                <td *ngFor="let estimation of estimations" class="primary-text" style="border:solid 1px #303030;background-color:#fff;padding: 0 0.5rem 0 1.5rem;">{{ estimation | currency }}</td>
+            </tr>
+            <tr style="height:2rem;">
+                <th style="width: 100%;" colspan="17"></th>
+            </tr>
+            <tr style="height: 2rem;width: 100%;background-color: beige;"> <!--(ngFor)-->
+                <td class="text-end" style="padding: 0 0.5rem 0 1.5rem;">{{ 140000 | currency}}</td>
+                <td class="text-end" style="padding: 0 0.5rem 0 1.5rem;">{{ 143500 | currency}}</td>
+                <td class="text-end" style="padding: 0 0.5rem 0 1.5rem;">{{ 147000 | currency}}</td>
+            </tr>
+            <tr style="background-color:#EFEFEF;height:2rem;">
+                <td colspan="17"></td>
+            </tr>
+            <tr style="height:2rem;background-color:#fff;"> <!--(ngFor)-->
+                <td class="primary-text" style="border:solid 1px #303030;padding: 0 0.5rem 0 1.5rem;">{{ 14500 | currency }}</td>
+            </tr>
+            <tr style="height:2rem;background-color:#fff;">
+                <td class="primary-text text-center">4%</td>
+            </tr>
+            <tr style="background-color:#fff;height:2rem;">
+                <td colspan="17"></td>
+            </tr>
+            <tr style="height:2rem;background-color: lightblue;"><!--(ngFor)-->
+                <td class="text-end" style="padding: 0 0.5rem;">{{6525 | currency}}</td>
+            </tr>
+        </table>     
+    </div>
 </div>
