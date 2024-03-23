@@ -16,16 +16,16 @@ export class MenuComponent {
   @Input() brand: any
 
   menuList = [
-    {id: 1, nombre: Pages.MAIN, icon: 'fas fa-home', link: 'inicio'},
-    {id: 2, nombre: Pages.RESULT, icon: 'fas fa-circle-up', link: 'resultados'},
-    {id: 3, nombre: Pages.INDICATOR, icon: 'fas fa-chart-simple', link: 'indicadores'},
-    {id: 4, nombre: Pages.CASH, icon: 'fas fa-money-bill-transfer', link: 'flujo-efectivo'},
-    {id: 5, nombre: Pages.ESTIMATES, icon: 'fas fa-money-bill-trend-up', link: 'estimaciones-profit'},
-    {id: 6, nombre: Pages.ANALISIS, icon: 'fas fa-gauge', link: 'analisis-costo'},
-    {id: 7, nombre: Pages.INVENTARIO, icon: 'fas fa-layer-group', link: 'inventarios'},
-    {id: 8, nombre: Pages.EXPENSES, icon: 'fas fa-layer-group', link: 'gastos'},
-    {id: 9, nombre: Pages.SUPPLIER, icon: 'fas fa-layer-group', link: 'proveedores'},
-    {id: 10, nombre: Pages.SALES, icon: 'fas fa-layer-group', link: 'ventas'}
+    {id: 1, nombre: Pages.MAIN, icon: 'fas fa-home', selected: false, link: 'inicio'},
+    {id: 2, nombre: Pages.RESULT, icon: 'fas fa-circle-up', selected: false, link: 'resultados'},
+    {id: 3, nombre: Pages.INDICATOR, icon: 'fas fa-chart-simple', selected: false, link: 'indicadores'},
+    {id: 4, nombre: Pages.CASH, icon: 'fas fa-money-bill-transfer', selected: false, link: 'flujo-efectivo'},
+    {id: 5, nombre: Pages.ESTIMATES, icon: 'fas fa-money-bill-trend-up', selected: false, link: 'estimaciones-profit'},
+    {id: 6, nombre: Pages.ANALISIS, icon: 'fas fa-gauge', selected: false, link: 'analisis-costo'},
+    {id: 7, nombre: Pages.INVENTARIO, icon: 'fas fa-layer-group', selected: false, link: 'inventarios'},
+    {id: 8, nombre: Pages.EXPENSES, icon: 'fas fa-layer-group', selected: false, link: 'gastos'},
+    {id: 9, nombre: Pages.SUPPLIER, icon: 'fas fa-layer-group', selected: false, link: 'proveedores'},
+    {id: 10, nombre: Pages.SALES, icon: 'fas fa-layer-group', selected: false, link: 'ventas'}
   ]
 
   constructor(private router: Router, private authService: AuthService) {
@@ -44,6 +44,8 @@ export class MenuComponent {
   }
 
   navigate(url: string, params: any) {
+    this.menuList.map((i) => i.selected = false)
+    params.selected = true
     this.router.navigate([`dashboard/${url}`], {state: params})
   }
 

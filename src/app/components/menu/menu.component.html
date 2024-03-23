@@ -17,7 +17,7 @@
   <div class="menu-list-content">
     <ul>
       <li *ngFor="let item of menuList" class="list-item">
-        <a (click)="navigate(item.link, item)">
+        <a (click)="navigate(item.link, item)" [ngStyle]="{'color': item.selected ? '#ffca2e': '#fff'}">
           <i
             class="{{ item.icon }}"
             data-toggle="tooltip"

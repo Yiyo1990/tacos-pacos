@@ -1,1 +1,39 @@
-<p>cost-analysis works!</p>
+<div class="row" style=" margin: 0; width: 100% !important;">
+    <div class="col-12 sm-12 md-12">
+        <div class="row">
+            <div class="col-12">
+                <accordion>
+                    <!-- ///////////  TACOS ////////////-->
+                    <accordion-group [isOpen]="true">
+                        <span accordion-heading>
+                            <label class="tab-title">Tacos</label> &nbsp; <i style="float: right;"
+                                class='fa fa-chevron-down'></i>
+                        </span>
+
+                        <table style="width: 100%;">
+                            
+                        </table>
+                        
+
+                    </accordion-group>
+
+                    <!-- ///////////  GORDITAS ////////////-->
+                    <accordion-group [isOpen]="false">
+                        <span accordion-heading>
+                            <label class="tab-title">Gorditas</label> &nbsp; <i style="float: right;"
+                                class='fa fa-chevron-down'></i>
+                        </span>
+                    </accordion-group>
+
+                    <!-- ///////////  GUISADOS ////////////-->
+                    <accordion-group [isOpen]="false">
+                        <span accordion-heading>
+                            <label class="tab-title">Guisados</label> &nbsp; <i style="float: right;"
+                                class='fa fa-chevron-down'></i>
+                        </span>
+                    </accordion-group>
+                </accordion>
+            </div>
+        </div>
+    </div>
+</div>

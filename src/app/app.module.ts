@@ -79,7 +79,7 @@ import { ProfitEstimatesComponent } from './pages/profit-estimates/profit-estima
     RowTotalNegocioComponent,
     CategorySupplierCardComponent,
     SupplierComponent,
-    ProfitEstimatesComponent
+    ProfitEstimatesComponent  
   ],
   imports: [
     BrowserModule,
