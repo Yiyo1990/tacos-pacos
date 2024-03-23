@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MainService } from 'src/app/main/main.service';
 import { Dates } from 'src/app/util/Dates';
-import { Pages, ReportChannel, barChartOptions, fixedData, groupArrayByKey } from 'src/app/util/util';
+import { Pages, ReportChannel, barChartOptions, fixedData, getKpiColorAndPercent, groupArrayByKey, kpisIndicators } from 'src/app/util/util';
 import { SalesService } from '../sales/sales-service.service';
 import { ExpenseService } from '../expenses/expenses.service';
 import { LoadingService } from 'src/app/components/loading/loading.service';
@@ -89,16 +89,16 @@ export class IndicatorsComponent implements OnInit {
    */
   get categoriesIndicator(): Array<any> {
     let list = this.foodCatforiesList.map((s: any) => {
-      let indicator = this.kpisIndicators.find((k: any) => k.code == s.code)
-      let kpi = indicator.chart.includes("$") ? `${this.service.convertToCurrency(indicator.value)}`
-        : `${indicator.chart.slice(0, 1)}${indicator.value}${indicator.chart.slice(1)}`
+      let indicator = kpisIndicators.find((k: any) => k.code == s.code)
+      let kpi = indicator!.chart.includes("$") ? `${this.service.convertToCurrency(indicator!.value)}`
+        : `${indicator!.chart.slice(0, 1)}${indicator!.value}${indicator!.chart.slice(1)}`
 
       return { id: s.id, name: s.name, code: s.code, indicator, kpi, color: Charts.chartColors.gastos }
     })
-    let indicatorSale = this.kpisIndicators.find((k: any) => k.code == 'sale')
-    let indicatorProfit = this.kpisIndicators.find((k: any) => k.code == 'profit')
-    list.unshift({ id: 0, name: 'Ventas', code: 'sale', indicator: indicatorSale, kpi: `${this.service.convertToCurrency(indicatorSale.value)}`, color: Charts.chartColors.ventas})
-    list.push({ id: list.length, name: 'Profit', code: 'profit', indicator: indicatorProfit, kpi: `${indicatorProfit.chart.slice(0, 1)}${indicatorProfit.value}${indicatorProfit.chart.slice(1)}`, color: Charts.chartColors.profit })
+    let indicatorSale = kpisIndicators.find((k: any) => k.code == 'sale')
+    let indicatorProfit = kpisIndicators.find((k: any) => k.code == 'profit')
+    list.unshift({ id: 0, name: 'Ventas', code: 'sale', indicator: indicatorSale, kpi: `${this.service.convertToCurrency(indicatorSale!.value)}`, color: Charts.chartColors.ventas})
+    list.push({ id: list.length, name: 'Profit', code: 'profit', indicator: indicatorProfit, kpi: `${indicatorProfit!.chart.slice(0, 1)}${indicatorProfit!.value}${indicatorProfit!.chart.slice(1)}`, color: Charts.chartColors.profit })
     return list
   }
 
@@ -227,11 +227,11 @@ export class IndicatorsComponent implements OnInit {
     let totalSalesByMonth: Array<any> = []
     let grouping = groupArrayByKey(this.sales, "monthNumber")
 
-    let profit = this.kpisIndicators.find(s => s.code == 'sale')
+    let profit = kpisIndicators.find(s => s.code == 'sale')
     Object.keys(grouping).map((k: any) => {
       let sales = grouping[k]
       let totalSale = this.getTotalSalesByDelivery(sales)
-      let kpiColorPercent = this.getKpiColorAndPercent(profit, totalSale)
+      let kpiColorPercent = getKpiColorAndPercent(profit, totalSale)
       let backgroundColor = sales[0].monthNumber <= (this.dates.getCurrentMonth() + 1) ? kpiColorPercent.backgroundColor : "#ededed"
       let color = sales[0].monthNumber <= (this.dates.getCurrentMonth() + 1) ? kpiColorPercent.color : "#fff"
 
@@ -255,7 +255,7 @@ export class IndicatorsComponent implements OnInit {
     this.salesByMonth.map((sale: any) => {
       let expenses = groupingMonth[sale.month]
       let total = expenses ? expenses.reduce((total: number, obj: any) => total + obj.amount, 0) : 0
-      let kpiColorPercent = this.getKpiColorAndPercent(kpiIndicator, total, sale.total)
+      let kpiColorPercent = getKpiColorAndPercent(kpiIndicator, total, sale.total)
       let backgroundColor = sale.monthNumber <= (this.dates.getCurrentMonth() + 1) ? kpiColorPercent.backgroundColor : "#ededed"
       let color = sale.monthNumber <= (this.dates.getCurrentMonth() + 1) ? kpiColorPercent.color : "#fff"
 
@@ -275,12 +275,12 @@ export class IndicatorsComponent implements OnInit {
       let totalExpByMonth = expenses[m].reduce((total: number, obj: any) => total + obj.amount, 0)
       expensesByMonth.push({ month: m.replace(".", ""), total: totalExpByMonth })
     })
-    let salesKpi = this.kpisIndicators.find(s => s.code == 'sale')
-    let profit = this.kpisIndicators.find(s => s.code == 'profit')
+    let salesKpi = kpisIndicators.find(s => s.code == 'sale')
+    let profit = kpisIndicators.find(s => s.code == 'profit')
     this.salesByMonth.map((sale: any) => {
       let ex = expensesByMonth.find((s: any) => s.month == sale.month)
       let total = ex ? sale.total - ex.total : 0
-      let kpiColorPercent = this.getKpiColorAndPercent(profit, total, salesKpi.value) 
+      let kpiColorPercent = getKpiColorAndPercent(profit, total, salesKpi!.value) 
       let backgroundColor = sale.monthNumber <= (this.dates.getCurrentMonth() + 1) ? kpiColorPercent.backgroundColor : "#ededed"
       let color = sale.monthNumber <= (this.dates.getCurrentMonth() + 1) ? kpiColorPercent.color : "#fff"
 
@@ -290,53 +290,7 @@ export class IndicatorsComponent implements OnInit {
     return profitByMonth
   }
 
-  /**
-   * Regresa el color que se pinta en la tabla dependiendo a las reglas del kpi
-   * @param kpiIndicator indicador delkpi
-   * @param total total a comparar
-   * @param totalSale total de la venta
-   * @returns 
-   */
-  getKpiColorAndPercent(kpiIndicator: any, total: number, totalSale: number = 0) {
-    let backgroundColor = '#92d04f'
-    let color = '#212529'
-    let percent = 100
-    if (kpiIndicator.chart.includes("%")) {
-      let percentKpi = (kpiIndicator.value / 100);
-      let percentTotal = totalSale * percentKpi
-      let calc = ((total * 100) / totalSale)
-      percent = calc > 1 ? Math.round(calc) : Number(calc.toFixed(1))
-      percent = percent ? percent : 0
-
-      if (kpiIndicator.chart.includes(">")) {
-        if (total > percentTotal) {
-          backgroundColor = "#eb1331"
-          color = '#fff'
-        }
-      } else {
-        if (total < percentTotal) {
-          backgroundColor = "#eb1331"
-          color = '#fff'
-        }
-      }
-    } else {
-      percent = Math.round((total * 100) / kpiIndicator.value)
-      if (kpiIndicator.chart.includes(">")) {
-        if (total > kpiIndicator.value) {
-          backgroundColor = "#eb1331"
-          color = '#fff'
-        }
-      } else {
-        if (total < kpiIndicator.value) {
-          backgroundColor = "#eb1331"
-          color = '#fff'
-        }
-      }
-    }
-
-    return {backgroundColor, color, percent};
-  }
-
+  
   /**
    * Obtiene el total de las ventas de ingreso
    * @param sales  listado de ventas a sumar
@@ -377,27 +331,7 @@ export class IndicatorsComponent implements OnInit {
     return chartData
   }
 
-  /**
-   * Indicadores de los kpis por categoria 
-   *  :::::: TODO: ESTOS DATOS SE MODIFICARAN O SE ENVIARAN DESDE LA BD ::::::
-   */
-  get kpisIndicators(): Array<any> {
-    return [
-      { code: 'sale', value: 450000, chart: '<$' },
-      { code: 'food.alimentos', value: 40, chart: '>%' },
-      { code: 'food.sueldos', value: 115000, chart: '>$' },
-      { code: 'food.renta', value: 33000, chart: '>$' },
-      { code: 'food.servicios', value: 35000, chart: '>$' },
-      { code: 'food.comisiones', value: 1.5, chart: '>%' },
-      { code: 'food.transporte', value: 12000, chart: '>$' },
-      { code: 'food.desechables', value: 2, chart: '>%' },
-      { code: 'food.limpieza', value: 1, chart: '>%' },
-      { code: 'food.publicidad', value: 7500, chart: '>$' },
-      { code: 'food.repartos', value: 15000, chart: '>$' },
-      { code: 'food.otros', value: 10000, chart: '>$' },
-      { code: 'profit', value: 15, chart: '<%' },
-    ]
-  }
+  
 
 }
 

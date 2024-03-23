@@ -5,12 +5,14 @@ import { BaseChartDirective } from 'ng2-charts';
 import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from 'src/app/components/loading/loading.service';
 import { MainService } from 'src/app/main/main.service';
-import { SalesService } from '../sales/sales-service.service';
-import { BalanceType, OperationType, Pages, ReportChannel, barChartOptions, firstUpperCase, fixedData, groupArrayByKey, sortByKey } from 'src/app/util/util';
-import { Dates } from 'src/app/util/Dates';
+import { SalesService } from '@sales/sales-service.service';
+import { BalanceType, OperationType, Pages, ReportChannel, barChartOptions, firstUpperCase, fixedData, groupArrayByKey, sortByKey } from '@util/util';
+import { Dates } from '@util/Dates';
 import { ExpenseService } from '../expenses/expenses.service';
-import { Charts } from 'src/app/util/Charts';
+import { Charts } from '@util/Charts';
 import { ResultService } from '../results/result.service';
+import { Sale } from '@sales/Sale';
+import { Expense } from '@expenses/Expense';
 
 //import { default as Annotation } from 'chartjs-plugin-annotation';
 
@@ -175,7 +177,7 @@ export class DashboardComponent implements OnInit {
     let currentMonth = this.dates.formatDate(new Date(), 'MMM')
     let sales = this.sales.filter((s: any) => s.shortMonth.toUpperCase() == currentMonth.toUpperCase())
 
-    return this.getTotalSalesByDelivery(sales)
+    return Sale.getTotalSalesIncome(sales) //this.getTotalSalesByDelivery(sales)
   }
 
   /**
@@ -242,7 +244,7 @@ export class DashboardComponent implements OnInit {
             let pickUp = s.pickUp.toFixed(2)
             let takeout = s.takeout.toFixed(2)
             let delivery = s.delivery.toFixed(2)
-            let totalDinnigRoom = s.diningRoom + s.pickUp + s.takeout + s.delivery
+            let totalDinnigRoom = Sale.totalDinningRoom(s)//s.diningRoom + s.pickUp + s.takeout + s.delivery
 
             let day = firstUpperCase(s.day)
             let month = this.dates.getMonthName(s.dateSale, 'MMMM')
@@ -250,11 +252,10 @@ export class DashboardComponent implements OnInit {
             let monthNumber = this.dates.getMonthNumber(s.dateSale)
             //this.days.push(s.dateSale)
 
-            let apps = this.addPlatafformsData(s)
+            let apps = Sale.addPlatafformInData(s)//this.addPlatafformsData(s)
 
-
-            let totalApps = (Number(apps.uber.sale) + Number(apps.didi.sale) + Number(apps.rappi.sale))
-            let totalIncomeApps = (Number(apps.uber.income) + Number(apps.didi.income) + Number(apps.rappi.income))
+            let totalApps = Sale.totalAppsParrot(apps)//(Number(apps.uber.sale) + Number(apps.didi.sale) + Number(apps.rappi.sale))
+            let totalIncomeApps = Sale.totalAppsIncome(apps)//(Number(apps.uber.income) + Number(apps.didi.income) + Number(apps.rappi.income))
             let totalSale = (totalDinnigRoom + totalApps)
             // this.salesByDay.push((totalDinnigRoom + totalIncomeApps))
 
@@ -279,7 +280,7 @@ export class DashboardComponent implements OnInit {
     })
   }
 
-  addPlatafformsData(data: any) {
+  /*addPlatafformsData(data: any) {
     let parrot = data.reportChannel.find((s: any) => s.channel == ReportChannel.PARROT)
     let uber = data.reportChannel.find((s: any) => s.channel == ReportChannel.UBER_EATS)
 
@@ -287,34 +288,34 @@ export class DashboardComponent implements OnInit {
     let rappi = data.reportChannel.find((s: any) => s.channel == ReportChannel.RAPPI)
 
     return { parrot: fixedData(parrot), uber: fixedData(uber), didi: fixedData(didi), rappi: fixedData(rappi) }
-  }
+  }*/
 
   /**
    * Obtiene la cantidad de ventas anual
    */
   get totalSales(): number {
-    return this.getTotalSalesByDelivery(this.sales)
+    return Sale.getTotalSalesIncome(this.sales)//this.getTotalSalesByDelivery(this.sales)
   }
 
   /**
    * Obtiene la cantidad de ventas en efectivo
    */
   get totalCash(): number {
-    let sales = this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.parrot.sale), 0)
-    return (sales + this.cuentaPagadaCash) - (this.expensesCash + this.expensesTransfer)
+    let totalParrot = Sale.getTotalParrot(this.sales)//this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.parrot.sale), 0)
+    return (totalParrot + this.cuentaPagadaCash) - (this.expensesCash + this.expensesTransfer)
   }
 
   /**
    * Obtiene la cantidad de ventas por tarjeta
    */
-  get totalCard(): number {
-    let totalCard = this.sales.filter((a: any) => a.apps.parrot.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.parrot.income), 0)
-    let totalApps = 0
-    totalApps = totalApps + this.sales.filter((s: any) => s.apps.uber.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.uber.income), 0)
+  /*get totalCard(): number {
+    let totalCard = Sales.getTotalCard(this.sales)//this.sales.filter((a: any) => a.apps.parrot.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.parrot.income), 0)
+    let totalApps = Sales.getTotalAppsIncome(this.sales)
+    /*totalApps = totalApps + this.sales.filter((s: any) => s.apps.uber.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.uber.income), 0)
     totalApps = totalApps + this.sales.filter((s: any) => s.apps.didi.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.didi.income), 0)
     totalApps = totalApps + this.sales.filter((s: any) => s.apps.rappi.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.rappi.income), 0)
     return (totalCard + totalApps + this.cuentaPagadaTransfer) - (this.expensesTransfer)
-  }
+  }*/
 
   /**
    * Obtiene el profit anual
@@ -340,7 +341,7 @@ export class DashboardComponent implements OnInit {
 
     Object.keys(grouping).map((k: any) => {
       let sales = grouping[k]
-      let totalSale = this.getTotalSalesByDelivery(sales)
+      let totalSale = Sale.getTotalSalesIncome(sales) //this.getTotalSalesByDelivery(sales)
       totalSalesByMonth.push({ month: sales[0].shortMonth, total: totalSale })
     })
 
@@ -352,7 +353,7 @@ export class DashboardComponent implements OnInit {
    * @param sales  total de ventas ingreso
    * @returns 
    */
-  getTotalSalesByDelivery(sales: Array<any>): number {
+  /*getTotalSalesByDelivery(sales: Array<any>): number {
     let totalDinnigRoom = sales.reduce((total: number, sale: any) => total + Number(sale.diningRoom), 0)
     let totalDelivery = sales.reduce((total: number, sale: any) => total + Number(sale.delivery), 0)
     let totalPickUp = sales.reduce((total: number, sale: any) => total + Number(sale.pickUp), 0)
@@ -363,7 +364,7 @@ export class DashboardComponent implements OnInit {
     let totalRappi = sales.reduce((total: number, sale: any) => total + Number(sale.apps.rappi.income), 0)
 
     return (totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout + totalUber + totalDidi + totalRappi)
-  }
+  } */
 
   filterCharts(event: any) {
     this.isBtnParrotActive = event.parrot
@@ -439,7 +440,9 @@ export class DashboardComponent implements OnInit {
    */
   get paymentType() {
 
-    let data = this.sales
+    return Sale.getPaymentType(this.sales)
+
+    /*let data = this.sales
     let totalParrot = data.reduce((total, sale) => total + Number(sale.apps.parrot.sale), 0)
 
     let paymentUber = data.reduce((total, sale) => total + Number(sale.apps.uber.income), 0)
@@ -454,7 +457,7 @@ export class DashboardComponent implements OnInit {
     return {
       card: { total: Number(totalPayment.toFixed(2)), percent: percentPayment ? `${Math.round(percentPayment)}%` : '0%' },
       cash: { total: Number(totalParrot.toFixed(2)), percent: percentParrot ? `${Math.round(percentParrot)}%` : '0%' }
-    }
+    }*/
   }
 
 
@@ -521,24 +524,27 @@ export class DashboardComponent implements OnInit {
    * Regresa total de gastos anual
    */
   get totalExpenses(): number {
-    let totalSum = this.expenses.reduce((total: any, value: any) => total + value.amount, 0)
-    return Number(totalSum.toFixed(2))
+    /*let totalSum = this.expenses.reduce((total: any, value: any) => total + value.amount, 0)
+    return Number(totalSum.toFixed(2))*/
+    return Expense.totalExpenses(this.expenses)
   }
 
   /**
    * Regresa el total de gastos mediante efectivo
    */
   get expensesCash(): number {
-    return this.expenses.filter((e: any) => e.operationType.code == OperationType.CASH || e.operationType.code == OperationType.BOX)
-      .reduce((total: number, obj: any) => total + obj.amount, 0)
+    /*return this.expenses.filter((e: any) => e.operationType.code == OperationType.CASH || e.operationType.code == OperationType.BOX)
+      .reduce((total: number, obj: any) => total + obj.amount, 0)*/
+      return Expense.totalByCash(this.expenses)
   }
 
   /**
    * Regresa total de gastos mediante transferencia
    */
   get expensesTransfer(): number {
-    return this.expenses.filter((e: any) => e.operationType.code == OperationType.TRANSFER)
-      .reduce((total: number, obj: any) => total + obj.amount, 0)
+    /*return this.expenses.filter((e: any) => e.operationType.code == OperationType.TRANSFER)
+      .reduce((total: number, obj: any) => total + obj.amount, 0)*/
+      return Expense.totalByTransfer(this.expenses)
   }
 
   /**
