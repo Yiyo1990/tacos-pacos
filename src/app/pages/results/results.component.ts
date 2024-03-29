@@ -174,7 +174,23 @@ export class ResultsComponent implements OnInit {
     this.loading.start()
     this.salesByDay = []
     this.sales = []
-    this.salesService.getReportSalesByDateRange(this.brandSelected.id, startDate, endDate).subscribe({
+
+    let sale = new Sale(this.salesService)
+    sale.salesService(startDate, endDate, this.brandSelected.id).then((data: any) => {
+      this.days = data.days
+      this.salesByDay = data.salesByDay
+      this.sales = data.sales
+      this.lineChartData.labels = data.days
+      this.loading.stop()
+      this.pushDataSalesChart()
+      this.fillBarChartDays()
+      this.callServiceSearchExpenses(startDate, endDate)
+    }).catch((e: string) => {
+      this.toast.error(e)
+      this.loading.stop()
+    })
+
+    /*this.salesService.getReportSalesByDateRange(this.brandSelected.id, startDate, endDate).subscribe({
       next: (data: any) => {
         if (Array.isArray(data)) {
           this.lineChartData.datasets = []
@@ -217,29 +233,10 @@ export class ResultsComponent implements OnInit {
         this.loading.stop()
       }
     })
+    */
   }
 
-  /*addPlatafformsData(data: any) {
-    let parrot = data.reportChannel.find((s: any) => s.channel == ReportChannel.PARROT)
-    let uber = data.reportChannel.find((s: any) => s.channel == ReportChannel.UBER_EATS)
-
-    let didi = data.reportChannel.find((s: any) => s.channel == ReportChannel.DIDI_FOOD)
-    let rappi = data.reportChannel.find((s: any) => s.channel == ReportChannel.RAPPI)
-
-    return { parrot: fixedData(parrot), uber: fixedData(uber), didi: fixedData(didi), rappi: fixedData(rappi) }
-  }*/
-
   get totalSales(): number {
-   /* let totalDinnigRoom = this.sales.reduce((total, sale) => total + Number(sale.diningRoom), 0)
-    let totalDelivery = this.sales.reduce((total, sale) => total + Number(sale.delivery), 0)
-    let totalPickUp = this.sales.reduce((total, sale) => total + Number(sale.pickUp), 0)
-    let totalTakeout = this.sales.reduce((total, sale) => total + Number(sale.takeout), 0)
-
-    let totalUber = this.sales.reduce((total, sale) => total + Number(sale.apps.uber.income), 0)
-    let totalDidi = this.sales.reduce((total, sale) => total + Number(sale.apps.didi.income), 0)
-    let totalRappi = this.sales.reduce((total, sale) => total + Number(sale.apps.rappi.income), 0)
-
-    return (totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout + totalUber + totalDidi + totalRappi)*/
     return Sale.getTotalSalesIncome(this.sales)
   }
 
@@ -251,9 +248,6 @@ export class ResultsComponent implements OnInit {
   get totalCard(): number {
     let totalCard = this.sales.filter((a: any) => a.apps.parrot.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.parrot.income), 0)
     let totalApps = Sale.totalAppsIncomePaid(this.sales)
-    /*totalApps = totalApps + this.sales.filter((s: any) => s.apps.uber.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.uber.income), 0)
-    totalApps = totalApps + this.sales.filter((s: any) => s.apps.didi.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.didi.income), 0)
-    totalApps = totalApps + this.sales.filter((s: any) => s.apps.rappi.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.rappi.income), 0)*/
     return (totalCard + totalApps + this.cuentaPagadaTransfer) - (this.expensesTransfer)
   }
 
@@ -267,11 +261,6 @@ export class ResultsComponent implements OnInit {
    */
   get totalApps(): number {
     return Sale.totalAppsIncomeNoPaid(this.sales)
-    /*let totalApps = 0
-    totalApps = totalApps + this.sales.filter((s: any) => !s.apps.uber.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.uber.income), 0)
-    totalApps = totalApps + this.sales.filter((s: any) => !s.apps.didi.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.didi.income), 0)
-    totalApps = totalApps + this.sales.filter((s: any) => !s.apps.rappi.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.rappi.income), 0)
-    return totalApps*/
   }
 
   get total(): number {
@@ -288,22 +277,6 @@ export class ResultsComponent implements OnInit {
 
   get paymentType() {
     return Sale.getPaymentType(this.sales)
-    /*let data = this.sales
-    let totalParrot = data.reduce((total, sale) => total + Number(sale.apps.parrot.sale), 0)
-
-    let paymentUber = data.reduce((total, sale) => total + Number(sale.apps.uber.income), 0)
-    let paymentDidi = data.reduce((total, sale) => total + Number(sale.apps.didi.income), 0)
-    let paymentRappi = data.reduce((total, sale) => total + Number(sale.apps.rappi.income), 0)
-    let paymentParrot = data.reduce((total, sale) => total + Number(sale.apps.parrot.income), 0)
-
-    let totalPayment = (paymentUber + paymentDidi + paymentRappi + paymentParrot)
-    let percentParrot = (totalParrot * 100) / (totalParrot + totalPayment)
-    let percentPayment = (totalPayment * 100) / (totalParrot + totalPayment)
-
-    return {
-      card: { total: Number(totalPayment.toFixed(2)), percent: percentPayment ? `${Math.round(percentPayment)}%` : '0%' },
-      cash: { total: Number(totalParrot.toFixed(2)), percent: percentParrot ? `${Math.round(percentParrot)}%` : '0%' }
-    }*/
   }
 
   fillBarChartDays() {

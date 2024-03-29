@@ -26,7 +26,8 @@
     "paths": {
       "@sales/*":["src/app/pages/sales/*"],
       "@util/*":["src/app/util/*"],
-      "@expenses/*":["src/app/pages/expenses/*"]
+      "@expenses/*":["src/app/pages/expenses/*"],
+      "@assets/*":["src/assets/*"]
     }
   },
   "angularCompilerOptions": {

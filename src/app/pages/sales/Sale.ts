@@ -1,6 +1,67 @@
-import { ReportChannel } from "src/app/util/util"
+import { ReportChannel, firstUpperCase, groupArrayByKey } from "src/app/util/util"
+import { SalesService } from "./sales-service.service"
+import { Dates } from "@util/Dates"
+import { group } from "@angular/animations"
 
 export class Sale {
+    dates = new Dates()
+
+    constructor(private service: SalesService) { }
+
+    /**
+     * Llama servicio para obtener las ventas
+     * @param startDate fecha inicio
+     * @param endDate fecha fin
+     * @param branchId id de la sucursal
+     * @returns 
+     */
+    async salesService(startDate: string, endDate: string, branchId: number) {
+
+        return new Promise((resolve, error) => {
+            let salesByDay: Array<any> = []
+            let days: Array<any> = []
+            let sales: Array<any> = []
+            this.service.getReportSalesByDateRange(branchId, startDate, endDate).subscribe({
+                next: (data: any) => {
+                    if (Array.isArray(data)) {
+                        console.log("ventas",data)
+                        let salesData = data.map((s: any) => {
+                            let diningRoom = s.diningRoom.toFixed(2)
+                            let pickUp = s.pickUp.toFixed(2)
+                            let takeout = s.takeout.toFixed(2)
+                            let delivery = s.delivery.toFixed(2)
+                            let totalDinnigRoom = Sale.totalDinningRoom(s) //s.diningRoom + s.pickUp + s.takeout + s.delivery
+
+                            let day = firstUpperCase(s.day)
+                            let month = this.dates.getMonthName(s.dateSale)
+                            days.push(s.dateSale)
+
+                            let apps = Sale.addPlatafformInData(s)//this.addPlatafformsData(s)
+
+                            let totalApps = Sale.totalAppsParrot(apps)//(Number(apps.uber.sale) + Number(apps.didi.sale) + Number(apps.rappi.sale))
+                            let totalIncomeApps = Sale.totalAppsIncome(apps) //(Number(apps.uber.income) + Number(apps.didi.income) + Number(apps.rappi.income))
+                            let totalSale = (totalDinnigRoom + totalApps)
+                            salesByDay.push((totalDinnigRoom + totalIncomeApps))
+                            let channel = s.reportChannel.channel
+
+                            return { ...s, totalSale: totalSale.toFixed(2), diningRoom, pickUp, takeout, delivery, totalDinnigRoom: totalDinnigRoom.toFixed(2), day, apps, totalApps: totalApps.toFixed(2), month, channel }
+                        })
+
+                        sales = salesData
+                        resolve({ sales, salesByDay, days })
+                    } else {
+                        error("Ocurrio un error al intentar obtener las ventas")
+                    }
+                },
+                error: (e) => {
+                    error("Ocurrio un error al intentar obtener las ventas")
+                }
+            })
+        })
+
+
+    }
+
 
     /**
      * Agrega  los objetos plataformas a las ventas

@@ -57,9 +57,9 @@
             <div class="row" style="margin-top: 8%;" *ngIf="isBtnParrotActive == 1 || isBtnParrotActive == 2">
 
                 <div class="col-7 md-7 sm-12">
-                    <div style="margin: auto; margin-top: 3%;">
+                    <div style="margin: auto; margin-top: 10%;">
 
-                        <div style="display: flex;">
+                        <!--<div style="display: flex;">
                             <div style="width: 45%; padding: 5px;  padding-left: 15px;">
                                 <label style="font-size: 11pt; font-weight: 600;">Venta Total</label>
                             </div>
@@ -67,17 +67,24 @@
                                 style="font-weight: bold; font-size: 12pt; padding-left: 25px;">{{(channelSales?.totalDinnigRoom
                                 + channelSales?.totalUber + channelSales?.totalRappi + channelSales?.totalDidi) |
                                 currency}}</label>
-                        </div>
+                        </div>-->
 
-                        <div style="display: flex;">
-                            <div style="width: 45%; display: flex;">
-                                <div class="point" style="background-color: #3889EB;"></div><label style="font-size: 10pt;">Sucursal</label>
-                            </div>  
-                            <label style="font-size: 12pt; padding-left: 25px;">{{channelSales?.totalDinnigRoom
-                                | currency}}
-                            </label>
-                        </div>
+                        <div style="width: 100%; display: flex;" *ngFor="let channel of channelSales">
+                            <div style="width: 35%; display: flex;">
+                                <div class="point" [ngStyle]="{'background-color': channel.color}"></div>
+                                <label style="font-size: 10pt;">{{channel.name}}</label>
+                            </div>
+                            <div class="ellipsis" style="width: 45%;">
+                                <label style="font-size: 12pt; padding-left: 15px;">{{channel.total
+                                    | currency}}
+                                </label>
+                            </div>
+                            <div class="ellipsis" style="width: 20%; ">
+                                <label style="font-size: 12pt; padding-left: 15px;">{{channel.percent}}%</label>
+                            </div>
 
+                        </div>
+                        <!--
                         <div style="display: flex;">
                             <div style="width: 45%; display: flex;">
                                 <div class="point" style="background-color: #31B968; margin-top: 0.8rem !important;"></div><img
@@ -104,13 +111,13 @@
                             <label style="font-size: 12pt; padding-left: 25px; margin-top: 0.4rem;">{{channelSales?.totalDidi
                                 | currency}}</label>
                         </div>
-
+                    -->
                     </div>
                 </div>
 
                 <div class="col-5 md-5 sm-12">
-                    <canvas baseChart class="chart" style="margin-top: 2REM;" [data]="salesDonutChartData" [type]="'pie'"
-                        [options]="pieChartOptions" [plugins]="pieChartPlugins">
+                    <canvas baseChart class="chart" style="margin-top: 2REM;" [data]="salesDonutChartData"
+                        [type]="'doughnut'" [options]="pieChartOptions" [plugins]="pieChartPlugins">
                     </canvas>
                 </div>
 
@@ -147,12 +154,12 @@
             <div class="row" style="margin-top: 5%;">
                 <div class="col-6 md-6 sm-12">
                     <div class="row" style="font-weight: bold; font-size: 10pt;">
-                        <div class="col-6 md-6"></div>
-                        <div class="col-4 md-4"><label>Venta</label></div>
-                        <div class="col-2 md-2" style="text-align: center;"><label>%</label></div>
+                        <div class="col-4 md-4"></div>
+                        <div class="col-5 md-5"><label>Venta</label></div>
+                        <div class="col-3 md-3"><label>%</label></div>
                     </div>
                     <row-total-negocio *ngFor="let commerce of commerces" [id]="commerce.id" [name]="commerce.name"
-                        [total]="commerce.total" [percent]="commerce.percent"></row-total-negocio>
+                        [total]="commerce.total" [percent]="commerce.percent" [imageName]="commerce.iconAsset" />
                 </div>
                 <div class="col-6 md-6 sm-12">
                     <canvas baseChart class="chart" style="height: 100px !important;" [data]="barChartData"
@@ -207,38 +214,58 @@
     </div>
 
     <div class="row">
-        <div class="col-9 md-9 sm-12">
+        <div class="col-7 md-7 sm-12">
             <div class="row" style="margin-top: 5%;">
-                <div class="col-5 md-5 sm-12">
-                    <div class="row" style="font-weight: bold;">
-                        <div class="col-6 md-6"></div>
-                        <div class="col-4 md-4"><label>Venta</label></div>
-                        <div class="col-2 md-2" style="text-align: center;"><label>%</label></div>
+                <div class="col-4 md-4 sm-12">
+                    <div class="row" style="font-weight: bold; font-size: 10pt;">
+                        <div class="col-4 md-4"></div>
+                        <div class="col-5 md-5"><label>Venta</label></div>
+                        <div class="col-3 md-3"><label>%</label></div>
                     </div>
                     <row-total-negocio *ngFor="let commerce of commerces" [id]="commerce.id" [name]="commerce.name"
-                        [total]="commerce.total" [percent]="commerce.percent" />
+                        [total]="commerce.total" [percent]="commerce.percent" [imageName]="commerce.iconAsset" />
                 </div>
-                <div class="col-7 md-7 sm-12">
+                <div class="col-8 md-8 sm-12">
                     <canvas baseChart class="chart" style="height: 100px !important;" [data]="barChartData"
                         [options]="barChartOptions" [type]="barChartType"></canvas>
                 </div>
             </div>
-
         </div>
         <div class="col-3 md-3 sm-12">
+            <div style="margin: auto; margin-top: 15%;">
+                <div style="width: 100%; display: flex;" *ngFor="let channel of channelSales">
+                    <div style="width: 35%; display: flex;">
+                        <div class="point" [ngStyle]="{'background-color': channel.color}"></div>
+                        <label style="font-size: 10pt;">{{channel.name}}</label>
+                    </div>
+                    <div class="ellipsis" style="width: 45%;">
+                        <label style="font-size: 12pt; padding-left: 15px;">{{channel.total
+                            | currency}}
+                        </label>
+                    </div>
+                    <div class="ellipsis" style="width: 20%; ">
+                        <label style="font-size: 12pt; padding-left: 15px;">{{channel.percent}}%</label>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-2 md-2 sm-12">
             <div class="row" style="margin-top: 8%;" *ngIf="isBtnParrotActive == 1 || isBtnParrotActive == 2">
-                <div class="col-1 md-1 sm-12"></div>
-                <div class="col-11 md-11 sm-12">
-                    <div class="row">
+
+                <div class="col-12 md-12 sm-12">
+                    <canvas baseChart class="chart" [data]="salesDonutChartData" [type]="'doughnut'"
+                        [options]="pieChartOptions" [plugins]="pieChartPlugins">
+                    </canvas>
+                    <!--<div class="row">
                         <div class="col-2 md-3 sm-12"></div>
                         <div class="col-8 md-6 sm-12">
-                            <canvas baseChart class="chart" [data]="salesDonutChartData" [type]="'pie'"
-                                [options]="pieChartOptions" [plugins]="pieChartPlugins">
-                            </canvas>
+                            
                         </div>
                         <div class="col-2 md-2 sm-12"></div>
-                    </div>
-                    <div class="row">
+                    </div>-->
+                    <!--<div class="row">
                         <div class="col-12 md-12 sm-12" style="display: flex;">
                             <div class="line-colors" style="width: calc(100% / 4);">
                                 <div class="point" style="background-color: #3889EB;"></div>
@@ -257,7 +284,7 @@
                                 <div class="ellipsis">Didi</div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </div>

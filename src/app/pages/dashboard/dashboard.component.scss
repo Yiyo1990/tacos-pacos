@@ -59,7 +59,8 @@
 
 .bar-horizontal {
   height: 20px; /* Altura de cada barra */
-  margin: 5px 0; /* Espacio entre las barras */
+  margin: 5px 0;
+  max-width: 100%; /* Espacio entre las barras */
  // background-color: #007bff; /* Color de las barras */
   transition: all 0.3s ease; /* Transición suave para efectos de hover o cambios */
 }
