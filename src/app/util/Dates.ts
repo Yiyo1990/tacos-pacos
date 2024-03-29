@@ -20,7 +20,7 @@ export class Dates {
     public getMonthName(date: string, format: string = "MMMM") {
         try {
             const dateM = moment(date, 'DD-MM-yyyy')
-            return firstUpperCase(dateM.format(format))
+            return dateM.format(format).toUpperCase()
         } catch (e) {
             return ''
         }
@@ -38,10 +38,11 @@ export class Dates {
 
     getMonths(shortName: boolean = true): any[] {
         const meses = [];
+        let format = shortName ? 'MMM': 'MMMM'
         for (let i = 0; i < 12; i++) {
-            const mes = moment().month(i).format('MMMM');
+            const mes = moment().month(i).format(format);
             
-            meses.push({id: i+1, name: shortName ? firstUpperCase(mes).substring(0,3) : firstUpperCase(mes)});
+            meses.push({id: i+1, name: firstUpperCase(mes.replace(".",""))});
         }
         return meses
     }
