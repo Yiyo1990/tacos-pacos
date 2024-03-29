@@ -11,4 +11,5 @@ export class RowTotalNegocioComponent {
   @Input() total: number = 0
   @Input() percent: string = "100%"
   @Input() isChecked: boolean = true
+  @Input() imageName: string = ""
 }

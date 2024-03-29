@@ -31,13 +31,14 @@ export class VentasChartComponent implements OnChanges, OnInit {
     channelSales: any = {}
     salesDonutChartData: any
     paymentType: any = {}
-    
+
     barChartOptions: ChartOptions = barChartOptions
     public barChartType: ChartType = 'bar';
 
     pieChartOptions: ChartOptions = pieChartOptions
 
     commerces: any[] = []
+    salesChannel: Array<any> = []
 
     ngOnInit(): void {
         this.typeFilterBarChart = this.isResultadosScreen ? 1 : 2
@@ -71,7 +72,7 @@ export class VentasChartComponent implements OnChanges, OnInit {
 
         let months = this.dates.getMonths(false)
         if (this.isResultadosScreen) {
-           
+
             months.map((m: any) => {
                 this.barChartData.labels?.push(m.name)
                 listTotalDinningRoom.push(0)
@@ -84,10 +85,10 @@ export class VentasChartComponent implements OnChanges, OnInit {
 
         barchartLabels.map((day: any) => {
             let monthIndex = 0
-            if(this.isResultadosScreen) {
-                monthIndex = months.find((m:any) => m.name == day).id - 1
+            if (this.isResultadosScreen) {
+                monthIndex = months.find((m: any) => m.name == day).id - 1
             }
-            
+
             let dataDay = grouped[day]
             let totalDinnigRoom = 0
             let totalDidi = 0
@@ -101,7 +102,7 @@ export class VentasChartComponent implements OnChanges, OnInit {
                 totalRappi += this.isBtnParrotActive == 2 ? Number(d.apps.rappi.sale) : Number(d.apps.rappi.income)
             })
 
-            if(!this.isResultadosScreen) {
+            if (!this.isResultadosScreen) {
                 listTotalDinningRoom.push(totalDinnigRoom)
                 listTotalDidi.push(totalDidi)
                 listTotalUber.push(totalUber)
@@ -173,12 +174,50 @@ export class VentasChartComponent implements OnChanges, OnInit {
             let percentUber = Math.round((totalUber * 100) / total)
             let percentRappi = Math.round((totalRappi * 100) / total)
 
-            this.channelSales = {
-                totalDinnigRoom: (totalDinnigRoom + totalDelivery + totalPickUp + totalTakeout),
-                totalUber: totalUber,
-                totalDidi: totalDidi,
-                totalRappi: totalRappi
-            }
+            this.channelSales = [
+                {
+                    name: 'Comedor',
+                    total: totalDinnigRoom,
+                    percent: percentDinningRoom ? percentDinningRoom : 0,
+                    color: this.chartColors.dinningRoom
+                },
+                {
+                    name: 'Para Llevar',
+                    total: totalDelivery,
+                    percent: percentDelivery ? percentDelivery : 0,
+                    color: this.chartColors.dinningRoom
+                },
+                {
+                    name: 'Recoger',
+                    total: totalPickUp,
+                    percent: percentPickUp ? percentPickUp : 0,
+                    color: this.chartColors.dinningRoom
+                },
+                {
+                    name: 'Domicilio',
+                    total: totalTakeout,
+                    percent: percentTakeOut ? percentTakeOut : 0,
+                    color: this.chartColors.dinningRoom
+                },
+                {
+                    name: 'Uber',
+                    total: totalUber,
+                    percent: percentUber ? percentUber : 0,
+                    color: this.chartColors.uber
+                },
+                {
+                    name: 'Didi',
+                    total: totalDidi,
+                    percent: percentDidi ? percentDidi : 0,
+                    color: this.chartColors.didi
+                },
+                {
+                    name: 'Rappi',
+                    total: totalRappi,
+                    percent: percentRappi ? percentRappi : 0,
+                    color: this.chartColors.rappi
+                }
+            ]
 
             this.salesDonutChartData = Charts.Donut(['Comedor', 'ParaLlevar', 'Recoger', 'Domicilio', 'Uber', 'Didi', 'Rappi'], [percentDinningRoom, percentTakeOut, percentPickUp, percentDelivery, percentUber, percentDidi, percentRappi], [this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.dinningRoom, this.chartColors.uber, this.chartColors.didi, this.chartColors.rappi])
             this.fillBarChart(this.typeFilterBarChart, this.typeFilterAppBarChart)
@@ -206,6 +245,6 @@ export class VentasChartComponent implements OnChanges, OnInit {
     }
 
     getCommerces() {
-        this.commerces = this.brandSelected?.sucursal.commerces.map((c: any) => {return {...c, total: 0, percent: '100%'}})
+        this.commerces = this.brandSelected?.sucursal.commerces.map((c: any) => { return { ...c, total: 0, percent: '100%' } })
     }
 }
