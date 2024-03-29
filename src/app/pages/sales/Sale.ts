@@ -24,7 +24,6 @@ export class Sale {
             this.service.getReportSalesByDateRange(branchId, startDate, endDate).subscribe({
                 next: (data: any) => {
                     if (Array.isArray(data)) {
-                        console.log("ventas",data)
                         let salesData = data.map((s: any) => {
                             let diningRoom = s.diningRoom.toFixed(2)
                             let pickUp = s.pickUp.toFixed(2)
@@ -34,6 +33,7 @@ export class Sale {
 
                             let day = firstUpperCase(s.day)
                             let month = this.dates.getMonthName(s.dateSale)
+                            let shortMonth = this.dates.getMonthName(s.dateSale, 'MMM')
                             days.push(s.dateSale)
 
                             let apps = Sale.addPlatafformInData(s)//this.addPlatafformsData(s)
@@ -44,7 +44,7 @@ export class Sale {
                             salesByDay.push((totalDinnigRoom + totalIncomeApps))
                             let channel = s.reportChannel.channel
 
-                            return { ...s, totalSale: totalSale.toFixed(2), diningRoom, pickUp, takeout, delivery, totalDinnigRoom: totalDinnigRoom.toFixed(2), day, apps, totalApps: totalApps.toFixed(2), month, channel }
+                            return { ...s, totalSale: totalSale.toFixed(2), diningRoom, pickUp, takeout, delivery, totalDinnigRoom: totalDinnigRoom.toFixed(2), day, apps, totalApps: totalApps.toFixed(2), month, shortMonth: shortMonth.replace(".", ""), channel }
                         })
 
                         sales = salesData

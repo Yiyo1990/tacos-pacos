@@ -103,7 +103,7 @@ export class DashboardComponent implements OnInit {
     this.barChartDataBalance.labels = []
 
     dataSales.map((s: any) => {
-      this.barChartDataBalance.labels?.push(s.month.replace(".", "").toUpperCase())
+      this.barChartDataBalance.labels?.push(s.month)
       let expense = dataExpenses.find((e: any) => e.month == s.month)
       let totalProfit = expense ? (s.total - expense.total) : s.total
       chartDataProfit.push(Number(totalProfit.toFixed(2)))
@@ -175,7 +175,7 @@ export class DashboardComponent implements OnInit {
    */
   get totalSalesCurrentMonth(): number {
     let currentMonth = this.dates.formatDate(new Date(), 'MMM')
-    let sales = this.sales.filter((s: any) => s.shortMonth.toUpperCase() == currentMonth.toUpperCase())
+    let sales = this.sales.filter((s: any) => s.shortMonth.toUpperCase() == currentMonth.replace(".","").toUpperCase())
 
     return Sale.getTotalSalesIncome(sales) //this.getTotalSalesByDelivery(sales)
   }
@@ -200,7 +200,7 @@ export class DashboardComponent implements OnInit {
     //Obtiene el 40% de las ventas del mes actual para obtener el % de gastos de alimentos
     let percentCurrentMonth = Math.round((this.totalSalesCurrentMonth * 40) / 100)
     let currentMonth = this.dates.formatDate(new Date(), 'MMM')
-    let alimentoCategories = this.expenses.filter(e => e.foodCategories.code == 'food.alimentos').filter(e => e.shortMonth.toUpperCase() == currentMonth.toUpperCase())
+    let alimentoCategories = this.expenses.filter(e => e.foodCategories.code == 'food.alimentos').filter(e => e.shortMonth.toUpperCase() == currentMonth.replace(".","").toUpperCase())
     let totalExpense = alimentoCategories.reduce((total: number, exp: any) => total + exp.amount, 0)
     let percentExpense = Math.round((totalExpense * 100) / percentCurrentMonth)
 
@@ -261,7 +261,7 @@ export class DashboardComponent implements OnInit {
 
             return {
               ...s, totalSale: Number(totalSale.toFixed(2)), diningRoom, pickUp, takeout, delivery, totalDinnigRoom: totalDinnigRoom.toFixed(2),
-              day, apps, totalApps: Number(totalApps.toFixed(2)), month, monthNumber, totalIncomeApps: Number(totalIncomeApps.toFixed(2)), shortMonth
+              day, apps, totalApps: Number(totalApps.toFixed(2)), month, monthNumber, totalIncomeApps: Number(totalIncomeApps.toFixed(2)), shortMonth: shortMonth.replace(".", "").toUpperCase()
             }
           })
 
@@ -503,7 +503,7 @@ export class DashboardComponent implements OnInit {
             let month = this.dates.getMonthName(e.expenseDate, 'MMMM')
             let shortMonth = this.dates.getMonthName(e.expenseDate, 'MMM')
 
-            return { ...e, month, monthNumber, shortMonth }
+            return { ...e, month, monthNumber, shortMonth: shortMonth.replace(".", "").toUpperCase() }
           })
         }
         this.expenses = res

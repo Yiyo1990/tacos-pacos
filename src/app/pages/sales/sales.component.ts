@@ -199,6 +199,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
             let day = firstUpperCase(s.day)
             let month = this.dates.getMonthName(s.dateSale)
+            let shortMonth = this.dates.getMonthName(s.dateSale, 'MMM')
             let weekday = new Date(s.dateSale).getDay()
 
             let apps = this.fillSalesTbl(s)
@@ -209,7 +210,8 @@ export class SalesComponent implements OnInit, AfterViewInit {
             let totalIncome = (Number(apps.uber.income) + Number(apps.didi.income) + Number(apps.rappi.income)).toFixed(2)
             apps.parrot.commission = Number((Number(apps.parrot.income) * 0.04).toFixed(2))
 
-            return { ...s, totalSale: totalSale.toFixed(2), diningRoom, pickUp, takeout, delivery, totalDinnigRoom: Number(totalDinnigRoom.toFixed(2)), day, apps, totalApps: totalApps.toFixed(2), month, totalIncome: Number(totalIncome), weekday }
+            return { ...s, totalSale: totalSale.toFixed(2), diningRoom, pickUp, takeout, delivery, totalDinnigRoom: Number(totalDinnigRoom.toFixed(2)), day, apps, totalApps: totalApps.toFixed(2), month, totalIncome: Number(totalIncome), weekday,
+              shortMonth: shortMonth.replace(".", "").toUpperCase() }
           })
 
           this.sales = sales

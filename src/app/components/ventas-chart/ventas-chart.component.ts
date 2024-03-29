@@ -59,9 +59,7 @@ export class VentasChartComponent implements OnChanges, OnInit {
         let data: any[] = []
         this.barChartData.datasets = []
         this.barChartData.labels = []
-
-        let grouped = !this.isBtnMonthActive ? groupArrayByKey(this.sales, 'day') : groupArrayByKey(this.sales, 'month')
-
+        let grouped = !this.isBtnMonthActive ? groupArrayByKey(this.sales, 'day') : groupArrayByKey(this.sales, 'shortMonth')
         let barchartLabels = Object.keys(grouped)
 
         let listTotalDinningRoom: any = []
@@ -70,11 +68,11 @@ export class VentasChartComponent implements OnChanges, OnInit {
         let listTotalRappi: any = []
         let listTotalVenta: any = []
 
-        let months = this.dates.getMonths(false)
+        let months = this.dates.getMonths()
         if (this.isResultadosScreen) {
 
             months.map((m: any) => {
-                this.barChartData.labels?.push(m.name)
+                this.barChartData.labels?.push(m.name.toUpperCase())
                 listTotalDinningRoom.push(0)
                 listTotalDidi.push(0)
                 listTotalUber.push(0)
@@ -82,11 +80,10 @@ export class VentasChartComponent implements OnChanges, OnInit {
                 listTotalVenta.push(0)
             })
         }
-
         barchartLabels.map((day: any) => {
             let monthIndex = 0
             if (this.isResultadosScreen) {
-                monthIndex = months.find((m: any) => m.name == day).id - 1
+                monthIndex = months.find((m: any) => m.name.toUpperCase() == day).id - 1
             }
 
             let dataDay = grouped[day]
