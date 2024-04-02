@@ -173,6 +173,12 @@ export class VentasChartComponent implements OnChanges, OnInit {
 
             this.channelSales = [
                 {
+                    name: 'Total',
+                    total: total,
+                    percent: total > 0 ? 100 : 0,
+                    color: "#fff"
+                },
+                {
                     name: 'Comedor',
                     total: totalDinnigRoom,
                     percent: percentDinningRoom ? percentDinningRoom : 0,
@@ -180,8 +186,8 @@ export class VentasChartComponent implements OnChanges, OnInit {
                 },
                 {
                     name: 'Para Llevar',
-                    total: totalDelivery,
-                    percent: percentDelivery ? percentDelivery : 0,
+                    total: totalTakeout,
+                    percent: percentTakeOut ? percentTakeOut : 0,
                     color: this.chartColors.dinningRoom
                 },
                 {
@@ -192,8 +198,8 @@ export class VentasChartComponent implements OnChanges, OnInit {
                 },
                 {
                     name: 'Domicilio',
-                    total: totalTakeout,
-                    percent: percentTakeOut ? percentTakeOut : 0,
+                    total: totalDelivery,
+                    percent: percentDelivery ? percentDelivery : 0,
                     color: this.chartColors.dinningRoom
                 },
                 {
