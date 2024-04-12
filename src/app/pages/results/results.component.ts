@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ChartData, ChartOptions, ChartType, Color } from 'chart.js';
 import { MainService } from 'src/app/main/main.service';
 import { Dates } from 'src/app/util/Dates';
-import { BalanceType, OperationType, Pages, ReportChannel, barChartOptions, configDropdown, firstUpperCase, fixedData, groupArrayByKey, lineChartOptions, sortByKey } from 'src/app/util/util';
+import { BalanceType, OperationType, Pages, PaymentMethod, ReportChannel, TypeModules, barChartOptions, configDropdown, firstUpperCase, fixedData, groupArrayByKey, lineChartOptions, sortByKey } from 'src/app/util/util';
 import { SalesService } from '../sales/sales-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { ExpenseService } from '../expenses/expenses.service';
@@ -22,6 +22,7 @@ import { Sale } from '@sales/Sale';
 })
 export class ResultsComponent implements OnInit {
   readonly balanceType = BalanceType
+  readonly paymentMethod = PaymentMethod
 
   @ViewChildren(BaseChartDirective) charts: QueryList<BaseChartDirective> | undefined;
   @ViewChild('template', { static: true }) sampleModalRef!: TemplateRef<any>;
@@ -41,6 +42,7 @@ export class ResultsComponent implements OnInit {
   };
 
   days: any = []
+  totalIncomes: Array<any> = []
 
   //---- SALES ----
   sales: any[] = []
@@ -106,6 +108,7 @@ export class ResultsComponent implements OnInit {
           this.brandSelected = JSON.parse(result)
           this.onFilterDates()
           this.getFoodCategories()
+          this.getIncomeForModule()
         }
       }
     })
@@ -189,51 +192,6 @@ export class ResultsComponent implements OnInit {
       this.toast.error(e)
       this.loading.stop()
     })
-
-    /*this.salesService.getReportSalesByDateRange(this.brandSelected.id, startDate, endDate).subscribe({
-      next: (data: any) => {
-        if (Array.isArray(data)) {
-          this.lineChartData.datasets = []
-          this.updateCharts()
-          this.days = []
-          let sales = data.map((s: any) => {
-            let diningRoom = s.diningRoom.toFixed(2)
-            let pickUp = s.pickUp.toFixed(2)
-            let takeout = s.takeout.toFixed(2)
-            let delivery = s.delivery.toFixed(2)
-            let totalDinnigRoom =  Sale.totalDinningRoom(s) //s.diningRoom + s.pickUp + s.takeout + s.delivery
-
-            let day = firstUpperCase(s.day)
-            let month = this.dates.getMonthName(s.dateSale)
-            this.days.push(s.dateSale)
-
-            let apps = Sale.addPlatafformInData(s)//this.addPlatafformsData(s)
-
-            let totalApps = Sale.totalAppsParrot(apps)//(Number(apps.uber.sale) + Number(apps.didi.sale) + Number(apps.rappi.sale))
-            let totalIncomeApps = Sale.totalAppsIncome(apps) //(Number(apps.uber.income) + Number(apps.didi.income) + Number(apps.rappi.income))
-            let totalSale = (totalDinnigRoom + totalApps)
-            this.salesByDay.push((totalDinnigRoom + totalIncomeApps))
-
-            return { ...s, totalSale: totalSale.toFixed(2), diningRoom, pickUp, takeout, delivery, totalDinnigRoom: totalDinnigRoom.toFixed(2), day, apps, totalApps: totalApps.toFixed(2), month }
-          })
-
-          this.sales = sales
-          this.lineChartData.labels = this.days
-
-          this.pushDataSalesChart()
-          this.fillBarChartDays()
-          this.callServiceSearchExpenses(startDate, endDate)
-        }
-      },
-      error: (e) => {
-        this.loading.stop()
-        this.toast.error("Ocurrio un error al intentar obtener las ventas")
-      },
-      complete: () => {
-        this.loading.stop()
-      }
-    })
-    */
   }
 
   get totalSales(): number {
@@ -241,14 +199,14 @@ export class ResultsComponent implements OnInit {
   }
 
   get totalCash(): number {
-    let sales = this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.parrot.sale), 0)
-    return (sales + this.cuentaPagadaCash) - (this.expensesCash)
+    //let sales = this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.parrot.sale), 0)
+    let cash = this.totalIncomes.find((s: any) => s.paymentMethod == PaymentMethod.CASH)
+    return cash ? cash.income : 0
   }
 
   get totalCard(): number {
-    let totalCard = this.sales.filter((a: any) => a.apps.parrot.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.parrot.income), 0)
-    let totalApps = Sale.totalAppsIncomePaid(this.sales)
-    return (totalCard + totalApps + this.cuentaPagadaTransfer) - (this.expensesTransfer)
+    let card = this.totalIncomes.find((s: any) => s.paymentMethod == PaymentMethod.CARD)
+    return card ? card.income : 0
   }
 
   get totalPay(): number {
@@ -684,6 +642,52 @@ export class ResultsComponent implements OnInit {
   get cuentaPagadaTransfer(): number {
     return this.cuentasPorCobrar.filter((c: any) => c.isPay && c.operationType.code == OperationType.TRANSFER)
       .reduce((total: number, obj: any) => total + obj.amount, 0)
+  }
+
+
+  onChangeTotalIncome(total: any, method: string) {
+    let totalIncome = Number(total.replace("$",""))
+    this.updateIncomeForModule(method, totalIncome)
+  }
+
+  async updateIncomeForModule(typePayment: string, totalIncome: number) {
+    let data = {
+      id: null,
+      dateSale: this.dates.getFormatDate(new Date(), "DD-MM-YYYY"),
+      income: totalIncome,
+      branchId: this.brandSelected.id,
+      module: TypeModules.MAIN,
+      paymentMethod: typePayment
+    }
+    this.service.saveIncomeForModule(data).subscribe({
+      next: (res: any) => {
+        if(res) {
+          this.toast.success("Total actualizado con exito!")
+        }
+      },
+      error: () => {
+        this.toast.error("Ocurrio un error al actualizar el total")
+      }
+    })
+  }
+
+  async getIncomeForModule() {
+    this.loading.start()
+    this.service.getIncomeForModule(this.brandSelected.id, this.dates.getFormatDate(new Date(), 'DD-MM-YYYY')).subscribe({
+      next: (data: any) => {
+        this.loading.stop()
+        if (Array.isArray(data)) {
+          this.totalIncomes = data.filter((s: any) => s.module == TypeModules.MAIN)
+        } else {
+          this.toast.error("Ocurrio un error")
+        }
+
+      },
+      error: () => {
+        this.loading.stop()
+        this.toast.error("Ocurrio un error al obtener los totales de efectivo y tarjeta")
+      }
+    })
   }
 
 }

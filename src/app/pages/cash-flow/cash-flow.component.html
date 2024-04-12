@@ -150,7 +150,7 @@
                                 <div class="ellipsis" style="width: 100%;">{{cashData.name}}</div>
                             </td>
                             <td style="background-color: #ededed;" *ngFor="let month of cashData.data">
-                                {{month.total | currency}}
+                                <input-text [styles]="{'text-align': 'center', 'font-weight': '200'}" (onChangeEvent)="onChangeTotalIncome($event, paymentMethod.CASH, month)" value="{{month.total | currency}}" />
                             </td>
                         </tr>
                         <!--:::::::::::  TARJETA :::::::::::-->

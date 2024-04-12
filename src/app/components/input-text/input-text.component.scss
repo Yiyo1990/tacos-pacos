@@ -1,0 +1,14 @@
+.input-sin-bordes {
+    border: none; /* Quita el borde */
+    outline: none; /* Quita el resaltado al enfocar */
+    padding: 0px; /* Añade un poco de espacio interno */
+    //margin: 5px; /* Añade un poco de margen externo */
+    width: 100%; /* Define un ancho */
+    height: 100%;
+    font-weight: bold;
+    background-color: transparent;
+}
+
+.input-sin-bordes:focus {
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1); /* Opcional: añade un sombreado al enfocar */
+}

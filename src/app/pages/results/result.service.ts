@@ -32,8 +32,17 @@ export class ResultService {
   }
 
   getTicketTarget(branchId: number, startDate: string, endDate: string) {
-    console.log(startDate, endDate)
     let url = this.endPoint.concat(`report/kpis/ticketAndCount?branchId=${branchId}&&startDate=${startDate}&&endDate=${endDate}`)
+    return this.httpClient.get(url)
+  }
+
+  saveIncomeForModule(data: any) {
+    let url = this.endPoint.concat(`report/kpis/incomeForMonthModule`)
+    return this.httpClient.post(url, data)
+  }
+
+  getIncomeForModule(branchId: number, date: string) {
+    let url = this.endPoint.concat(`report/kpis/incomeForMonthModule?branchId=${branchId}&date=${date}`)
     return this.httpClient.get(url)
   }
  }

@@ -47,6 +47,7 @@ import { RowTotalNegocioComponent } from './components/row-total-negocio/row-tot
 import { CategorySupplierCardComponent } from './components/category-supplier-card/category-supplier-card.component';
 import { CurrencyPipe } from '@angular/common';
 import { ProfitEstimatesComponent } from './pages/profit-estimates/profit-estimates.component';
+import { InputTextComponent } from './components/input-text/input-text.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +80,8 @@ import { ProfitEstimatesComponent } from './pages/profit-estimates/profit-estima
     RowTotalNegocioComponent,
     CategorySupplierCardComponent,
     SupplierComponent,
-    ProfitEstimatesComponent  
+    ProfitEstimatesComponent,
+    InputTextComponent  
   ],
   imports: [
     BrowserModule,
