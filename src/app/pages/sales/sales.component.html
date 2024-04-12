@@ -51,9 +51,9 @@
                                     <td>{{sale?.pickUp | currency}}</td>
                                     <td>{{sale?.delivery | currency}}</td>
                                     <td>{{sale?.apps.parrot.sale | currency}}</td>
-                                    <td><input type="text" value="${{sale?.apps.parrot.income}}"
+                                    <td><input type="text" value=""
                                             (blur)="setValueIncome(i, sale, $any($event.target).value)"
-                                            formatoMoneda></td>
+                                            formatoMoneda></td>${{sale?.apps.parrot.income}}
                                     <td>{{sale?.apps.parrot.commission | currency}}</td>
                                     <td><option-pay [index]="i"  (checkedEvent)="onChangeIsPay($event, 'PARROT', sale)" [isSelected]="sale?.apps.parrot.isPay" /></td>
 

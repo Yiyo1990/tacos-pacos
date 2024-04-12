@@ -93,6 +93,7 @@ const kpisIndicators =
     { code: 'food.repartos', value: 15000, chart: '>$' },
     { code: 'food.otros', value: 10000, chart: '>$' },
     { code: 'profit', value: 15, chart: '<%' },
+    { code: 'food.impuestos.1', value: 10000, chart: '>$' },
   ]
 
 /**
@@ -241,8 +242,18 @@ enum Pages {
   INVENTARIO = 'Inventarios'
 }
 
+enum TypeModules {
+  MAIN = "MAIN",
+  CASH_FLOW = "CASH_FLOW"
+}
+
+enum PaymentMethod {
+  CASH = "CASH",
+  CARD = "CARD"
+}
+
 export {
   configDropdown, firstUpperCase, sortByKey, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions,
   groupArrayByKey, ReportChannel, fixedData, OperationType, BalanceType, Pages, totalSalesByDelivery, addPlatafformInData, kpisIndicators, 
-  getKpiColorAndPercent, foodPercents
+  getKpiColorAndPercent, foodPercents, TypeModules, PaymentMethod
 }

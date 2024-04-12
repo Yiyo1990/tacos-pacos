@@ -41,8 +41,8 @@ export class Dates {
         let format = shortName ? 'MMM': 'MMMM'
         for (let i = 0; i < 12; i++) {
             const mes = moment().month(i).format(format);
-            
-            meses.push({id: i+1, name: firstUpperCase(mes.replace(".",""))});
+            const mFormat = moment().month(i).format("DD-MM-YYYY")
+            meses.push({id: i+1, name: firstUpperCase(mes.replace(".","")), mFormat});
         }
         return meses
     }

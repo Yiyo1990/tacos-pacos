@@ -31,22 +31,25 @@
                             <div class="col-10 md-10 sm-12">
                                 <div class="row">
                                     <div class="sm-12" style="width: 14.2%;">
-                                        <div style="display: flex;">
+                                        <div style="display: flex; width: 100%;">
                                             <!-- Los colores ponerle el borde solamente-->
                                             <div class="cards-total"
-                                                style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #478b47; text-align: center; opacity: 0.8;">
+                                                style="width: 50% !important; height: auto; padding: 0.3%; border:solid 1px #478b47; text-align: center; opacity: 0.8;">
                                                 <label style="margin: 0; color: #60bb60;">Efectivo</label>
                                             </div>
-                                            <label class="cards-total total">{{totalCash | currency}}</label>
+                                            <!--<label class="cards-total total">{{totalCash | currency}}</label>-->
+                                            <input-text style="width: 50% !important; font-weight: bold; height: 100%;" (onChangeEvent)="onChangeTotalIncome($event, paymentMethod.CASH)" class="cards-total total" value="{{totalCash | currency}}"  />
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
-                                        <div style="display: flex;">
+                                        <div style="display: flex; width: 100%;">
                                             <div class="cards-total"
-                                                style="width: 130px; height: auto; padding: 0.3%; border:solid 1px #c147cc; text-align: center;">
+                                                style="width: 50%; height: auto; padding: 0.3%; border:solid 1px #c147cc; text-align: center;">
                                                 <label style="margin: 0; color: #c147cc;">Tarjeta</label>
                                             </div>
-                                            <label class="cards-total total">{{(totalCard) | currency}}</label>
+                                            <!--<label class="cards-total total">{{(totalCard) | currency}}</label>-->
+                                            <input-text style="width: 50% !important; font-weight: bold; height: 100%;" (onChangeEvent)="onChangeTotalIncome($event, paymentMethod.CARD)" class="cards-total total" value="{{totalCard | currency}}"  />
+
                                         </div>
                                     </div>
                                     <div class="sm-12" style="width: 14.2%;">
@@ -156,7 +159,7 @@
                         </div>
                     </accordion-group>
 
-                    <!-- ///////////  GASTOS ////////////-->
+                    <!-- **********  GASTOS  ********** /-->
                     <accordion-group [isOpen]="false">
                         <span accordion-heading>
                             <label class="tab-title">Gastos</label> &nbsp; <i

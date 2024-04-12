@@ -3,10 +3,12 @@ import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from 'src/app/components/loading/loading.service';
 import { MainService } from 'src/app/main/main.service';
 import { Dates } from 'src/app/util/Dates';
-import { OperationType, Pages, addPlatafformInData, firstUpperCase, groupArrayByKey, sortByKey, totalSalesByDelivery } from 'src/app/util/util';
+import { OperationType, Pages, PaymentMethod, TypeModules, addPlatafformInData, firstUpperCase, groupArrayByKey, sortByKey, totalSalesByDelivery } from 'src/app/util/util';
 import { ExpenseService } from '../expenses/expenses.service';
 import { SalesService } from '../sales/sales-service.service';
 import { ResultService } from '../results/result.service';
+import { Expense } from '@expenses/Expense';
+import { Sale } from '@sales/Sale';
 
 @Component({
   selector: 'app-cash-flow',
@@ -26,6 +28,7 @@ export class CashFlowComponent implements OnInit {
   private sales: Array<any> = []
 
   private cuentasPorCobrar: Array<any> = []
+  readonly paymentMethod = PaymentMethod
 
   constructor(private mainService: MainService,
     private loading: LoadingService,
@@ -65,8 +68,18 @@ export class CashFlowComponent implements OnInit {
    */
   async callServiceSearchExpenses(start: string, end: string, search: string = "") {
     this.loading.start()
-    this.expenseService.searchExpense(this.brandSelected.id, start, end, search).subscribe({
+    new Expense(this.expenseService, this.brandSelected).callServiceSearchExpenses(start, end, search).then((res: any) => {
+      this.expenses = res.map((r: any) => {
+        return { ...r, shortMonth: firstUpperCase(r.shortMonth.replace(".", "").toLowerCase()) }
+      })
+      this.loading.stop()
+    }).catch((e: any) => {
+      this.loading.stop()
+      this.toast.error(e)
+    })
+    /*this.expenseService.searchExpense(this.brandSelected.id, start, end, search).subscribe({
       next: (res: any) => {
+        console.log("gastos",res)
         if (Array.isArray(res)) {
           res = res.map((e: any) => {
             let monthNumber = this.dates.getMonthNumber(e.expenseDate)
@@ -74,7 +87,7 @@ export class CashFlowComponent implements OnInit {
             let shortMonth = this.dates.getMonthName(e.expenseDate, 'MMM')
             let categoryCode = e.foodCategories.code
 
-            return { ...e, month, monthNumber, shortMonth: firstUpperCase(shortMonth).replace(".", ""), categoryCode }
+            return { ...e, month, monthNumber, shortMonth: shortMonth.replace(".", "").toUpperCase(), categoryCode }
           })
         }
         this.expenses = res
@@ -86,7 +99,7 @@ export class CashFlowComponent implements OnInit {
       complete: () => {
         this.loading.stop()
       }
-    })
+    })*/
   }
 
   /**
@@ -117,35 +130,45 @@ export class CashFlowComponent implements OnInit {
  * @param endDate  fecha fin
  */
   async getReportSalesByDateRange(startDate: string, endDate: string) {
+
     this.loading.start()
 
     this.sales = []
-    this.salesService.getReportSalesByDateRange(this.brandSelected.id, startDate, endDate).subscribe({
-      next: (data: any) => {
-        if (Array.isArray(data)) {
-          let sales = data.map((s: any) => {
-
-            let month = this.dates.getMonthName(s.dateSale, 'MMMM')
-            let shortMonth = this.dates.getMonthName(s.dateSale, 'MMM')
-            let monthNumber = this.dates.getMonthNumber(s.dateSale)
-
-            let apps = addPlatafformInData(s)
-
-            return {
-              ...s, month, monthNumber, shortMonth: firstUpperCase(shortMonth).replace(".", ""), apps
-            }
-          })
-          this.sales = sales
-        }
-      },
-      error: (e) => {
-        this.loading.stop()
-        this.toast.error("Ocurrio un error al intentar obtener las ventas")
-      },
-      complete: () => {
-        this.loading.stop()
-      }
+    new Sale(this.salesService).salesService(startDate, endDate, this.brandSelected.id).then((res: any) => {
+      this.sales = res.sales.map((r: any) => {
+        return { ...r, shortMonth: firstUpperCase(r.shortMonth.replace(".", "").toLowerCase()) }
+      })
+      this.loading.stop()
+    }).catch((e: any) => {
+      this.loading.stop()
+      this.toast.error(e)
     })
+    /* this.salesService.getReportSalesByDateRange(this.brandSelected.id, startDate, endDate).subscribe({
+       next: (data: any) => {
+         if (Array.isArray(data)) {
+           let sales = data.map((s: any) => {
+ 
+             let month = this.dates.getMonthName(s.dateSale, 'MMMM')
+             let shortMonth = this.dates.getMonthName(s.dateSale, 'MMM')
+             let monthNumber = this.dates.getMonthNumber(s.dateSale)
+ 
+             let apps = addPlatafformInData(s)
+ 
+             return {
+               ...s, month: month.replace(".", ""), monthNumber, shortMonth: shortMonth.replace(".", "").toUpperCase(), apps
+             }
+           })
+           this.sales = sales
+         }
+       },
+       error: (e) => {
+         this.loading.stop()
+         this.toast.error("Ocurrio un error al intentar obtener las ventas")
+       },
+       complete: () => {
+         this.loading.stop()
+       }
+     }) */
   }
 
   /**
@@ -171,7 +194,7 @@ export class CashFlowComponent implements OnInit {
    * @param month 
    * @returns 
    */
-  getSalesAppsByMonth(month: string): number{
+  getSalesAppsByMonth(month: string): number {
     let totalApps = 0
     let salesMonth = this.sales.filter((s: any) => s.shortMonth == month)
     totalApps = totalApps + salesMonth.filter((s: any) => s.apps.uber.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.uber.income), 0)
@@ -295,7 +318,7 @@ export class CashFlowComponent implements OnInit {
     let byMonth = groupArrayByKey(this.sales, 'shortMonth')
     let salesMonth: Array<any> = []
     this.dates.getMonths().map((m: any) => {
-      let total = Array.isArray(byMonth[m.name]) ? totalSalesByDelivery(byMonth[m.name]) : 0      
+      let total = Array.isArray(byMonth[m.name]) ? totalSalesByDelivery(byMonth[m.name]) : 0
       salesMonth.push({ month: m.name, total: Number(total.toFixed(2)) })
     })
 
@@ -349,9 +372,9 @@ export class CashFlowComponent implements OnInit {
   get expensesByCategoryData() {
     let groupedByCategory = groupArrayByKey(this.expenses, "categoryCode")
     let dataByCategory: Array<any> = []
-
     Object.keys(groupedByCategory).map((c: any) => {
       let categoryExpByMonth = this.getExpensesByMonth(groupedByCategory[c])
+
       let totalYearCategory = categoryExpByMonth.reduce((total: number, obj: any) => total + obj.total, 0)
       categoryExpByMonth.push({ month: 'Total', total: Number(totalYearCategory.toFixed(2)) })
       dataByCategory.push({ name: groupedByCategory[c][0].foodCategories.name, data: categoryExpByMonth })
@@ -370,7 +393,9 @@ export class CashFlowComponent implements OnInit {
 
     let categoryExpByMonth: Array<any> = []
     this.dates.getMonths().map((m: any) => {
+
       let groupedByMonth = categoryByMonth[m.name]
+
       let total = 0
       if (Array.isArray(groupedByMonth)) {
         total = groupedByMonth.reduce((total: number, obj: any) => total + obj.amount, 0)
@@ -391,7 +416,7 @@ export class CashFlowComponent implements OnInit {
     return { name: 'Total Gastos', data: expesesMonth }
   }
 
-  
+
   /**
    * Calcula el total Disponible (Fin mes)
    * @returns 
@@ -453,17 +478,17 @@ export class CashFlowComponent implements OnInit {
    * @returns Una lista con el total de las ventas por mes
    */
   getTotalCardRow() {
-    let totalCard =  this.dates.getMonths().map(m => {
+    let totalCard = this.dates.getMonths().map(m => {
       let totalCard = this.getSalesTransferByMonth(m.name)
       let totalApps = this.getSalesAppsByMonth(m.name)
       let totalCuentaTransfer = this.getCuentaPagadaTransfer(m.name)
-      
+
       let total = (totalCard + totalApps + totalCuentaTransfer) - this.getExpensesTransfer(m.name)
       return { month: m.name, total: total }
     })
 
     let totalYear = totalCard.reduce((total: number, obj: any) => total + obj.total, 0)
-    totalCard.push({month: 'Total', total: totalYear})
+    totalCard.push({ month: 'Total', total: totalYear })
     return totalCard
   }
 
@@ -490,13 +515,13 @@ export class CashFlowComponent implements OnInit {
     let totalCardM = this.getTotalCardRow()
     let totalPorCobrarM = this.getAccountsReceivableByMonth()
 
-    let totalList =  this.headerData.map(m => {
+    let totalList = this.headerData.map(m => {
       let totalCash = totalCashM.find((c: any) => c.month == m.name)
       let totalCard = totalCardM.find((c: any) => c.month == m.name)
       let totalPorCobrar = totalPorCobrarM.find((c: any) => c.month == m.name)
-      
+
       let total = 0
-      if(totalCash && totalCard && totalPorCobrar) {
+      if (totalCash && totalCard && totalPorCobrar) {
         total = (totalCash.total + totalCard.total + totalPorCobrar.total)
       }
       return { month: m.name, total }
@@ -524,7 +549,7 @@ export class CashFlowComponent implements OnInit {
       let available = availableEndMonth.find((a: any) => a.month == m.name)
       let totalD = totalData.find((t: any) => t.month == m.name)
       let total = 0
-      if(available && totalD) {
+      if (available && totalD) {
         total = (totalD.total - available.total)
       }
       return { month: m.name, total }
@@ -536,5 +561,57 @@ export class CashFlowComponent implements OnInit {
    */
   get gapData() {
     return { name: 'GAP', data: this.getGapRow() }
+  }
+
+  onChangeTotalIncome(total: any, method: string, month: any) {
+    if (month.mFormat != 'NONE') {
+      let totalIncome = Number(total.replace("$", ""))
+      this.updateIncomeForModule(method, totalIncome, month.mFormat)
+    }
+
+  }
+
+  async updateIncomeForModule(typePayment: string, totalIncome: number, date: string) {
+    let data = {
+      id: null,
+      dateSale: date,
+      income: totalIncome,
+      branchId: this.brandSelected.id,
+      module: TypeModules.MAIN,
+      paymentMethod: typePayment
+    }
+    this.resultService.saveIncomeForModule(data).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.toast.success("Total actualizado con exito!")
+        }
+      },
+      error: () => {
+        this.toast.error("Ocurrio un error al actualizar el total")
+      }
+    })
+  }
+
+  async getIncomeForModule(date: string, paymentMethod: string) {
+    //this.loading.start()
+    return new Promise((resolve, reject) => {
+      this.resultService.getIncomeForModule(this.brandSelected.id, date).subscribe({
+        next: (data: any) => {
+          //this.loading.stop()
+          if (Array.isArray(data)) {
+            let totalIncome = data.filter((s: any) => s.module == TypeModules.CASH_FLOW && s.paymentMethod == paymentMethod)
+            resolve(totalIncome)
+          } else {
+            this.toast.error("Ocurrio un error")
+            reject(0)
+          }
+        },
+        error: () => {
+          //this.loading.stop()
+          this.toast.error("Ocurrio un error al obtener los totales de efectivo y tarjeta")
+        }
+      })
+    })
+
   }
 }
