@@ -41,8 +41,9 @@ export class ResultService {
     return this.httpClient.post(url, data)
   }
 
-  getIncomeForModule(branchId: number, date: string) {
-    let url = this.endPoint.concat(`report/kpis/incomeForMonthModule?branchId=${branchId}&date=${date}`)
+  getIncomeForModule(branchId: number, startDate: string, endDate: string) {
+    console.log(startDate,endDate)
+    let url = this.endPoint.concat(`report/kpis/incomeForMonthModule?branchId=${branchId}&startDate=${startDate}&endDate=${endDate}`)
     return this.httpClient.get(url)
   }
  }

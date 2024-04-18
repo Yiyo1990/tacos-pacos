@@ -89,6 +89,9 @@ export class ResultsComponent implements OnInit {
 
   loadingServices: Array<any> = []
 
+  totalCash: number = 0.00
+  totalCard: number = 0.00
+
   constructor(private mainService: MainService,
     private activeRouter: ActivatedRoute,
     private salesService: SalesService,
@@ -130,6 +133,7 @@ export class ResultsComponent implements OnInit {
         this.getReportSalesByDateRange(dates.start, dates.end)
         this.getCuentasPorCobrar()
         this.serviceTicketTarget()
+        this.getIncomeForModule()
       }
     })
 
@@ -150,6 +154,7 @@ export class ResultsComponent implements OnInit {
         this.filterDate = { start: months.start, end: months.end }
         this.getReportSalesByDateRange(months.start, months.end)
         this.getCuentasPorCobrar()
+        this.getIncomeForModule()
       }
     })
   }
@@ -198,16 +203,16 @@ export class ResultsComponent implements OnInit {
     return Sale.getTotalSalesIncome(this.sales)
   }
 
-  get totalCash(): number {
+  /*get totalCash(): number {
     //let sales = this.sales.reduce((total: number, sale: any) => total + Number(sale.apps.parrot.sale), 0)
     let cash = this.totalIncomes.find((s: any) => s.paymentMethod == PaymentMethod.CASH)
     return cash ? cash.income : 0
-  }
+  } */
 
-  get totalCard(): number {
+  /*get totalCard(): number {
     let card = this.totalIncomes.find((s: any) => s.paymentMethod == PaymentMethod.CARD)
     return card ? card.income : 0
-  }
+  }*/
 
   get totalPay(): number {
     let totalPay = this.sales.filter((a: any) => !a.apps.parrot.isPay).reduce((total: number, sale: any) => total + Number(sale.apps.parrot.income), 0)
@@ -222,6 +227,7 @@ export class ResultsComponent implements OnInit {
   }
 
   get total(): number {
+    console.log("cash",this.totalCash, "card", this.totalCard)
     return this.totalCash + this.totalCard + this.totalApps + this.totalPay
   }
 
@@ -646,23 +652,29 @@ export class ResultsComponent implements OnInit {
 
 
   onChangeTotalIncome(total: any, method: string) {
-    let totalIncome = Number(total.replace("$",""))
+    let totalIncome = Number(total.replace("$","").replace(",",""))
+    if(method == this.paymentMethod.CASH) {
+      this.totalCash = totalIncome
+    } else {
+      this.totalCard = totalIncome
+    }
     this.updateIncomeForModule(method, totalIncome)
   }
 
   async updateIncomeForModule(typePayment: string, totalIncome: number) {
     let data = {
       id: null,
-      dateSale: this.dates.getFormatDate(new Date(), "DD-MM-YYYY"),
+      dateSale: this.dates.getFormatDate(this.filterDate.start, "DD-MM-YYYY"),
       income: totalIncome,
       branchId: this.brandSelected.id,
       module: TypeModules.MAIN,
       paymentMethod: typePayment
     }
+
     this.service.saveIncomeForModule(data).subscribe({
       next: (res: any) => {
-        if(res) {
-          this.toast.success("Total actualizado con exito!")
+        if(!res) {
+          this.toast.error("Ocurrio un error al actualizar el total")
         }
       },
       error: () => {
@@ -673,11 +685,17 @@ export class ResultsComponent implements OnInit {
 
   async getIncomeForModule() {
     this.loading.start()
-    this.service.getIncomeForModule(this.brandSelected.id, this.dates.getFormatDate(new Date(), 'DD-MM-YYYY')).subscribe({
+    this.service.getIncomeForModule(this.brandSelected.id, this.dates.getFormatDate(this.filterDate.start, 'DD-MM-YYYY') ,  this.dates.getFormatDate(this.filterDate.end, 'DD-MM-YYYY')).subscribe({
       next: (data: any) => {
         this.loading.stop()
         if (Array.isArray(data)) {
           this.totalIncomes = data.filter((s: any) => s.module == TypeModules.MAIN)
+          let cash = this.totalIncomes.find((s: any) => s.paymentMethod == PaymentMethod.CASH)
+          let card = this.totalIncomes.find((s: any) => s.paymentMethod == PaymentMethod.CARD)
+
+          this.totalCash = cash ? cash.income : 0
+          this.totalCard = card ? card.income : 0
+
         } else {
           this.toast.error("Ocurrio un error")
         }

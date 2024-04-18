@@ -595,7 +595,7 @@ export class CashFlowComponent implements OnInit {
   async getIncomeForModule(date: string, paymentMethod: string) {
     //this.loading.start()
     return new Promise((resolve, reject) => {
-      this.resultService.getIncomeForModule(this.brandSelected.id, date).subscribe({
+      this.resultService.getIncomeForModule(this.brandSelected.id, date, '01-12-2024').subscribe({
         next: (data: any) => {
           //this.loading.stop()
           if (Array.isArray(data)) {
