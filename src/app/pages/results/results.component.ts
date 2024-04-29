@@ -227,8 +227,7 @@ export class ResultsComponent implements OnInit {
   }
 
   get total(): number {
-    console.log("cash",this.totalCash, "card", this.totalCard)
-    return this.totalCash + this.totalCard + this.totalApps + this.totalPay
+    return this.totalCash + this.totalCard + this.totalApps + this.totalPay + this.totalPorCobrar
   }
 
   get totalGap(): number {
