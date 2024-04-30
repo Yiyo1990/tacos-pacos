@@ -150,16 +150,17 @@
                                 <div class="ellipsis" style="width: 100%;">{{cashData.name}}</div>
                             </td>
                             <td style="background-color: #ededed;" *ngFor="let month of cashData.data">
-                                <input-text [styles]="{'text-align': 'center', 'font-weight': '200'}" (onChangeEvent)="onChangeTotalIncome($event, paymentMethod.CASH, month)" value="{{month.total | currency}}" />
+                                <!--<input-text  (onChangeEvent)="onChangeTotalIncome($event, paymentMethod.CASH, month)" value="{{month.total | currency}}" />-->                                
+                                <input type="text" style="text-align: center !important; font-weight: 400 !important;" class="input-sin-bordes" (blur)="onChangeTotalIncome($any($event.target).value,  paymentMethod.CASH, month)" value="{{month.total | currency}}">
                             </td>
                         </tr>
                         <!--:::::::::::  TARJETA :::::::::::-->
                         <tr>
                             <td style="background-color: #ededed !important;">
-                                <div class="ellipsis" style="width: 100%;">{{cardData.name}}</div>
+                                <div class="ellipsis"  style="width: 100%;">{{cardData.name}}</div>
                             </td>
                             <td style="background-color: #ededed;" *ngFor="let month of cardData.data">
-                                {{month.total | currency}}
+                                <input type="text" style="text-align: center !important; font-weight: 400 !important;" class="input-sin-bordes" (blur)="onChangeTotalIncome($any($event.target).value,  paymentMethod.CARD, month)" value="{{month.total | currency}}">
                             </td>
                         </tr>
                         <!--:::::::::::  POR COBRAR :::::::::::-->

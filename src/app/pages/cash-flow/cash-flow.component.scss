@@ -16,7 +16,7 @@
     font-weight: 600;
     font-size: 9pt;
     margin-top: 1%;
-    text-align: center !important;
+    //text-align: center !important;
 }
 
 
@@ -54,4 +54,19 @@ table tbody tr td:first-child {
 
 table tbody tr td:last-child {
     background-color: #ddebf7 !important;
+}
+
+.input-sin-bordes {
+    border: none; /* Quita el borde */
+    outline: none; /* Quita el resaltado al enfocar */
+    padding: 0px; /* Añade un poco de espacio interno */
+    //margin: 5px; /* Añade un poco de margen externo */
+    width: 100%; /* Define un ancho */
+    height: 100%;
+    font-weight: bold;
+    background-color: transparent;
+}
+
+.input-sin-bordes:focus {
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1); /* Opcional: añade un sombreado al enfocar */
 }
