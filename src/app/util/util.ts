@@ -143,6 +143,10 @@ const getKpiColorAndPercent = (kpiIndicator: any, total: number, totalSale: numb
   return {backgroundColor, color, percent};
 }
 
+const isNumber = (input: string) => {
+  return /^-?\d+(\.\d+)?$/.test(input)
+}
+
 const foodPercents = [{selected: true, id: 1, value: 30},{selected: false, id: 2, value: 31},{selected: false, id: 2, value: 32},{selected: false, id: 3, value: 33},{selected: false, id: 4, value: 34},{selected: false, id: 5, value: 35},{selected: false, id: 6, value: 36},{selected: false, id: 7, value: 37},{selected: false, id: 8, value: 38},{selected: false, id: 9, value: 39},{selected: false, id: 10, value: 40}]
 
 const lineChartOptions = {
@@ -255,5 +259,5 @@ enum PaymentMethod {
 export {
   configDropdown, firstUpperCase, sortByKey, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions,
   groupArrayByKey, ReportChannel, fixedData, OperationType, BalanceType, Pages, totalSalesByDelivery, addPlatafformInData, kpisIndicators, 
-  getKpiColorAndPercent, foodPercents, TypeModules, PaymentMethod
+  getKpiColorAndPercent, foodPercents, TypeModules, PaymentMethod, isNumber
 }
