@@ -16,6 +16,7 @@ import { InventarioComponent } from './pages/inventario/inventario.component';
 import { BillsComponent } from './pages/expenses/expenses.component';
 import { SupplierComponent } from './pages/supplier/supplier.component';
 import { SalesComponent } from './pages/sales/sales.component';
+import { InsumosComponent } from './pages/insumos/insumos.component';
 
 const routes: Routes = [
   {
@@ -32,7 +33,8 @@ const routes: Routes = [
       { path: 'inventarios', component: InventarioComponent},
       { path: 'gastos', component: BillsComponent},
       { path: 'proveedores', component: SupplierComponent},
-      { path: 'ventas', component: SalesComponent}
+      { path: 'ventas', component: SalesComponent},
+      { path: 'insumos', component: InsumosComponent}
     ],
     canActivate: [authGuard]
   },
