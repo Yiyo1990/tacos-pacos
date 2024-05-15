@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { MainService } from 'src/app/main/main.service';
 
 @Component({
@@ -7,7 +8,18 @@ import { MainService } from 'src/app/main/main.service';
   styleUrls: ['./cost-analysis.component.scss']
 })
 export class CostAnalysisComponent {
-  constructor(private mainService: MainService){
+  constructor(private mainService: MainService, private router: Router){
     mainService.setPageName("Análisis")
+  }
+
+
+  //  constructor(private router: Router){}
+
+
+  /**
+   *  Ir a la pantalla de insumos
+   */
+  goToInsumos() {
+    this.router.navigate([`dashboard/insumos`])
   }
 }

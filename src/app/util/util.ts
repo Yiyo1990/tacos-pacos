@@ -243,7 +243,8 @@ enum Pages {
   EXPENSES = 'Gastos',
   SUPPLIER = 'Proveedores',
   SALES = 'Ventas',
-  INVENTARIO = 'Inventarios'
+  INVENTARIO = 'Inventarios',
+  INSUMOS = 'Insumos'
 }
 
 enum TypeModules {
