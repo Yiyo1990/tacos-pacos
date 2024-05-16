@@ -229,7 +229,7 @@ export class ProfitEstimatesComponent implements OnInit {
       }
     }
     percent = estimation > 0 ? ((todayTotal * 100) / estimation) : 0
-    return { id: category.id, code: category.code, name: category.name, estimation, todayTotal, percent: `${Math.round(percent)}%` }
+    return { id: category.id, code: category.code, name: category.name, estimation, todayTotal, percent: `${Math.round(percent)}%`, backgroundColor: percent > 100 ? '#ff0000': '#92d050', color: percent > 100 ? '#fff': '#000'}
   }
 
   /**
