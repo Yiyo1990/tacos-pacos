@@ -53,7 +53,7 @@ export class SucursalOptionComponent implements OnInit {
    */
   goDashboard(): void {
     if (Object.keys(this.marcaSelected).length > 0 && this.marcaSelected.sucursal) {
-      sessionStorage.setItem('marcaSeleccionada', JSON.stringify(this.marcaSelected))
+      sessionStorage.setItem('marcaSeleccionada', JSON.stringify(this.marcaSelected.sucursal))
       this.route.navigate(['/dashboard/inicio'])
     } else {
       this.messageAlert = "Favor de seleccionar todas las opciones"
