@@ -51,6 +51,6 @@ export class MenuComponent {
   }
 
   getSucursal() {
-    return this.brand.sucursal
+    return this.brand
   }
 }

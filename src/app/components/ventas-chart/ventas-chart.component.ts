@@ -248,6 +248,6 @@ export class VentasChartComponent implements OnChanges, OnInit {
     }
 
     getCommerces() {
-        this.commerces = this.brandSelected?.sucursal.commerces.map((c: any) => { return { ...c, total: 0, percent: '100%' } })
+        this.commerces = this.brandSelected?.commerces.map((c: any) => { return { ...c, total: 0, percent: '100%' } })
     }
 }
