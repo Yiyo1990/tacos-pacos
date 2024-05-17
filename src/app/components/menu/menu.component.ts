@@ -23,7 +23,7 @@ export class MenuComponent {
     {id: 5, nombre: Pages.ESTIMATES, icon: 'fas fa-money-bill-trend-up', selected: false, link: 'estimaciones-profit'},
     {id: 6, nombre: Pages.ANALISIS, icon: 'fas fa-gauge', selected: false, link: 'analisis-costo'},
     {id: 11, nombre: Pages.INSUMOS, icon: 'fas fa-cart-arrow-down', selected: false, link: 'insumos'},
-    {id: 7, nombre: Pages.INVENTARIO, icon: 'fas fa-layer-group', selected: false, link: 'inventarios'},
+    //{id: 7, nombre: Pages.INVENTARIO, icon: 'fas fa-layer-group', selected: false, link: 'inventarios'},
     {id: 8, nombre: Pages.EXPENSES, icon: 'fas fa-circle-dollar-to-slot', selected: false, link: 'gastos'},
     {id: 9, nombre: Pages.SUPPLIER, icon: 'fas fa-users', selected: false, link: 'proveedores'},
     {id: 10, nombre: Pages.SALES, icon: 'fas fa-hand-holding-dollar', selected: false, link: 'ventas'}
