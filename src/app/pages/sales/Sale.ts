@@ -176,8 +176,10 @@ export class Sale {
         let percentPayment = (totalPayment * 100) / (totalParrot + totalPayment)
 
         return {
-            card: { total: Number(totalPayment.toFixed(2)), percent: percentPayment ? `${Math.round(percentPayment)}%` : '0%' },
-            cash: { total: Number(totalParrot.toFixed(2)), percent: percentParrot ? `${Math.round(percentParrot)}%` : '0%' }
+            totalParrot: Number(totalParrot.toFixed(2)),
+            totalPayment: Number(totalPayment.toFixed(2)),
+            percentParrot:  percentParrot ? `${Math.round(percentParrot)}%` : '0%',
+            percentPayment:  percentPayment ? `${Math.round(percentPayment)}%` : '0%'
         }
     }
 

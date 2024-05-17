@@ -1,0 +1,164 @@
+@import '/src/styles.scss';
+
+/******************
+** [Container] */
+.ca-container {
+    padding: 0;
+    margin: 0;
+}
+
+/*************
+[Division]
+*/
+.ca-title-division {
+    padding-left: 0.5rem;
+    margin-left: 0.5rem;
+    color: #657cad;
+    font-weight: bold;
+}
+
+/******************
+[Table]
+*/
+.ca-section-container {
+    font-size:11pt;
+    padding: 0;
+    margin: 0;
+}
+/*************
+[Row-Header]
+*/
+.ca-table-row-header {
+    height: 1.9rem;
+    display: flex;
+    justify-content: end;
+}
+.ca-table-header {
+    display: flex;
+    justify-content: center;
+    border-radius: 0.4rem;
+    padding: 0.15rem 0;
+    margin: 0;
+    margin-left: 1.2rem;
+    text-decoration: underline;
+    font-size: 11pt;
+    flex-wrap: wrap;
+    font-weight: 400;
+}
+
+.ca-table-row-body {
+    height: 1.6rem;
+    font-size: 11pt;
+}
+
+/*******************
+[Grid]
+*/
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    //grid-template-columns: repeat(9, calc((100% / 9)));
+    gap: 0;
+}
+.grid-item {
+  //border: 1px solid royalblue;
+  //border-top: 1px solid brown;
+  //border-bottom: 1px solid brown;
+}
+
+
+/*******************
+[Guisado-Section]
+*/
+/*******************
+[Column Stews]
+*/
+.g-section-content {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    width: 6rem; 
+    height: 3rem;
+}
+.g-section-content-box {
+    width: 100%;
+    height: 100%;
+}
+.g-section-content-box-1 {
+    padding-top: 0.7rem;
+}
+.g-content-stew {
+    display:grid;
+    justify-content: center;
+    align-items: center;
+}
+.g-content-stew-item{
+    width: 5rem;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.5rem;
+    border: 5px solid lightblue;
+    background-color: #F1F3F1;
+}
+
+.g-content-stew p {
+    font-size: 16pt;
+    font-weight: 600;
+    text-align: center;
+}
+
+/*******************
+[All]
+*/
+.primary-color {
+    color: #fff;
+    background-color: $primaryColor;
+}
+.secondary-color {
+    //background-color: lightgray;
+    background-color: #F1F3F1;
+}
+.primary-text {
+    color: #657cad;
+    font-weight: bold;
+    text-align: center;
+}
+.txt-title {
+    color: #fff;
+    font-weight: bold;
+}
+
+/******************* */
+
+
+
+.g-desglose-header {
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.5rem;
+    border: 4px solid #DBE8F4;
+   // margin-right: 1.5rem;
+}
+
+.g-column {
+    height: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.4rem;
+    border: 4px solid lightsteelblue;
+}
+
+.g-desglose-body {
+   // background-color: khaki;
+    font-size: 10pt;
+}
+
+
+
+
+

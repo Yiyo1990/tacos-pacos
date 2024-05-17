@@ -143,6 +143,10 @@
                                 <canvas baseChart class="chart" style="height: 150px !important;"
                                     [data]="barChartDataDaily" [options]="barChartOptions" [type]="'bar'"></canvas>
                             </div>
+                            <div class="col-5 md-5 sm-12">
+                                <div class="line-title"><label>Tipo de Pago</label></div>
+                                <tipo-pago-chart [payment]="paymentType" />
+                            </div>
                             <div class="col-2 md-2 sm-12">
                                 <div class="line-title"><label>Ticket Promedio</label></div>
                                 <div class="row" style="font-size: 9pt; margin-top: 1rem;"  *ngFor="let ticket of ticketsTargetList">
@@ -162,21 +166,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-5 md-5 sm-12">
-                                <div class="line-title"><label>Tipo de Pago</label></div>
-                                <div class="row" style="font-size: 9pt; margin-top: 3%;">
-                                    <div class="col-2 md-2 sm-12"><span
-                                            style="background-color: rgb(224, 224, 224); padding: 5px; color: #60bb60; font-weight: bold;">Efectivo</span>
-                                    </div>
-                                    <div class="col-2 md-2 sm-12 ellipsis" title="{{paymentType.cash.total | currency}}">{{paymentType.cash.total | currency}}</div>
-                                    <div class="col-2 md-2 sm-12"> {{paymentType.cash.percent}}</div>
-                                    <div class="col-2 md-2 sm-12"><span
-                                            style="background-color: rgb(224, 224, 224); padding: 5px; color: #e68c38; font-weight: bold;">Tarjeta</span>
-                                    </div>
-                                    <div class="col-2 md-2 sm-12 ellipsis" title="{{paymentType.card.total | currency}}">{{paymentType.card.total | currency}}</div>
-                                    <div class="col-2 md-2 sm-12">{{paymentType.card.percent}}</div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </accordion-group>
 
