@@ -1,7 +1,7 @@
 <div *ngIf="!isResultadosScreen">
     <div class="row">
 
-        <div class="col-5 md-6 sm-12">
+        <div class="col-5 md-5 sm-12">
             <div class="row">
                 <div class="col-11 md-11 sm-12">
                     <div style="display: flex; margin-top: 2%;">
@@ -33,7 +33,7 @@
             </div>
         </div>
 
-        <div class="col-4 md-3 sm-12" style="font-size: 10pt;">
+        <div class="col-4 md-4 sm-12" style="font-size: 10pt;">
             <div class="row" style="margin-top: 2%;">
                 <div class="col-6 md-6 sm-12" style="margin: auto;"><label style="font-weight: 600; float: right;">Punto
                         de Venta</label></div>
@@ -127,7 +127,8 @@
             <div class="row" *ngIf="isBtnParrotActive == 3" style="margin-top: 8%;">
                 <div class="col-1 md-1 sm-12"></div>
                 <div class="col-10 md-10 sm-12" style="text-align: center;">
-                    <label class="subtitle">Tipo de Pago</label>
+                    <tipo-pago-chart [payment]="paymentType" />
+                    <!--<label class="subtitle">Tipo de Pago</label>
                     <div class="row" style="margin-top: 3%;">
                         <div class="col-2 md-2 sm-12">
                             <label style="font-weight: 600; font-size: 11pt; color: #074877;">TARJETA</label>
@@ -145,7 +146,7 @@
                             <progress-bar [progressColor]="'#69e141'" [progress]="paymentType.percentParrot"
                                 [ammount]="paymentType.totalParrot" />
                         </div>
-                    </div>
+                    </div>-->
                 </div>
             </div>
 
@@ -177,10 +178,10 @@
 
 <div *ngIf="isResultadosScreen">
     <div class="row">
-        <div class="col-3 md-3 sm-12"></div>
-        <div class="col-2 md-2 sm-12">
+        <div class="col-7 md-7 sm-12">
             <div class="row">
-                <div class="col-11 md-11 sm-12">
+                <div class="col-4 md-4 sm-12"></div>
+                <div class="col-8 md-8 sm-12">
                     <div style="display: flex; margin-top: 2%;">
                         <button class="button-switch"
                             [ngClass]="{'btn-active': isBtnParrotActive == 2, 'btn-inactive': isBtnParrotActive != 2}"
@@ -188,18 +189,16 @@
                         <button class="button-switch"
                             [ngClass]="{'btn-active': isBtnParrotActive == 1, 'btn-inactive': isBtnParrotActive != 1}"
                             (click)="fillDonughtChart(1)" style="margin-left: 10px; font-size: 10pt;">Ingresos</button>
-
                     </div>
                 </div>
             </div>
         </div>
-
-
-        <div class="col-4 md-3 sm-12">
+        <div class="col-3 md-3 sm-12">
             <div class="row" style="margin-top: 2%;">
-                <div class="col-6 md-6 sm-12" style="margin: auto;"><label style="font-weight: 600; float: right;">Punto
-                        de Venta</label></div>
-                <div class="col-6 md-6 sm-12">
+                <div class="col-5 md-5 sm-12" style="margin: auto;">
+                    <label style="font-weight: 600;">Punto de Venta</label>
+                </div>
+                <div class="col-7 md-7 sm-12">
                     <select class="form-control" (change)="fillBarChart(0,$any($event.target).value)">
                         <option value="1" [selected]>Todos</option>
                         <option value="2">General</option>
@@ -210,6 +209,9 @@
                     </select>
                 </div>
             </div>
+        </div>
+        <div class="col-2 md-2 sm-12">
+            
         </div>
 
     </div>

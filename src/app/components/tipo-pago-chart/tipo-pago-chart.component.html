@@ -1,0 +1,21 @@
+<div style="width: 100%; text-align: center;">
+   <!--<label class="subtitle">Tipo de Pago</label>-->
+    <div class="row" style="margin-top: 3%;">
+        <div class="col-2 md-2 sm-12">
+            <label style="font-weight: 600; font-size: 11pt; color: #074877;">TARJETA</label>
+        </div>
+        <div class="col-10 md-10 sm-12">
+            <progress-bar [progressColor]="'#ffda22'" [progress]="payment.percentPayment"
+                [ammount]="payment.totalPayment" />
+        </div>
+    </div>
+    <div class="row" style="margin-top: 3%;">
+        <div class="col-2 md-2 sm-12">
+            <label style="font-weight: 600; font-size: 11pt; color: #074877;">EFECTIVO</label>
+        </div>
+        <div class="col-10 md-10 sm-12">
+            <progress-bar [progressColor]="'#69e141'" [progress]="payment.percentParrot"
+                [ammount]="payment.totalParrot" />
+        </div>
+    </div>
+</div>

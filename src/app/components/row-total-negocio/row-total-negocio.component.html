@@ -2,7 +2,12 @@
     <div class="col-1 md-1 sm-12">
         <input type="checkbox" [checked]="isChecked">
     </div>
-    <div class="col-3 md-3 sm-12 ellipsis" title="{{name}}"><img width="40" height="20" src="assets/{{imageName}}"></div>
-    <div class="col-5 md-5 sm-12 ellipsis" title="{{total | currency}}">{{total | currency}}</div>
-    <div class="col-3 md-3 sm-12 ellipsis" title="{{percent}}">{{percent}}</div>
+    <div class="col-3 md-3 sm-12 ellipsis" title="{{name}}"><img width="40" height="20" src="assets/{{imageName}}">
+    </div>
+    <div class="col-7 md-7 sm-12">
+        <div class="row">
+            <div class="col-7 md-7 sm-12 ellipsis" title="{{total | currency}}">{{total | currency}}</div>
+            <div class="col-5 md-5 sm-12 ellipsis" title="{{percent}}">{{percent}}</div>
+        </div>
+    </div>
 </div>

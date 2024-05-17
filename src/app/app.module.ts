@@ -49,6 +49,7 @@ import { CurrencyPipe } from '@angular/common';
 import { ProfitEstimatesComponent } from './pages/profit-estimates/profit-estimates.component';
 import { InputTextComponent } from './components/input-text/input-text.component';
 import { InsumosComponent } from './pages/insumos/insumos.component';
+import { TipoPagoChartComponent } from './components/tipo-pago-chart/tipo-pago-chart.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { InsumosComponent } from './pages/insumos/insumos.component';
     SupplierComponent,
     ProfitEstimatesComponent,
     InputTextComponent,
-    InsumosComponent  
+    InsumosComponent,
+    TipoPagoChartComponent  
   ],
   imports: [
     BrowserModule,
