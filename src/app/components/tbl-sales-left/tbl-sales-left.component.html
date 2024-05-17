@@ -1,1 +1,9 @@
-<p>tbl-left</p>
+<table style="width: 100%;">
+    <tbody>
+        <tr *ngFor="let sale of sales" [ngClass]="{'row-background': sale.day == 'Sábado' || sale.day == 'Domingo' }">
+            <td>{{sale.dateSale}}</td>
+            <td>{{sale.day}}</td>
+            <td>{{(sale?.totalIncome + sale?.totalDinnigRoom) | currency}}</td>
+        </tr>
+    </tbody>
+</table>

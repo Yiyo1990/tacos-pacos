@@ -41,7 +41,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     document.getElementById("desgloce")?.click()
     setTimeout(() => {
-      let rowBody = document.getElementsByClassName("row-body")
+      let rowBody = document.getElementsByClassName("hiddenScroll")
       Array.from(rowBody).forEach(el => el.addEventListener('scroll', e => {
         Array.from(rowBody).forEach(d => {
           d.scrollLeft = el.scrollLeft
@@ -60,19 +60,24 @@ export class SalesComponent implements OnInit, AfterViewInit {
     })
 
     document.getElementById("content-body")?.addEventListener("scroll", (e) => {
-      let tbl = document.getElementsByTagName('table')[1]
-      if (tbl) {
-        let offset = tbl.getBoundingClientRect()
-
-        let header = document.getElementById("hiddenHeader")
-
-        if (offset.top <= 14) {
-          header!.style.visibility = 'visible'
-        } else {
-          header!.style.visibility = 'hidden'
-        }
-      }
+      console.log( document.getElementsByTagName('table'))
+      let headerLeft = document.getElementsByTagName('table')[2]
+      let headerRight = document.getElementsByTagName('table')[3]
+      if (headerRight) {this.hiddenTblHeader(headerRight, 'hiddenHeader')}
+      if (headerRight) {this.hiddenTblHeader(headerRight, 'hiddenHeaderLeft')}
     })
+  }
+
+  hiddenTblHeader(tbl: any, id: string){
+    let offset = tbl.getBoundingClientRect()
+
+    let header = document.getElementById(id)
+
+    if (offset.top <= 14) {
+      header!.style.visibility = 'visible'
+    } else {
+      header!.style.visibility = 'hidden'
+    }
   }
 
   onFilterDates() {

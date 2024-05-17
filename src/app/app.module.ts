@@ -51,6 +51,7 @@ import { InputTextComponent } from './components/input-text/input-text.component
 import { InsumosComponent } from './pages/insumos/insumos.component';
 import { TipoPagoChartComponent } from './components/tipo-pago-chart/tipo-pago-chart.component';
 import { TblSalesLeft } from './components/tbl-sales-left/tbl-sales-left.component';
+import { HeaderTblLeftComponent } from './components/header-tbl-left/header-tbl-left.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { TblSalesLeft } from './components/tbl-sales-left/tbl-sales-left.compone
     InputTextComponent,
     InsumosComponent,
     TipoPagoChartComponent,
-    TblSalesLeft
+    TblSalesLeft,
+    HeaderTblLeftComponent
   ],
   imports: [
     BrowserModule,

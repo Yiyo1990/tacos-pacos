@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 
 @Component({
     selector: 'tbl-sales-left', 
@@ -7,5 +7,5 @@ import { Component } from "@angular/core";
 })
 
 export class TblSalesLeft {
-    
+    @Input() sales: Array<any> = []
 }

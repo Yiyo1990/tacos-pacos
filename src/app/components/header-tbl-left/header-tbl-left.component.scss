@@ -1,7 +1,9 @@
+@import '/src/styles.scss';
+
 table {
     //min-width: 2500px;
-    min-height: 100px;
-    font-size: 8pt;
+   // min-height: 5rem;
+ //   font-size: 8pt;
 
     thead {
         border-bottom: 2px solid #b1b1b1;
@@ -17,21 +19,6 @@ table {
             }
         }
 
-    }
-
-    tbody {
-        font-size: 10pt;
-
-        tr {
-            text-align: center;
-            height: 40px;
-
-            td {
-                width: 100px;
-                margin-left: 5px;
-                margin-right: 5px;
-            }
-        }
     }
 }
 

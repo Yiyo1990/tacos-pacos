@@ -1,4 +1,10 @@
-<div id="hiddenHeader" class="row-body" style="visibility: hidden; margin-top: -10px; overflow: scroll; position: fixed; left: 14.3rem; width: calc(100% - 18.5rem)">
+<div class="" id="hiddenHeaderLeft" 
+style="position: fixed; left: 14.7rem; visibility: hidden; width:  20.8rem; margin-top: -10px;">
+    <header-tbl-left />
+</div>
+
+<div id="hiddenHeader" class="row-body hiddenScroll"
+    style="visibility: hidden; margin-top: -10px; overflow: scroll; position: fixed; left: 36.3rem; width: calc(100% - 40.6rem)">
     <header-tbl-sales />
 </div>
 
@@ -22,8 +28,8 @@
             <div class="col-3 md-3"></div>
         </div>
 
-        <ventas-chart [sales]="sales" [isResultadosScreen]="false" [brandSelected]="brandSelected"/>
-        
+        <ventas-chart [sales]="sales" [isResultadosScreen]="false" [brandSelected]="brandSelected" />
+
         <div class="row">
 
             <div id="desgloce" (click)="isOpenDesgloce = !isOpenDesgloce"
@@ -35,54 +41,78 @@
 
             <div class="row" *ngIf="isOpenDesgloce">
                 <div class="table-body">
-                    <div class="row-body">
-                        <header-tbl-sales />
-                        <table>
-                            <tbody>
-                                <tr *ngFor="let sale of salesToShow; let i = index;"
-                                    [ngClass]="{'row-background': sale.day == 'Sábado' || sale.day == 'Domingo' }">
-                                    <td>{{sale.dateSale}}</td>
-                                    <td>{{sale.day}}</td>
-                                    <td>{{(sale?.totalIncome + sale?.totalDinnigRoom) | currency}}</td>
-                                    <td style="width: 48px; background-color: #fff;"></td>
-                                    <td>{{sale?.totalDinnigRoom | currency}}</td>
-                                    <td>{{sale?.diningRoom | currency}}</td>
-                                    <td>{{sale?.takeout | currency}}</td>
-                                    <td>{{sale?.pickUp | currency}}</td>
-                                    <td>{{sale?.delivery | currency}}</td>
-                                    <td>{{sale?.apps.parrot.sale | currency}}</td>
-                                    <td><input type="text" value="${{sale?.apps.parrot.income}}"
-                                            (blur)="setValueIncome(i, sale, $any($event.target).value)"
-                                            formatoMoneda></td>
-                                    <td>{{sale?.apps.parrot.commission | currency}}</td>
-                                    <td><option-pay [index]="i"  (checkedEvent)="onChangeIsPay($event, 'PARROT', sale)" [isSelected]="sale?.apps.parrot.isPay" /></td>
+                    <div style="width: 100%;">
+                        <div class="row">
+                            <div class="col-3 md-3">
+                               <header-tbl-left />
+                            </div>
+                            <div class="col-9 md-9 hiddenScroll" style="overflow-x: scroll;">
+                                <header-tbl-sales />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3 md-3">
+                                <tbl-sales-left [sales]="salesToShow" />
+                            </div>
+                            <div class="col-9 md-3  hiddenScroll" style="overflow-x: scroll; ">
+                                <table>
+                                    <tbody>
+                                        <tr *ngFor="let sale of salesToShow; let i = index;"
+                                            [ngClass]="{'row-background': sale.day == 'Sábado' || sale.day == 'Domingo' }">
+                                            <!--<td>{{sale.dateSale}}</td>
+                                            <td>{{sale.day}}</td>
+                                            <td>{{(sale?.totalIncome + sale?.totalDinnigRoom) | currency}}</td>-->
+                                            <td>{{sale?.totalDinnigRoom | currency}}</td>
+                                            <td>{{sale?.diningRoom | currency}}</td>
+                                            <td>{{sale?.takeout | currency}}</td>
+                                            <td>{{sale?.pickUp | currency}}</td>
+                                            <td>{{sale?.delivery | currency}}</td>
+                                            <td>{{sale?.apps.parrot.sale | currency}}</td>
+                                            <td><input type="text" value="${{sale?.apps.parrot.income}}"
+                                                    (blur)="setValueIncome(i, sale, $any($event.target).value)"
+                                                    formatoMoneda></td>
+                                            <td>{{sale?.apps.parrot.commission | currency}}</td>
+                                            <td><option-pay [index]="i"
+                                                    (checkedEvent)="onChangeIsPay($event, 'PARROT', sale)"
+                                                    [isSelected]="sale?.apps.parrot.isPay" /></td>
 
-                                    <td style="width: 48px; background-color: #fff;"></td>
+                                            <td style="width: 48px; background-color: #fff;"></td>
 
-                                    <td>{{sale?.totalIncome | currency}}</td>
-                                    <td>{{sale?.apps.uber.sale | currency}}</td>
-                                    <td> <input type="text" value="${{sale?.apps.uber.income}}"
-                                            (blur)="setIncomePlatforms(sale.apps.uber, sale, sale.dateSale, $any($event.target).value, 1)"
-                                            formatoMoneda></td>
-                                    <td style="width: 56px;">{{sale?.apps.uber.tax}}%</td>
-                                    <td><option-pay [index]="i" (checkedEvent)="onChangeIsPay($event, 'UBER_EATS', sale)" [isSelected]="sale?.apps.uber.isPay" /></td>
+                                            <td>{{sale?.totalIncome | currency}}</td>
+                                            <td>{{sale?.apps.uber.sale | currency}}</td>
+                                            <td> <input type="text" value="${{sale?.apps.uber.income}}"
+                                                    (blur)="setIncomePlatforms(sale.apps.uber, sale, sale.dateSale, $any($event.target).value, 1)"
+                                                    formatoMoneda></td>
+                                            <td style="width: 56px;">{{sale?.apps.uber.tax}}%</td>
+                                            <td><option-pay [index]="i"
+                                                    (checkedEvent)="onChangeIsPay($event, 'UBER_EATS', sale)"
+                                                    [isSelected]="sale?.apps.uber.isPay" /></td>
 
-                                    <td>{{sale?.apps.rappi.sale | currency}}</td>
-                                    <td><input type="text" value="{{sale?.apps.rappi.income}}"
-                                            (blur)="setIncomePlatforms(sale.apps.rappi,sale, sale.dateSale, $any($event.target).value, 3)">
-                                    </td>
-                                    <td style="width: 56px;">{{sale?.apps.rappi.tax}}%</td>
-                                    <td><option-pay [index]="i" (checkedEvent)="onChangeIsPay($event, 'RAPPI', sale)" [isSelected]="sale?.apps.rappi.isPay" /></td>
+                                            <td>{{sale?.apps.rappi.sale | currency}}</td>
+                                            <td><input type="text" value="{{sale?.apps.rappi.income}}"
+                                                    (blur)="setIncomePlatforms(sale.apps.rappi,sale, sale.dateSale, $any($event.target).value, 3)">
+                                            </td>
+                                            <td style="width: 56px;">{{sale?.apps.rappi.tax}}%</td>
+                                            <td><option-pay [index]="i"
+                                                    (checkedEvent)="onChangeIsPay($event, 'RAPPI', sale)"
+                                                    [isSelected]="sale?.apps.rappi.isPay" /></td>
 
-                                    <td>{{sale?.apps.didi.sale | currency}}</td>
-                                    <td><input type="text" value="{{sale?.apps.didi.income}}"
-                                            (blur)="setIncomePlatforms(sale.apps.didi, sale, sale.dateSale, $any($event.target).value, 2)">
-                                    </td>
-                                    <td style="width: 56px;">{{sale?.apps.didi.tax}}%</td>
-                                    <td><option-pay [index]="i" (checkedEvent)="onChangeIsPay($event, 'DIDI_FOOD', sale)" [isSelected]="sale?.apps.didi.isPay" /></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                            <td>{{sale?.apps.didi.sale | currency}}</td>
+                                            <td><input type="text" value="{{sale?.apps.didi.income}}"
+                                                    (blur)="setIncomePlatforms(sale.apps.didi, sale, sale.dateSale, $any($event.target).value, 2)">
+                                            </td>
+                                            <td style="width: 56px;">{{sale?.apps.didi.tax}}%</td>
+                                            <td><option-pay [index]="i"
+                                                    (checkedEvent)="onChangeIsPay($event, 'DIDI_FOOD', sale)"
+                                                    [isSelected]="sale?.apps.didi.isPay" /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--<tbl-sales-left [sales]="salesToShow" style="width: 15rem;"/>-->
+
+                        </div>
+
                     </div>
                 </div>
             </div>
