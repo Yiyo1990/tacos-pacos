@@ -50,6 +50,7 @@ import { ProfitEstimatesComponent } from './pages/profit-estimates/profit-estima
 import { InputTextComponent } from './components/input-text/input-text.component';
 import { InsumosComponent } from './pages/insumos/insumos.component';
 import { TipoPagoChartComponent } from './components/tipo-pago-chart/tipo-pago-chart.component';
+import { TblSalesLeft } from './components/tbl-sales-left/tbl-sales-left.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,8 @@ import { TipoPagoChartComponent } from './components/tipo-pago-chart/tipo-pago-c
     ProfitEstimatesComponent,
     InputTextComponent,
     InsumosComponent,
-    TipoPagoChartComponent  
+    TipoPagoChartComponent,
+    TblSalesLeft
   ],
   imports: [
     BrowserModule,

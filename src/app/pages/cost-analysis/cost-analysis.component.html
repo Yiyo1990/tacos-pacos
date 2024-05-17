@@ -1,42 +1,209 @@
-<div class="row" style=" margin: 0; width: 100% !important;">
-    <div class="col-12 sm-12 md-12">
-        <div class="row">
-            <div class="col-12">
-                <div class="row" style="margin-bottom: 1rem;">
-                    <div class="col-md-4"><button style="float: left;" (click)="goToInsumos()">Insumos</button></div>
-                    <div class="col-md-4"></div>
-                    <div class="col-md-4" ></div>
+<div class="ca-container">
+    <!--Tacos-->
+    <p class="ca-title-division secondary-color">Tacos</p>
+    <div class="row">
+        <div class="col-1 px-0">            
+            <div *ngFor="let item of mainHedaer">
+                <table class="table ca-section-container">
+                    <tr class="ca-table-row-header"></tr>
+                    <tr class="ca-table-row-body">
+                        <td class="primary-text">Costo</td>
+                    </tr>
+                    <tr class="secondary-color ca-table-row-body">
+                        <td class="primary-text">60%</td>
+                    </tr>
+                    <tr>
+                        <td class="primary-text ca-table-row-body">Venta</td>
+                    </tr>
+                    <tr class="secondary-color ca-table-row-body">
+                        <td class="primary-text">%</td>
+                    </tr>
+                    <tr class="ca-table-row-body"></tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-11 px-0 mx-0">
+            <div class="grid-container"><!--GridContainer-->
+                <div class="grid-item"  *ngFor="let item of guisosList"><!--Item-->
+                    <table width="100%" class="table ca-section-container">
+                        <tr class="ca-table-header primary-color ca-table-row-header">
+                            <td>{{item.name}}</td>
+                        </tr>
+                        <tr class="ca-table-row-body">
+                            <td class="text-end">{{item.costo | currency}}</td>
+                        </tr>
+                        <tr class="ca-table-row-body secondary-color">
+                            <td class="text-end">{{item.margen |currency}}</td>
+                        </tr>
+                        <tr class="ca-table-row-body">
+                            <td class="text-end">{{item.porcentaje | currency}}</td>
+                        </tr>
+                        <tr class="ca-table-row-body secondary-color">
+                            <td class="text-center">{{item.porcentaje }}%</td>
+                        </tr>
+                        <tr class="ca-table-row-body"></tr>
+                    </table>
+                </div><!--item-->
+            </div><!--GridContainer-->
+        </div>
+    </div>
+
+    <!--Gorditas-->
+    <p class="ca-title-division secondary-color">Gorditas</p>
+    <div class="row">
+        <div class="col-1 px-0">            
+            <div *ngFor="let item of mainHedaer">
+                <table class="table ca-section-container">
+                    <tr class="ca-table-row-header"></tr>
+                    <tr class="ca-table-row-body">
+                        <td class="primary-text">Costo</td>
+                    </tr>
+                    <tr class="secondary-color ca-table-row-body">
+                        <td class="primary-text">60%</td>
+                    </tr>
+                    <tr>
+                        <td class="primary-text ca-table-row-body">Venta</td>
+                    </tr>
+                    <tr class="secondary-color ca-table-row-body">
+                        <td class="primary-text">%</td>
+                    </tr>
+                    <tr class="ca-table-row-body"></tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-11 px-0 mx-0">
+            <div class="grid-container"><!--GridContainer-->
+                <div class="grid-item"  *ngFor="let item of guisosList"><!--Item-->
+                    <table width="100%" class="table ca-section-container">
+                        <tr class="ca-table-header primary-color ca-table-row-header">
+                            <td>{{item.name}}</td>
+                        </tr>
+                        <tr class="ca-table-row-body">
+                            <td class="text-end">{{item.costo | currency}}</td>
+                        </tr>
+                        <tr class="ca-table-row-body secondary-color">
+                            <td class="text-end">{{item.margen |currency}}</td>
+                        </tr>
+                        <tr class="ca-table-row-body">
+                            <td class="text-end">{{item.porcentaje | currency}}</td>
+                        </tr>
+                        <tr class="ca-table-row-body secondary-color">
+                            <td class="text-center">{{item.porcentaje }}%</td>
+                        </tr>
+                        <tr class="ca-table-row-body"></tr>
+                    </table>
+                </div><!--item-->
+            </div><!--GridContainer-->
+        </div>
+    </div>
+
+    <!--Guisados-->
+    <p class="ca-title-division secondary-color">Guisados</p>    
+    <div class="row" style="padding-left: 1rem;font-size:12pt">
+        <div class="primary-color text-center">
+            <label class="txt-title py-1">Barbacoa</label>
+        </div>
+        <div class="col-7 pt-2" style="display: flex;">
+            <!--Column Guiso-->
+            <div style="padding: 0">
+                <div class="primary-color text-center g-section-content">
+                   <strong>Guiso</strong>
                 </div>
-                <accordion>
-                    <!-- ///////////  TACOS ////////////-->
-                    <accordion-group [isOpen]="true">
-                        <span accordion-heading>
-                            <label class="tab-title">Tacos</label> &nbsp; <i style="float: right;"
-                                class='fa fa-chevron-down'></i>
-                        </span>
-
-                        <table style="width: 100%;">
-                        </table>
-                        
-
-                    </accordion-group>
-
-                    <!-- ///////////  GORDITAS ////////////-->
-                    <accordion-group [isOpen]="false">
-                        <span accordion-heading>
-                            <label class="tab-title">Gorditas</label> &nbsp; <i style="float: right;"
-                                class='fa fa-chevron-down'></i>
-                        </span>
-                    </accordion-group>
-
-                    <!-- ///////////  GUISADOS ////////////-->
-                    <accordion-group [isOpen]="false">
-                        <span accordion-heading>
-                            <label class="tab-title">Guisados</label> &nbsp; <i style="float: right;"
-                                class='fa fa-chevron-down'></i>
-                        </span>
-                    </accordion-group>
-                </accordion>
+                <div class="g-section-content-box">
+                    <!--Litros-->
+                    <div class="g-section-content-box-1">
+                        <div class="g-content-stew">
+                            <div class="g-content-stew-item">
+                                <strong>Litros</strong>
+                            </div>
+                            <p class="">17</p>
+                        </div>
+                    </div>
+                     <!--Piezas x-->
+                    <div class="g-section-content-box-1">
+                        <div class="g-content-stew">
+                            <div class="g-content-stew-item">
+                                <strong>Piezas x</strong>
+                            </div>
+                            <p class="">23</p>
+                        </div>
+                    </div>
+                    <!--Piezas -->
+                    <div class="g-section-content-box-1">
+                        <div class="g-content-stew">
+                            <div class="g-content-stew-item">
+                                <strong>Piezas</strong>
+                            </div>
+                            <p class="">391</p>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <div style="width: 100%;">
+                <table class="table" style="width: 100%;font-size: 12pt;">
+                    <tr class="primary-color text-center" style="height: 3rem;">
+                        <th>No.</th>
+                        <th>Categoría</th>
+                        <th>Ingrediente</th>
+                        <th>KG-LT $</th>
+                        <th>Qty</th>
+                        <th>Precio</th>
+                    </tr>
+                    <tr class="text-center" style="height: 3rem;">
+                        <td>1</td>
+                        <td>Proteinas</td>
+                        <td>Labio National</td>
+                        <td>{{ 146.90 | currency }}</td>
+                        <td>{{ 27.2 | currency }}</td>
+                        <td>{{ 3995.68 | currency }}</td>
+                    </tr>
+                    <tr class="text-center" style="height: 3rem;background-color: #DBE8F4">
+                        <td>2</td>
+                        <td>Verduras</td>
+                        <td>Ajo</td>
+                        <td>{{ 80 | currency }}</td>
+                        <td>{{ 0.08 | currency }}</td>
+                        <td>{{ 6.40 | currency }}</td>
+                    </tr>
+                    <tr class="text-center" style="height: 3rem;">
+                        <td>3</td>
+                        <td>Verduras</td>
+                        <td>Cebolla</td>
+                        <td>{{ 25 | currency }}</td>
+                        <td>{{ 0.3 | currency }}</td>
+                        <td>{{ 7.50 | currency }}</td>
+                    </tr>
+                    <tr class="text-center" style="height: 3rem;background-color: #DBE8F4">
+                        <td>4</td>
+                        <td>Servicios</td>
+                        <td>Gas</td>
+                        <td>{{ 12 | currency }}</td>
+                        <td>{{ 10 | currency }}</td>
+                        <td>{{ 120 | currency }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="7" class="text-end primary-text" style="border-top: 0.5px solid lightslategrey;">{{ 4701.56 | currency }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-5 pt-2" style="padding: 0;margin: 0;">
+            <div class="g-desglose-header secondary-color text-center">
+                <label class="primary-text">Desglose</label>
+            </div>
+            <div class="pt-3 g-desglose-body">
+                <div class="row">
+                    <div class="col-2">
+                        col-1
+                    </div>
+                    <div class="col-5">
+                        col-5
+                    </div>
+                    <div class="col-5">
+                        col-5
+                    </div>
+                </div>
             </div>
         </div>
     </div>
