@@ -86,7 +86,7 @@
     <div class="col-8 md-8 sm-12" style="margin-left: 36rem;">
         <table class="table" style="width:100%;background: #fff;font-size: 10pt;">
             <tr class="primary-color" style="height:2rem">
-                <th style="width: 100%; text-align: center;" colspan="17">Venta Estimada Mensual</th>
+                <th style="width: 100%; text-align: center;" [attr.colspan]="estimations.length">Venta Estimada Mensual</th>
             </tr>
             <tr style="height: 2rem;">
                 <td *ngFor="let estimation of estimations" class="primary-color"
