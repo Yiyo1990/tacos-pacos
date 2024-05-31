@@ -1,8 +1,16 @@
-<div class="ca-container">
+<div class="row" style=" margin: 0; width: 100% !important;">
+
+    <div class="row">
+        <div class="col-12 md-12 sm-12">
+            <button style="font-size: 7pt;" (click)="onClickRegisterGuisado(template)">Registrar Guisado</button>
+        </div>
+    </div>
+
+
     <!--Tacos-->
     <p class="ca-title-division secondary-color">Tacos</p>
     <div class="row">
-        <div class="col-1 px-0">            
+        <div class="col-1 px-0">
             <div *ngFor="let item of mainHedaer">
                 <table class="table ca-section-container">
                     <tr class="ca-table-row-header"></tr>
@@ -24,7 +32,7 @@
         </div>
         <div class="col-11 px-0 mx-0">
             <div class="grid-container"><!--GridContainer-->
-                <div class="grid-item"  *ngFor="let item of guisosList"><!--Item-->
+                <div class="grid-item" *ngFor="let item of guisosList"><!--Item-->
                     <table width="100%" class="table ca-section-container">
                         <tr class="ca-table-header primary-color ca-table-row-header">
                             <td>{{item.name}}</td>
@@ -51,7 +59,7 @@
     <!--Gorditas-->
     <p class="ca-title-division secondary-color">Gorditas</p>
     <div class="row">
-        <div class="col-1 px-0">            
+        <div class="col-1 px-0">
             <div *ngFor="let item of mainHedaer">
                 <table class="table ca-section-container">
                     <tr class="ca-table-row-header"></tr>
@@ -73,7 +81,7 @@
         </div>
         <div class="col-11 px-0 mx-0">
             <div class="grid-container"><!--GridContainer-->
-                <div class="grid-item"  *ngFor="let item of guisosList"><!--Item-->
+                <div class="grid-item" *ngFor="let item of guisosList"><!--Item-->
                     <table width="100%" class="table ca-section-container">
                         <tr class="ca-table-header primary-color ca-table-row-header">
                             <td>{{item.name}}</td>
@@ -98,7 +106,7 @@
     </div>
 
     <!--Guisados-->
-    <p class="ca-title-division secondary-color">Guisados</p>    
+    <p class="ca-title-division secondary-color">Guisados</p>
     <div class="row" style="padding-left: 1rem;font-size:12pt">
         <div class="primary-color text-center">
             <label class="txt-title py-1">Barbacoa</label>
@@ -107,7 +115,7 @@
             <!--Column Guiso-->
             <div style="padding: 0">
                 <div class="primary-color text-center g-section-content">
-                   <strong>Guiso</strong>
+                    <strong>Guiso</strong>
                 </div>
                 <div class="g-section-content-box">
                     <!--Litros-->
@@ -119,7 +127,7 @@
                             <p class="">17</p>
                         </div>
                     </div>
-                     <!--Piezas x-->
+                    <!--Piezas x-->
                     <div class="g-section-content-box-1">
                         <div class="g-content-stew">
                             <div class="g-content-stew-item">
@@ -183,7 +191,8 @@
                         <td>{{ 120 | currency }}</td>
                     </tr>
                     <tr>
-                        <td colspan="7" class="text-end primary-text" style="border-top: 0.5px solid lightslategrey;">{{ 4701.56 | currency }}</td>
+                        <td colspan="7" class="text-end primary-text" style="border-top: 0.5px solid lightslategrey;">{{
+                            4701.56 | currency }}</td>
                     </tr>
                 </table>
             </div>
@@ -208,3 +217,110 @@
         </div>
     </div>
 </div>
+
+
+
+
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Registrar Guisado</h4>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-12 md-12 sm-12">
+                <!--<ngx-select-dropdown [config]="[]" [options]="foodCategories" [disabled]="!isEnabledRegisterSup"
+            [(ngModel)]="provider!.foodCategories"></ngx-select-dropdown>-->
+                <div class="row" style="margin-bottom: 0.5rem;">
+                    <div class="col-12 md-12 sm-12">
+
+                        <!--Column Guiso-->
+                        <div class="g-section-content-box" style="display: flex;">
+                            <!--Litros-->
+                            <div class="g-section-content-box-1">
+                                <div class="g-content-stew">
+                                    <div class="g-content-stew-item">
+                                        <strong>Litros</strong>
+                                    </div>
+                                    <div>17</div>
+                                </div>
+                            </div>
+                            <!--Piezas x-->
+                            <div class="g-section-content-box-1">
+                                <div class="g-content-stew">
+                                    <div class="g-content-stew-item">
+                                        <strong>Piezas x</strong>
+                                    </div>
+                                    <div>23</div>
+                                </div>
+                            </div>
+                            <!--Piezas -->
+                            <div class="g-section-content-box-1">
+                                <div class="g-content-stew">
+                                    <div class="g-content-stew-item">
+                                        <strong>Piezas</strong>
+                                    </div>
+                                    <div>391</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex;">
+                    <div style="width: 100%;">
+                        <table class="table" style="width: 100%;font-size: 12pt;">
+                            <tr class="primary-color text-center" style="height: 3rem;">
+                                <th>No.</th>
+                                <th>Categoría</th>
+                                <th>Ingrediente</th>
+                                <th>KG-LT $</th>
+                                <th>Qty</th>
+                                <th>Precio</th>
+                            </tr>
+                            <tr class="text-center" style="height: 3rem;">
+                                <td>1</td>
+                                <td>Proteinas</td>
+                                <td>Labio National</td>
+                                <td>{{ 146.90 | currency }}</td>
+                                <td>{{ 27.2 | currency }}</td>
+                                <td>{{ 3995.68 | currency }}</td>
+                            </tr>
+                            <tr class="text-center" style="height: 3rem;background-color: #DBE8F4">
+                                <td>2</td>
+                                <td>Verduras</td>
+                                <td>Ajo</td>
+                                <td>{{ 80 | currency }}</td>
+                                <td>{{ 0.08 | currency }}</td>
+                                <td>{{ 6.40 | currency }}</td>
+                            </tr>
+                            <tr class="text-center" style="height: 3rem;">
+                                <td>3</td>
+                                <td>Verduras</td>
+                                <td>Cebolla</td>
+                                <td>{{ 25 | currency }}</td>
+                                <td>{{ 0.3 | currency }}</td>
+                                <td>{{ 7.50 | currency }}</td>
+                            </tr>
+                            <tr class="text-center" style="height: 3rem;background-color: #DBE8F4">
+                                <td>4</td>
+                                <td>Servicios</td>
+                                <td>Gas</td>
+                                <td>{{ 12 | currency }}</td>
+                                <td>{{ 10 | currency }}</td>
+                                <td>{{ 120 | currency }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="7" class="text-end primary-text"
+                                    style="border-top: 0.5px solid lightslategrey;">{{ 4701.56 | currency }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <button>Guardar</button>
+    </div>
+</ng-template>
