@@ -231,11 +231,14 @@
     <div class="modal-body">
         <div class="row">
             <div class="col-12 md-12 sm-12">
-                <!--<ngx-select-dropdown [config]="[]" [options]="foodCategories" [disabled]="!isEnabledRegisterSup"
-            [(ngModel)]="provider!.foodCategories"></ngx-select-dropdown>-->
                 <div class="row" style="margin-bottom: 0.5rem;">
                     <div class="col-12 md-12 sm-12">
-
+                        <div class="row" style="margin-bottom: 2rem;">
+                            <div class="col-3 md-12">
+                                <label style="font-weight: bold;">Nombre del Guiso</label>
+                                <input type="text" class="form-control" placeholder="Ejem: Barbacoa">
+                            </div>
+                        </div>
                         <!--Column Guiso-->
                         <div class="g-section-content-box" style="display: flex;">
                             <!--Litros-->
@@ -270,51 +273,48 @@
                 </div>
                 <div style="display: flex;">
                     <div style="width: 100%;">
-                        <table class="table" style="width: 100%;font-size: 12pt;">
-                            <tr class="primary-color text-center" style="height: 3rem;">
-                                <th>No.</th>
-                                <th>Categoría</th>
-                                <th>Ingrediente</th>
-                                <th>KG-LT $</th>
-                                <th>Qty</th>
-                                <th>Precio</th>
+                        <table  class="table" style="width: 100%; font-size: 12pt;">
+                            <tr class="primary-color text-center" style="height: 3rem; width: 100%;">
+                                <th style="width: 5%;">No.</th>
+                                <th style="width: 20%;">Categoría</th>
+                                <th style="width: 20%;">Ingrediente</th>
+                                <th style="width: 10%;">KG-LT $</th>
+                                <th style="width: 10%;">Unidad</th>
+                                <th style="width: 10%;">Qty</th>
+                                <th style="width: 20%;">Precio</th>
+                                <th style="width: 5%;"></th>
                             </tr>
-                            <tr class="text-center" style="height: 3rem;">
-                                <td>1</td>
-                                <td>Proteinas</td>
-                                <td>Labio National</td>
-                                <td>{{ 146.90 | currency }}</td>
-                                <td>{{ 27.2 | currency }}</td>
-                                <td>{{ 3995.68 | currency }}</td>
+                        </table>
+                        <table class="table" style="width: 100%; font-size: 12pt;">
+                            <tr class="text-center" style="height: 3rem;" *ngFor="let ingrediente of ingredienteList; let i=index;">
+                                <row-guisado
+                                [id]="i" 
+                                [categories]="categoriesList" 
+                                [insumoList]="insumosList"
+                                [ingrediente]="ingrediente" 
+                                (onChangeIngredienteValues)="onChangeIngredienteValues($event)" 
+                                (onDeleteRow)="onDeleteIngrediente($event)"/>
                             </tr>
-                            <tr class="text-center" style="height: 3rem;background-color: #DBE8F4">
-                                <td>2</td>
-                                <td>Verduras</td>
-                                <td>Ajo</td>
-                                <td>{{ 80 | currency }}</td>
-                                <td>{{ 0.08 | currency }}</td>
-                                <td>{{ 6.40 | currency }}</td>
-                            </tr>
-                            <tr class="text-center" style="height: 3rem;">
-                                <td>3</td>
-                                <td>Verduras</td>
-                                <td>Cebolla</td>
-                                <td>{{ 25 | currency }}</td>
-                                <td>{{ 0.3 | currency }}</td>
-                                <td>{{ 7.50 | currency }}</td>
-                            </tr>
-                            <tr class="text-center" style="height: 3rem;background-color: #DBE8F4">
-                                <td>4</td>
-                                <td>Servicios</td>
-                                <td>Gas</td>
-                                <td>{{ 12 | currency }}</td>
-                                <td>{{ 10 | currency }}</td>
-                                <td>{{ 120 | currency }}</td>
-                            </tr>
+
+                        </table>
+                        <table class="table" style="width: 100%; font-size: 12pt;">
                             <tr>
-                                <td colspan="7" class="text-end primary-text"
-                                    style="border-top: 0.5px solid lightslategrey;">{{ 4701.56 | currency }}</td>
+                                <td style="width: 75%;" colspan="5">
+                                    
+                                    <div style="border: solid 1px #d1d1d1; width: 25px; height: 25px; border-radius: 5px; cursor: pointer; padding: 0.1rem 0.1rem !important;"
+                                        title="Agregar ingrediente"
+                                        (click)="onAddIngrediente()"
+                                        >
+                                        <i style="font-size: 16pt;" class="fa fa-plus"></i>
+                                    </div>
+                                    
+                                </td>
+                                
+                                <td class="primary-text"
+                                    style="width: 20%;">{{ 4701.56 | currency }}</td>
+                                <td style="width: 5%; "></td>
                             </tr>
+
                         </table>
                     </div>
                 </div>

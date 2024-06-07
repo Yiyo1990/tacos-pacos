@@ -68,5 +68,16 @@ export class InsumoService {
     let url = this.url.concat(`insumos/insumos-catalogo/${branchId}`)
     return this.httpClient.get(url)
   }
+
+
+  /**
+   * Servicio para obtener el listado de categorias
+   * @param branchId 
+   * @returns 
+   */
+  getInsumosCategories(branchId: number) {
+    let url = this.url.concat(`insumos/categorias/${branchId}`)
+    return this.httpClient.get(url)
+  }
   
 }

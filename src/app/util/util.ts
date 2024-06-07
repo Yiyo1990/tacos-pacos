@@ -36,6 +36,15 @@ const sortByKey = (array: Array<any>, keyName: string): Array<any> => {
   return array.sort((a: any, b: any) => { return a[keyName] < b[keyName] ? 0 : -1 })
 }
 
+const convertObjectToArray  = (obj: any) => {
+  let res: any = []
+  let keys = Object.keys(obj)
+  keys.map((k:any, id: any) => {
+    res.push({id: id++, name: k, data: obj[k]})
+  })
+  return res
+}
+
 const fixedData = (data: any) => {
   data.commission = data.commission.toFixed(2)
   data.sale = data.sale.toFixed(2)
@@ -260,5 +269,5 @@ enum PaymentMethod {
 export {
   configDropdown, firstUpperCase, sortByKey, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions,
   groupArrayByKey, ReportChannel, fixedData, OperationType, BalanceType, Pages, totalSalesByDelivery, addPlatafformInData, kpisIndicators, 
-  getKpiColorAndPercent, foodPercents, TypeModules, PaymentMethod, isNumber
+  getKpiColorAndPercent, foodPercents, TypeModules, PaymentMethod, isNumber, convertObjectToArray
 }

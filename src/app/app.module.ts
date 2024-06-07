@@ -52,6 +52,8 @@ import { InsumosComponent } from './pages/insumos/insumos.component';
 import { TipoPagoChartComponent } from './components/tipo-pago-chart/tipo-pago-chart.component';
 import { TblSalesLeft } from './components/tbl-sales-left/tbl-sales-left.component';
 import { HeaderTblLeftComponent } from './components/header-tbl-left/header-tbl-left.component';
+import { RowGuisadoComponent } from './components/row-guisado/row-guisado.component';
+import { HeaderTblGuisadoComponent } from './components/header-tbl-guisado/header-tbl-guisado.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +91,9 @@ import { HeaderTblLeftComponent } from './components/header-tbl-left/header-tbl-
     InsumosComponent,
     TipoPagoChartComponent,
     TblSalesLeft,
-    HeaderTblLeftComponent
+    HeaderTblLeftComponent,
+    RowGuisadoComponent,
+    HeaderTblGuisadoComponent
   ],
   imports: [
     BrowserModule,

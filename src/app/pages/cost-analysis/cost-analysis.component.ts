@@ -4,6 +4,7 @@ import { MainService } from 'src/app/main/main.service';
 import { CostAnalysisService } from './cost-analysis.service';
 import { InsumoService } from '../insumos/insumo.service';
 import { ToastrService } from 'ngx-toastr';
+import { convertObjectToArray, groupArrayByKey } from '@util/util';
 
 @Component({
   selector: 'app-cost-analysis',
@@ -15,6 +16,7 @@ export class CostAnalysisComponent implements OnInit {
   modalRef?: BsModalRef;
   currentBranch: any
   insumosList: Array<any> = []
+  categoriesList: Array<any> = []
 
   public guisosList: Array<any> = [
     { id: 1, name: "Barbacoa", costo: 12.01, margen: 30.05, porcentaje: 22 },
@@ -46,6 +48,13 @@ export class CostAnalysisComponent implements OnInit {
     // { id: 1, name: "Costo", name2: "60%", name3: "Venta", name4: "%" }
   ]
 
+
+  /**
+   * variables para modal
+   */
+  public ingredienteList: Array<any> = []
+
+
   constructor(
     private mainService: MainService,
     private modalService: BsModalService,
@@ -60,6 +69,7 @@ export class CostAnalysisComponent implements OnInit {
     this.calcularAnchoColumna();
     this.currentBranch = JSON.parse(this.mainService.currentBranch)
     this.getInsumoList()
+    this.callCategoriesService()
   }
 
   calcularAnchoColumna(): void {
@@ -79,18 +89,33 @@ export class CostAnalysisComponent implements OnInit {
     // return `repeat(${numCol}, calc((100% / 2)))`
   }
 
-
-
-
   /**
    * Evento click Registrar Guisado
    * @param template 
    */
   onClickRegisterGuisado(template: any) {
     // this.resetProviderData()
+    this.ingredienteList = []
     this.openModal(template)
   }
 
+
+  /**
+   * Evento para agreguar un row ingrediente
+   */
+  onAddIngrediente() {
+   // 
+    let ingrediente = {
+      id: 0,
+      categoria: {},
+      ingrediente: "",
+      kgLt: 0,
+      unidadM: {},
+      qty: 0,
+      precio: 0
+    }
+    this.ingredienteList.push(ingrediente)
+  }
 
 
   /**
@@ -99,7 +124,8 @@ export class CostAnalysisComponent implements OnInit {
   getInsumoList() {
     this.insumoService.getInsumos(this.currentBranch.id).subscribe({
       next: (res: any) => {
-        this.insumosList = res
+        this.insumosList = convertObjectToArray(res)
+        console.log(this.insumosList)
       },
       error: () => {
         this.toast.error("Ocurrio un error al obtener los ingredientes.")
@@ -122,6 +148,32 @@ export class CostAnalysisComponent implements OnInit {
     })
   }
 
+  callCategoriesService() {
+    this.insumoService.getInsumosCategories(this.currentBranch.id).subscribe({
+      next: (res: any) => {
+        if(Array.isArray(res)) {
+          this.categoriesList = res
+        }
+      },
+      error: (e) => {
+        console.log(e)
+      }
+    })
+  }
+
+  /***
+   * funciones para registro de guisado
+   *  **/
+
+  /**
+   * Evento que recibe cuando se da click en eliminar un row de ingrediente
+   * @param e ingrediente a eliminar
+   */
+  onDeleteIngrediente(e: any) {
+    let newList = this. ingredienteList.filter((i: any) => i.id != e.id)
+    this.ingredienteList = newList
+  }
+
 
   /**
    * 
@@ -129,13 +181,25 @@ export class CostAnalysisComponent implements OnInit {
    */
   openModal(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-xl', backdrop: 'static' })
-    // this.modalRef = this.modalService.show(template)
   }
 
-  /**
+    /**
    * Cierra Modal para editar agregar guisado
    */
-  closeModal() {
-    this.modalRef?.hide()
-  }
-}
+    closeModal() {
+      this.modalRef?.hide()
+    }
+
+    /**
+     * Evento para recibir los ingredientes agregados a la lista
+     * @param event 
+     */
+    onChangeIngredienteValues(event: any) {
+      this.ingredienteList[event.id] = event
+    }
+
+    get totalPriceGuisado() {
+
+      return 0
+    }
+} 
