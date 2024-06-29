@@ -54,6 +54,8 @@ import { TblSalesLeft } from './components/tbl-sales-left/tbl-sales-left.compone
 import { HeaderTblLeftComponent } from './components/header-tbl-left/header-tbl-left.component';
 import { RowGuisadoComponent } from './components/row-guisado/row-guisado.component';
 import { HeaderTblGuisadoComponent } from './components/header-tbl-guisado/header-tbl-guisado.component';
+import { ModalGuisadoComponent } from './components/modal-guisado/modal-guisado.component';
+import { DecimalOnlyDirective } from './directivas/decimal-only.directive';
 
 @NgModule({
   declarations: [
@@ -93,7 +95,9 @@ import { HeaderTblGuisadoComponent } from './components/header-tbl-guisado/heade
     TblSalesLeft,
     HeaderTblLeftComponent,
     RowGuisadoComponent,
-    HeaderTblGuisadoComponent
+    HeaderTblGuisadoComponent,
+    ModalGuisadoComponent,
+    DecimalOnlyDirective
   ],
   imports: [
     BrowserModule,

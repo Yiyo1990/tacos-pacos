@@ -152,7 +152,7 @@ const getKpiColorAndPercent = (kpiIndicator: any, total: number, totalSale: numb
   return {backgroundColor, color, percent};
 }
 
-const isNumber = (input: string) => {
+const isNumber = (input: any) => {
   return /^-?\d+(\.\d+)?$/.test(input)
 }
 
@@ -264,6 +264,56 @@ enum TypeModules {
 enum PaymentMethod {
   CASH = "CASH",
   CARD = "CARD"
+}
+
+export enum GuisoCanal {
+  CHANNEL_COMEDOR = 'CHANNEL_COMEDOR',
+  CHANNEL_APLICACION = 'CHANNEL_APLICACION'
+}
+
+export enum GuisoPresentacion {
+  TACO = 'TACO',
+  GORDITA = 'GORDITA',
+}
+
+export class GuisadoCalculadora {
+  id: any = null
+  venta: number = 0
+  guisoPresentacion = GuisoPresentacion.GORDITA
+  guisoCanal = GuisoCanal.CHANNEL_COMEDOR
+  costo: number = 0
+  percent60: number = 0
+  percent = 0
+  utilidad = 0
+
+  constructor(presentacion: GuisoPresentacion, canal: GuisoCanal){
+    this.guisoPresentacion = presentacion
+    this.guisoCanal = canal
+  }
+}
+
+export class GuisoVenta {
+  id!: number
+  venta!: number
+  ingreso!: number
+  guisoPresentacion!: any
+  guisoCanal!: any
+}
+
+export class GuisoDetalle {
+  insumoId!: number
+  cantidad!: number
+}
+
+export class Guisado {
+  id!: number
+  nombreGuiso!: string
+  cantidad!: number
+  unidadMedidaId!: number
+  piezas!: number
+  guisoDetalle!: any[]
+  guisoVenta!: any[]
+  branchId!: number
 }
 
 export {

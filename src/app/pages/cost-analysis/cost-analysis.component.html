@@ -6,11 +6,26 @@
         </div>
     </div>
 
+    <div class="row" style="height: 1rem;"></div>
+    <div class="row" style="margin-bottom: 1rem;">
+        <div class="col-12 md-12 sm-12">
+            <div style="display: flex;">
+                <button class="button-switch"
+                    style="font-size: 9pt;" 
+                    [ngClass]="{'btn-active': isTabTaco, 'btn-inactive': !isTabTaco}"
+                    (click)="isTabTaco=true">Tacos</button>
+                <button class="button-switch"
+                    style="font-size: 9pt;" 
+                    [ngClass]="{'btn-active': !isTabTaco, 'btn-inactive': isTabTaco}"
+                    (click)="isTabTaco=false">Gorditas</button>
+            </div>
+        </div>
+    </div>
+
 
     <!--Tacos-->
-    <p class="ca-title-division secondary-color">Tacos</p>
-    <div class="row">
-        <div class="col-1 px-0">
+    <div *ngIf="isTabTaco" class="row">
+        <div class="col-1 px-0" *ngIf="tacosList.length > 0">
             <div *ngFor="let item of mainHedaer">
                 <table class="table ca-section-container">
                     <tr class="ca-table-row-header"></tr>
@@ -32,22 +47,22 @@
         </div>
         <div class="col-11 px-0 mx-0">
             <div class="grid-container"><!--GridContainer-->
-                <div class="grid-item" *ngFor="let item of guisosList"><!--Item-->
+                <div class="grid-item" *ngFor="let item of tacosList"><!--Item-->
                     <table width="100%" class="table ca-section-container">
                         <tr class="ca-table-header primary-color ca-table-row-header">
-                            <td>{{item.name}}</td>
+                            <td style="cursor: pointer;" (click)="editGuiso(item, template)">{{item.name}}</td>
                         </tr>
                         <tr class="ca-table-row-body">
-                            <td class="text-end">{{item.costo | currency}}</td>
+                            <td class="text-center">{{item.costo | currency}}</td>
                         </tr>
                         <tr class="ca-table-row-body secondary-color">
-                            <td class="text-end">{{item.margen |currency}}</td>
+                            <td class="text-center">{{item.percent60 |currency}}</td>
                         </tr>
                         <tr class="ca-table-row-body">
-                            <td class="text-end">{{item.porcentaje | currency}}</td>
+                            <td class="text-center">{{item.venta | currency}}</td>
                         </tr>
                         <tr class="ca-table-row-body secondary-color">
-                            <td class="text-center">{{item.porcentaje }}%</td>
+                            <td class="text-center">{{item.percent }}%</td>
                         </tr>
                         <tr class="ca-table-row-body"></tr>
                     </table>
@@ -57,9 +72,8 @@
     </div>
 
     <!--Gorditas-->
-    <p class="ca-title-division secondary-color">Gorditas</p>
-    <div class="row">
-        <div class="col-1 px-0">
+    <div *ngIf="!isTabTaco" class="row">
+        <div class="col-1 px-0" *ngIf="gorditasList.length > 0">
             <div *ngFor="let item of mainHedaer">
                 <table class="table ca-section-container">
                     <tr class="ca-table-row-header"></tr>
@@ -81,22 +95,23 @@
         </div>
         <div class="col-11 px-0 mx-0">
             <div class="grid-container"><!--GridContainer-->
-                <div class="grid-item" *ngFor="let item of guisosList"><!--Item-->
+                <!--Item-->
+                <div class="grid-item" *ngFor="let item of gorditasList">
                     <table width="100%" class="table ca-section-container">
                         <tr class="ca-table-header primary-color ca-table-row-header">
                             <td>{{item.name}}</td>
                         </tr>
                         <tr class="ca-table-row-body">
-                            <td class="text-end">{{item.costo | currency}}</td>
+                            <td class="text-center">{{item.costo | currency}}</td>
                         </tr>
                         <tr class="ca-table-row-body secondary-color">
-                            <td class="text-end">{{item.margen |currency}}</td>
+                            <td class="text-center">{{item.percent60 |currency}}</td>
                         </tr>
                         <tr class="ca-table-row-body">
-                            <td class="text-end">{{item.porcentaje | currency}}</td>
+                            <td class="text-center">{{item.venta | currency}}</td>
                         </tr>
                         <tr class="ca-table-row-body secondary-color">
-                            <td class="text-center">{{item.porcentaje }}%</td>
+                            <td class="text-center">{{item.percent }}%</td>
                         </tr>
                         <tr class="ca-table-row-body"></tr>
                     </table>
@@ -104,223 +119,16 @@
             </div><!--GridContainer-->
         </div>
     </div>
-
-    <!--Guisados-->
-    <p class="ca-title-division secondary-color">Guisados</p>
-    <div class="row" style="padding-left: 1rem;font-size:12pt">
-        <div class="primary-color text-center">
-            <label class="txt-title py-1">Barbacoa</label>
-        </div>
-        <div class="col-7 pt-2" style="display: flex;">
-            <!--Column Guiso-->
-            <div style="padding: 0">
-                <div class="primary-color text-center g-section-content">
-                    <strong>Guiso</strong>
-                </div>
-                <div class="g-section-content-box">
-                    <!--Litros-->
-                    <div class="g-section-content-box-1">
-                        <div class="g-content-stew">
-                            <div class="g-content-stew-item">
-                                <strong>Litros</strong>
-                            </div>
-                            <p class="">17</p>
-                        </div>
-                    </div>
-                    <!--Piezas x-->
-                    <div class="g-section-content-box-1">
-                        <div class="g-content-stew">
-                            <div class="g-content-stew-item">
-                                <strong>Piezas x</strong>
-                            </div>
-                            <p class="">23</p>
-                        </div>
-                    </div>
-                    <!--Piezas -->
-                    <div class="g-section-content-box-1">
-                        <div class="g-content-stew">
-                            <div class="g-content-stew-item">
-                                <strong>Piezas</strong>
-                            </div>
-                            <p class="">391</p>
-                        </div>
-                    </div>
-                </div>
-                <hr>
-            </div>
-            <div style="width: 100%;">
-                <table class="table" style="width: 100%;font-size: 12pt;">
-                    <tr class="primary-color text-center" style="height: 3rem;">
-                        <th>No.</th>
-                        <th>Categoría</th>
-                        <th>Ingrediente</th>
-                        <th>KG-LT $</th>
-                        <th>Qty</th>
-                        <th>Precio</th>
-                    </tr>
-                    <tr class="text-center" style="height: 3rem;">
-                        <td>1</td>
-                        <td>Proteinas</td>
-                        <td>Labio National</td>
-                        <td>{{ 146.90 | currency }}</td>
-                        <td>{{ 27.2 | currency }}</td>
-                        <td>{{ 3995.68 | currency }}</td>
-                    </tr>
-                    <tr class="text-center" style="height: 3rem;background-color: #DBE8F4">
-                        <td>2</td>
-                        <td>Verduras</td>
-                        <td>Ajo</td>
-                        <td>{{ 80 | currency }}</td>
-                        <td>{{ 0.08 | currency }}</td>
-                        <td>{{ 6.40 | currency }}</td>
-                    </tr>
-                    <tr class="text-center" style="height: 3rem;">
-                        <td>3</td>
-                        <td>Verduras</td>
-                        <td>Cebolla</td>
-                        <td>{{ 25 | currency }}</td>
-                        <td>{{ 0.3 | currency }}</td>
-                        <td>{{ 7.50 | currency }}</td>
-                    </tr>
-                    <tr class="text-center" style="height: 3rem;background-color: #DBE8F4">
-                        <td>4</td>
-                        <td>Servicios</td>
-                        <td>Gas</td>
-                        <td>{{ 12 | currency }}</td>
-                        <td>{{ 10 | currency }}</td>
-                        <td>{{ 120 | currency }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="7" class="text-end primary-text" style="border-top: 0.5px solid lightslategrey;">{{
-                            4701.56 | currency }}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="col-5 pt-2" style="padding: 0;margin: 0;">
-            <div class="g-desglose-header secondary-color text-center">
-                <label class="primary-text">Desglose</label>
-            </div>
-            <div class="pt-3 g-desglose-body">
-                <div class="row">
-                    <div class="col-2">
-                        col-1
-                    </div>
-                    <div class="col-5">
-                        col-5
-                    </div>
-                    <div class="col-5">
-                        col-5
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 
 
-
+<!---:::::::::::::: MODAL REGISTRO DE GUISADO ::::::::::::::-->
 <ng-template #template>
-    <div class="modal-header">
-        <h4 class="modal-title pull-left">Registrar Guisado</h4>
-        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="closeModal()">
-            <span aria-hidden="true" class="visually-hidden">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <div class="row">
-            <div class="col-12 md-12 sm-12">
-                <div class="row" style="margin-bottom: 0.5rem;">
-                    <div class="col-12 md-12 sm-12">
-                        <div class="row" style="margin-bottom: 2rem;">
-                            <div class="col-3 md-12">
-                                <label style="font-weight: bold;">Nombre del Guiso</label>
-                                <input type="text" class="form-control" placeholder="Ejem: Barbacoa">
-                            </div>
-                        </div>
-                        <!--Column Guiso-->
-                        <div class="g-section-content-box" style="display: flex;">
-                            <!--Litros-->
-                            <div class="g-section-content-box-1">
-                                <div class="g-content-stew">
-                                    <div class="g-content-stew-item">
-                                        <strong>Litros</strong>
-                                    </div>
-                                    <div>17</div>
-                                </div>
-                            </div>
-                            <!--Piezas x-->
-                            <div class="g-section-content-box-1">
-                                <div class="g-content-stew">
-                                    <div class="g-content-stew-item">
-                                        <strong>Piezas x</strong>
-                                    </div>
-                                    <div>23</div>
-                                </div>
-                            </div>
-                            <!--Piezas -->
-                            <div class="g-section-content-box-1">
-                                <div class="g-content-stew">
-                                    <div class="g-content-stew-item">
-                                        <strong>Piezas</strong>
-                                    </div>
-                                    <div>391</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div style="display: flex;">
-                    <div style="width: 100%;">
-                        <table  class="table" style="width: 100%; font-size: 12pt;">
-                            <tr class="primary-color text-center" style="height: 3rem; width: 100%;">
-                                <th style="width: 5%;">No.</th>
-                                <th style="width: 20%;">Categoría</th>
-                                <th style="width: 20%;">Ingrediente</th>
-                                <th style="width: 10%;">KG-LT $</th>
-                                <th style="width: 10%;">Unidad</th>
-                                <th style="width: 10%;">Qty</th>
-                                <th style="width: 20%;">Precio</th>
-                                <th style="width: 5%;"></th>
-                            </tr>
-                        </table>
-                        <table class="table" style="width: 100%; font-size: 12pt;">
-                            <tr class="text-center" style="height: 3rem;" *ngFor="let ingrediente of ingredienteList; let i=index;">
-                                <row-guisado
-                                [id]="i" 
-                                [categories]="categoriesList" 
-                                [insumoList]="insumosList"
-                                [ingrediente]="ingrediente" 
-                                (onChangeIngredienteValues)="onChangeIngredienteValues($event)" 
-                                (onDeleteRow)="onDeleteIngrediente($event)"/>
-                            </tr>
-
-                        </table>
-                        <table class="table" style="width: 100%; font-size: 12pt;">
-                            <tr>
-                                <td style="width: 75%;" colspan="5">
-                                    
-                                    <div style="border: solid 1px #d1d1d1; width: 25px; height: 25px; border-radius: 5px; cursor: pointer; padding: 0.1rem 0.1rem !important;"
-                                        title="Agregar ingrediente"
-                                        (click)="onAddIngrediente()"
-                                        >
-                                        <i style="font-size: 16pt;" class="fa fa-plus"></i>
-                                    </div>
-                                    
-                                </td>
-                                
-                                <td class="primary-text"
-                                    style="width: 20%;">{{ 4701.56 | currency }}</td>
-                                <td style="width: 5%; "></td>
-                            </tr>
-
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br><br>
-        <button>Guardar</button>
-    </div>
+<modal-guisado 
+(closeModalEvent)="closeModal()" 
+(saveEvent)="saveGuiso($event)"
+[categorias]="categoriesList" 
+[insumos]="insumosList"
+[guisoEdit]="guisoEdit" />
 </ng-template>

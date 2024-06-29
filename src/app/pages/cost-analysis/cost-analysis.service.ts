@@ -9,20 +9,23 @@ export class CostAnalysisService {
 
   private url = environment.apiUrl
 
-  constructor(
-    private http: HttpClient
-  ) { 
-
-  }
-
-
+  constructor(private http: HttpClient) {}
 
   /**
    * Obtener listado de guisos
    * @param branchId 
    */
   getGuisos(branchId: Number) {
-    this.url = this.url.concat(`guiso/${branchId}`)
-    return this.http.get(this.url)
+    let url = this.url.concat(`guiso/${branchId}`)
+    return this.http.get(url)
+  }
+
+  /**
+   * Guardo un guiso
+   * @param guiso 
+   */
+  saveGuiso(guiso: any) {
+    let url = this.url.concat(`guiso/`)
+    return this.http.post(url, guiso)
   }
 }

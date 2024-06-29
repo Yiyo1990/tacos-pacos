@@ -35,20 +35,27 @@ export class RowGuisadoComponent implements OnInit {
    * @param e 
    */
   onChangeCategory(e: any) {
-    
-    this.ingredienteList = []
-    //this.ingrediente = {}
-    let categoria = this.categories.find((i: any) => i.id == e)
-    let cat = this.insumoList.find((c: any) => c.name == categoria.name)
-    if(cat) {
-      this.ingredienteList = cat.data
-      this.ingrediente.categoria = categoria
-      this.onChangeIngredienteValues.emit(this.ingrediente)
+    //this.ingredienteList = []
+    this.ingredienteList = this.asignaIngredienteData(e)
+    this.onChangeIngredienteValues.emit(this.ingrediente)
+  }
+
+  /**
+   * 
+   * @param idCategory 
+   */
+  asignaIngredienteData(idCategory:number) {
+    let ingredientes = []
+    let categoria = this.categories.find((i: any) => i.id == idCategory)
+    if(categoria) {
+      let cat = this.insumoList.find((c: any) => c.name == categoria.name)
+      if(cat) {
+        ingredientes = cat.data
+        this.ingrediente.categoria = categoria
+      }
     }
-   // this.ingredienteList = ingredientes.data
-    //console.log(ingredientes)
-    //this.ingrediente.categoria = ingredientes
-    //this.onChangeIngredienteValues.emit(this.ingrediente)
+    
+    return ingredientes
   }
 
   /**
@@ -83,12 +90,15 @@ export class RowGuisadoComponent implements OnInit {
    * @param ing 
    */
   setIngredienteSelected(ing: any) {
-    //this.ingrediente.categoria = ing.insumosCatalogo
-    //this.ingrediente.id = this.id
-    this.ingrediente.ingrediente = ing.ingrediente
+    this.ingrediente.ingrediente = ing
     this.ingrediente.kgLt = ing.costo
     this.ingrediente.precio = 0
+    this.ingrediente.qty = 0
     this.ingrediente.unidadM = ing.insumosUnidadMedida
     this.onChangeIngredienteValues.emit(this.ingrediente)
+  }
+
+  get ingredienteListData() {
+    return this.asignaIngredienteData(this.ingrediente.categoria.id)
   }
 }
