@@ -243,5 +243,9 @@
         </div>
     </div>
     <br><br>
+    <div>
     <button (click)="saveGuisado()">Guardar</button>
+    <button *ngIf="isEdit" style="float: right; background-color: #c96363;" (click)="deleteGuiso()">Eliminar Guisado</button>
+    </div>
+
 </div>

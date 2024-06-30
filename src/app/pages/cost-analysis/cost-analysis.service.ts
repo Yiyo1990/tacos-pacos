@@ -28,4 +28,14 @@ export class CostAnalysisService {
     let url = this.url.concat(`guiso/`)
     return this.http.post(url, guiso)
   }
+
+  /**
+   * Elimnar guisados
+   * @param id id del guiso
+   * @param branchId 
+   */
+  deleteGuiso(id: number, branchId: number) {
+    let url = this.url.concat(`guiso/${id}/${branchId}`)
+    return this.http.delete(url)
+  }
 }

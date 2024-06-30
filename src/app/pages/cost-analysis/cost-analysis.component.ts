@@ -51,15 +51,15 @@ export class CostAnalysisComponent implements OnInit {
   }
 
   calcularAnchoColumna(): void {
-    let numCol = 0;
+    this.mainHedaer = []
     const resColm = (this.tacosList.length / 9)
-    numCol = resColm + 2
-    for (let index = 0; index < resColm; index++) {
+    for (let index = 0; index <= resColm; index++) {
       this.mainHedaer.push({ id: 1, name: "Costo", name2: "60%", name3: "Venta", name4: "%" })
     }
   }
 
   async getGuisados() {
+
     this.loading.start()
     this.service.getGuisos(this.currentBranch.id).subscribe({
       next: (res: any) => {
@@ -116,7 +116,7 @@ export class CostAnalysisComponent implements OnInit {
 
   getVentaGuiso(ventaList: Array<any>, canal: string, presentacion: string): number {
     let find = ventaList.find((i: any) => i.canal == canal && i.guisoPresentacion == presentacion)
-    return find.venta
+    return find ? find.venta : 0
   }
 
   getpercent60Guiso(costo: number): number {
@@ -207,9 +207,9 @@ export class CostAnalysisComponent implements OnInit {
     this.loading.start()
     guiso.branchId = this.currentBranch.id
     guiso.unidadMedidaId = this.unidadMedidaId
+
     this.service.saveGuiso(guiso).subscribe({
       next: (resp: any) => {
-        console.log("respuesta guiso",resp)
         this.loading.stop()
         this.toast.success("El guiso se ha guardado con exito!")
         this.closeModal()
@@ -241,6 +241,22 @@ export class CostAnalysisComponent implements OnInit {
       },
       error: () => {
         this.toast.error("Ocurrio un error al obtener las unidades de medida")
+      }
+    })
+  }
+
+  deleteGuisado(guiso: any){
+    this.loading.start()
+    this.service.deleteGuiso(guiso.id, this.currentBranch.id).subscribe({
+      next: (res: any) => {
+        this.loading.stop()
+        this.toast.success("El guiso se ha eliminado correctamente!")
+        this.closeModal()
+        this.getGuisados()
+      },
+      error: () => {
+        this.loading.stop()
+        this.toast.error("Ha ocurrido un error al eliminar el guiso")
       }
     })
   }
