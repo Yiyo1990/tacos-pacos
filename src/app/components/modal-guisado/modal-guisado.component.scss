@@ -1,0 +1,111 @@
+@import '/src/styles.scss';
+
+.primary-color {
+    color: #fff;
+    background-color: $primaryColor;
+}
+
+.primary-text {
+    color: #657cad;
+    font-weight: bold;
+    text-align: center;
+}
+
+.calculadora-header {
+    height: 1.8rem; 
+    border-radius: 5px; 
+    border: solid 1px $primaryColor;
+    margin: 0; 
+    text-align: center; 
+    font-size: 11pt;
+    color: $primaryColor;
+}
+
+.btn-active {
+    background-color: #7881af !important; 
+    color: #fff !important;
+}
+
+.btn-inactive {
+    background-color: #ffffff !important;
+    color: #000 !important;
+}
+
+.calculator {
+    thead {
+        font-size: 13pt;
+    }
+    thead tr, tbody tr {
+        height: 2.5rem;
+    }
+    .header {
+        color: #090661;
+        font-weight: bold;
+    }
+    .header-green {
+        color: #288715;
+        font-weight: bold;
+    }
+}
+
+/******************
+[Table]
+*/
+.ca-section-container {
+    font-size:11pt;
+    padding: 0;
+    margin: 0;
+}
+/*************
+[Row-Header]
+*/
+.ca-table-row-header {
+    height: 1.9rem;
+    display: flex;
+    justify-content: end;
+}
+.ca-table-header {
+    display: flex;
+    justify-content: center;
+    border-radius: 0.4rem;
+    padding: 0.15rem 0;
+    margin: 0;
+    margin-left: 1.2rem;
+    text-decoration: underline;
+    font-size: 11pt;
+    flex-wrap: wrap;
+    font-weight: 400;
+}
+
+.ca-table-row-body {
+    height: 1.6rem;
+    font-size: 11pt;
+}
+
+
+/*******************
+[Grid]
+*/
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    //grid-template-columns: repeat(9, calc((100% / 9)));
+    gap: 0;
+}
+
+
+.hiddenScroll::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 0px rgba(0, 0, 0, 0);
+    background-color: #3b3b3b57;
+}
+
+.hiddenScroll::-webkit-scrollbar {
+    width: 5px;
+    background-color: #ffffffa1;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 1px;
+    -webkit-box-shadow: inset 0 0 0px rgba(255, 255, 255, 0.3);
+    background-color: #090661;
+}

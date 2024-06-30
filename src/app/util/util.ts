@@ -36,6 +36,15 @@ const sortByKey = (array: Array<any>, keyName: string): Array<any> => {
   return array.sort((a: any, b: any) => { return a[keyName] < b[keyName] ? 0 : -1 })
 }
 
+const convertObjectToArray  = (obj: any) => {
+  let res: any = []
+  let keys = Object.keys(obj)
+  keys.map((k:any, id: any) => {
+    res.push({id: id++, name: k, data: obj[k]})
+  })
+  return res
+}
+
 const fixedData = (data: any) => {
   data.commission = data.commission.toFixed(2)
   data.sale = data.sale.toFixed(2)
@@ -143,7 +152,7 @@ const getKpiColorAndPercent = (kpiIndicator: any, total: number, totalSale: numb
   return {backgroundColor, color, percent};
 }
 
-const isNumber = (input: string) => {
+const isNumber = (input: any) => {
   return /^-?\d+(\.\d+)?$/.test(input)
 }
 
@@ -257,8 +266,58 @@ enum PaymentMethod {
   CARD = "CARD"
 }
 
+export enum GuisoCanal {
+  CHANNEL_COMEDOR = 'CHANNEL_COMEDOR',
+  CHANNEL_APLICACION = 'CHANNEL_APLICACION'
+}
+
+export enum GuisoPresentacion {
+  TACO = 'TACO',
+  GORDITA = 'GORDITA',
+}
+
+export class GuisadoCalculadora {
+  id: any = null
+  venta: number = 0
+  guisoPresentacion = GuisoPresentacion.GORDITA
+  guisoCanal = GuisoCanal.CHANNEL_COMEDOR
+  costo: number = 0
+  percent60: number = 0
+  percent = 0
+  utilidad = 0
+
+  constructor(presentacion: GuisoPresentacion, canal: GuisoCanal){
+    this.guisoPresentacion = presentacion
+    this.guisoCanal = canal
+  }
+}
+
+export class GuisoVenta {
+  id!: number
+  venta!: number
+  ingreso!: number
+  guisoPresentacion!: any
+  guisoCanal!: any
+}
+
+export class GuisoDetalle {
+  insumoId!: number
+  cantidad!: number
+}
+
+export class Guisado {
+  id!: number
+  nombreGuiso!: string
+  cantidad!: number
+  unidadMedidaId!: number
+  piezas!: number
+  guisoDetalle!: any[]
+  guisoVenta!: any[]
+  branchId!: number
+}
+
 export {
   configDropdown, firstUpperCase, sortByKey, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions,
   groupArrayByKey, ReportChannel, fixedData, OperationType, BalanceType, Pages, totalSalesByDelivery, addPlatafformInData, kpisIndicators, 
-  getKpiColorAndPercent, foodPercents, TypeModules, PaymentMethod, isNumber
+  getKpiColorAndPercent, foodPercents, TypeModules, PaymentMethod, isNumber, convertObjectToArray
 }

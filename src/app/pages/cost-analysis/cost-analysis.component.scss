@@ -1,5 +1,7 @@
 @import '/src/styles.scss';
 
+
+
 /******************
 ** [Container] */
 .ca-container {
@@ -82,31 +84,41 @@
 }
 .g-section-content-box {
     width: 100%;
-    height: 100%;
 }
 .g-section-content-box-1 {
     padding-top: 0.7rem;
+    flex: 1;
 }
+
 .g-content-stew {
-    display:grid;
+    display:flex;
     justify-content: center;
     align-items: center;
+    align-content: center;
+    div {
+        font-weight: bold;
+    }
 }
+
 .g-content-stew-item{
-    width: 5rem;
-    height: 3rem;
-    display: flex;
+    width: 9rem;
+    height: 2rem;
+    text-align: center;
+    align-content: center;
+   // flex: 1;
     justify-content: center;
     align-items: center;
     border-radius: 0.5rem;
     border: 5px solid lightblue;
     background-color: #F1F3F1;
+    margin-right: 0.5rem;
 }
 
 .g-content-stew p {
     font-size: 16pt;
     font-weight: 600;
-    text-align: center;
+    //text-align: center;
+    display: flex;
 }
 
 /*******************
@@ -158,7 +170,44 @@
     font-size: 10pt;
 }
 
+.hiddenScroll::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 0px rgba(0, 0, 0, 0);
+    background-color: #3b3b3b57;
+}
+
+.hiddenScroll::-webkit-scrollbar {
+    width: 5px;
+    background-color: #ffffffa1;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 1px;
+    -webkit-box-shadow: inset 0 0 0px rgba(255, 255, 255, 0.3);
+    background-color: #090661;
+}
+
+.button-switch {
+    text-align: center;
+    // min-width: 10px;
+    width: 120px;
+    height: 30px;
+    background-color: #ffffff;
+    border-radius: 8%;
+    border: 1px solid #696969;
+    cursor: pointer;
+    color: #000;
+    text-align: center;
+    justify-content: center;
+    padding-bottom: 0.5rem;
+}
 
 
+.btn-active {
+    background-color: #7881af !important; 
+    color: #fff !important;
+}
 
-
+.btn-inactive {
+    background-color: #ffffff !important;
+    color: #000 !important;
+}

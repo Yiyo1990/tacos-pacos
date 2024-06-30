@@ -1,0 +1,247 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Registrar Guisado</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+</div>
+<div class="modal-body" style="font-size: 9pt;">
+    <div class="row">
+        <div class="col-12 md-12 sm-12">
+            <div class="row" style="margin-bottom: 0.5rem;">
+                <div class="col-12 md-12 sm-12">
+                    <div class="row" style="margin-bottom: 2rem;">
+                        <div class="col-3 md-3 sm-12">
+                            <label style="font-weight: bold;">Nombre del Guiso</label>
+                            <input type="text" [(ngModel)]="guisoName" style="font-weight: bold;"
+                                class="form-control" placeholder="Ejem: Barbacoa">
+                        </div>
+                        <div class="col-2 md-2 sm-12">
+                            <div class="g-section-content-box-1">
+                                <div class="g-content-stew">
+                                    <div class="g-content-stew-item">
+                                        <strong>Litros</strong>
+                                    </div>
+                                    <div><input type="text" style="font-weight: bold;" class="form-control"
+                                            placeholder="Ingrese cantidad" [(ngModel)]="litros">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2 md-2 sm-12">
+                            <div class="g-section-content-box-1">
+                                <div class="g-content-stew">
+                                    <div class="g-content-stew-item">
+                                        <strong>Piezas x litro</strong>
+                                    </div>
+                                    <div><input type="text" style="font-weight: bold;"
+                                            [(ngModel)]="piezasXlitro" placeholder="Ingrese cantidad"
+                                            class="form-control"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2 md-2 sm-12">
+                            <div class="g-section-content-box-1">
+                                <div class="g-content-stew">
+                                    <div class="g-content-stew-item" style="width: 6rem !important;">
+                                        <strong>Precio x litro</strong>
+                                    </div>
+                                    <div style="font-weight: bold; font-size: 12pt;">{{precioXlitro | currency}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2 md-2 sm-12">
+                            <div class="g-section-content-box-1">
+                                <div class="g-content-stew">
+                                    <div class="g-content-stew-item" style="width: 6rem !important;">
+                                        <strong>Piezas</strong>
+                                    </div>
+                                    <div style="font-weight: bold; font-size: 12pt;">{{piezas}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom: 1rem;">
+                <div class="col-12 md-12 sm-12">
+                    <div style="display: flex;">
+                        <button class="button-switch"
+                            [ngClass]="{'btn-active': isTabIngrediente, 'btn-inactive': !isTabIngrediente}"
+                            (click)="isTabIngrediente=true">Ingredientes</button>
+                        <button class="button-switch"
+                            [ngClass]="{'btn-active': !isTabIngrediente, 'btn-inactive': isTabIngrediente}"
+                            (click)="isTabIngrediente=false">Calculadora</button>
+                    </div>
+                </div>
+            </div>
+            <!--:::: TAB INGREDIENTES :::::-->
+            <div style="width: 100%;" *ngIf="isTabIngrediente">
+                <div class="hiddenScroll" style="width: 100%;  max-height: 22rem; overflow-y: auto;">
+                    <table class="table" style="width: 100%; font-size: 12pt;">
+                        <tr class="primary-color text-center" style="height: 3rem; width: 100%;">
+                            <th style="width: 5%;">No.</th>
+                            <th style="width: 20%;">Categoría</th>
+                            <th style="width: 20%;">Ingrediente</th>
+                            <th style="width: 10%;">KG-LT $</th>
+                            <th style="width: 10%;">Unidad</th>
+                            <th style="width: 10%;">Qty</th>
+                            <th style="width: 20%;">Precio</th>
+                            <th style="width: 5%;"></th>
+                        </tr>
+                    </table>
+                    <table class="table" style="width: 100%; font-size: 12pt;">
+                        <tr class="text-center" style="height: 3rem;"
+                            *ngFor="let ingrediente of ingredienteList; let i=index;">
+                            <row-guisado [id]="i" [categories]="categorias" [insumoList]="insumos"
+                                [ingrediente]="ingrediente"
+                                (onChangeIngredienteValues)="onChangeIngredienteValues($event)"
+                                (onDeleteRow)="onDeleteIngrediente($event)" />
+                        </tr>
+
+                    </table>
+
+                </div>
+                <table class="table" style="width: 100%; font-size: 12pt;">
+                    <tr>
+                        <td style="width: 75%;" colspan="5">
+
+                            <div style="border: solid 1px #d1d1d1; width: 25px; height: 25px; border-radius: 5px; cursor: pointer; padding: 0.1rem 0.1rem !important;"
+                                title="Agregar ingrediente" (click)="onAddIngrediente()">
+                                <i style="font-size: 16pt;" class="fa fa-plus"></i>
+                            </div>
+
+                        </td>
+
+                        <td class="primary-text" style="width: 20%;">{{ totalPriceGuisado | currency }}</td>
+                        <td style="width: 5%; "></td>
+                    </tr>
+
+                </table>
+            </div>
+
+            <!--:::: TAB CALCULADORA :::::-->
+            <div style="width: 100%;" *ngIf="!isTabIngrediente">
+                <div class="row" style="margin-left: 0.5rem; margin-right: 0.5rem;">
+                    <div class="col-6 md-6 sm-12" style="padding:1rem;">
+
+                        <div class="row">
+                            <div class="col-12 md-12 sm-12 calculadora-header">
+                                <label>Comedor</label>
+                            </div>
+                        </div>
+                        <div class="row" style="font-size: 11pt;">
+                            <div class="col-12 md-12">
+                                <table style="width: 100%;" class="calculator">
+                                    <thead class="header" style="text-align: center;">
+                                        <tr>
+                                            <th colspan="2">Tacos</th>
+                                            <th></th>
+                                            <th colspan="2">Gorditas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="header" >Costo</td>
+                                            <td>{{costoTaco | currency}}</td>
+                                            <td></td>
+                                            <td class="header" >Costo</td>
+                                            <td>{{costoGordita | currency}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="header" >60%</td>
+                                            <td>{{percent60Taco | currency}}</td>
+                                            <td></td>
+                                            <td class="header" >60%</td>
+                                            <td>{{percent60Gordita | currency}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="header" >Venta</td>
+                                            <td><input type="text" [(ngModel)]="calComedorTaco.venta" decimalOnly></td>
+                                            <td></td>
+                                            <td class="header" >Venta</td>
+                                            <td><input type="text" [(ngModel)]="calComedorGordita.venta" decimalOnly></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="header" >%</td>
+                                            <td>{{percentTacoComedor}}%</td>
+                                            <td></td>
+                                            <td class="header" >%</td>
+                                            <td>{{percentGorditaComedor}}%</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="header-green">Utilidad</td>
+                                            <td>{{utilidadTacoComedor | currency}}</td>
+                                            <td></td>
+                                            <td class="header-green">Utilidad</td>
+                                            <td>{{utilidadGorditaComedor | currency}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-6 md-6 sm-12" style="padding:1rem;">
+                        <div class="row">
+                            <div class="col-12 md-12 sm-12 calculadora-header">
+                                <label>Aplicacion</label>
+                            </div>
+                        </div>
+                        <div class="row" style="font-size: 11pt;">
+                            <div class="col-12 md-12">
+                                <table style="width: 100%;" class="calculator">
+                                    <thead class="header" style="text-align: center;">
+                                        <tr>
+                                            <th colspan="2">Tacos</th>
+                                            <th></th>
+                                            <th colspan="2">Gorditas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="header" >Costo</td>
+                                            <td>{{costoTaco | currency}}</td>
+                                            <td></td>
+                                            <td class="header" >Costo</td>
+                                            <td>{{costoGordita | currency}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="header" >Venta</td>
+                                            <td><input type="text" [(ngModel)]="calAppTaco.venta" decimalOnly></td>
+                                            <td></td>
+                                            <td class="header" >Venta</td>
+                                            <td><input type="text" [(ngModel)]="calAppGordita.venta" decimalOnly></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="header" >Ingreso</td>
+                                            <td>{{ingresoTaco | currency}}</td>
+                                            <td></td>
+                                            <td class="header" >Ingreso</td>
+                                            <td>{{ingresoGordita | currency}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="header" >%</td>
+                                            <td>{{percentTacoApp}}%</td>
+                                            <td></td>
+                                            <td class="header" >%</td>
+                                            <td>{{percentGorditaApp}}%</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="header-green">Utilidad</td>
+                                            <td>{{utilidadTacoApp | currency}}</td>
+                                            <td></td>
+                                            <td class="header-green">Utilidad</td>
+                                            <td>{{utilidadGorditaApp | currency}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <button (click)="saveGuisado()">Guardar</button>
+</div>

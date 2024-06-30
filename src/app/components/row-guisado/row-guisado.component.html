@@ -1,0 +1,31 @@
+
+    <td style="width: 5%;">
+        <label>{{id+1}}</label>
+    </td>
+    <td style="width: 20%;">
+        <select  class="form-control" (change)="onChangeCategory($any($event.target).value)">
+            <option disabled value="0" selected>Selecciona una Categoria</option>
+            <option *ngFor="let category of categories" [selected]="category.id == ingrediente.categoria.id" value="{{category.id}}">{{category.name}}</option>
+        </select>
+    </td>
+    <td style="width: 20%;">
+        <select  class="form-control" (change)="onChangeIngrediente($any($event.target).value)">
+            <option value="0" selected>Selecciona un Ingrediente</option>
+            <option *ngFor="let ing of ingredienteListData" [selected]="ing.id == ingrediente.ingrediente.id" value="{{ing.id}}">{{ing.ingrediente}}</option>
+        </select>
+    </td>
+    <td style="width: 10%;">
+        <input type="text" value="{{ingrediente?.kgLt | currency}}" class="form-control" disabled>
+    </td>
+    <td style="width: 10%;">
+        <input type="text" value="{{ingrediente?.unidadM?.name}}" class="form-control" disabled>
+    </td>
+    <td style="width: 10%;">
+        <input type="text" value="{{ingrediente?.qty}}"  (keyup)="onChangeQuantity($any($event.target).value)" class="form-control">
+    </td>
+    <td style="width: 20%;">
+        <input type="text" style="text-align: center;" value="{{ingrediente?.precio | currency}}" class="form-control" disabled>
+    </td>
+    <td style="width: 5%;">
+        <i class="fas fa-trash" (click)="onDeleteRowEvent()" style="color: rgb(255, 124, 124); cursor: pointer;" title="Borrar"></i>
+    </td>
