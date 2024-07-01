@@ -124,7 +124,7 @@ export class CostAnalysisComponent implements OnInit {
   }
 
   getPercentGuiso(venta: number, costo: number): number {
-    return Math.round((costo / venta) * 100)
+    return Math.round((1 - (costo / venta)) * 100)
   }
 
   /**
