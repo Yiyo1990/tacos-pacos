@@ -149,7 +149,7 @@ export class ModalGuisadoComponent implements OnInit {
   }
 
   get precioXlitro() {
-    return this.totalPriceGuisado * this.litros
+    return this.totalPriceGuisado / this.litros
   }
 
   get piezas(): number {
@@ -207,12 +207,12 @@ export class ModalGuisadoComponent implements OnInit {
 
   get percentTacoComedor(): number {
     let venta = !this.calComedorTaco.venta ? 0 : this.calComedorTaco.venta
-    return Math.round((venta != 0 ? (this.costoTaco / venta) : 0) * 100)
+    return Math.round((venta != 0 ? (1 - (this.costoTaco / venta)) : 0) * 100)
   }
 
   get percentGorditaComedor(): number {
     let venta = !this.calComedorGordita.venta ? 0 : this.calComedorGordita.venta
-    return Math.round((venta != 0 ? (this.costoGordita / venta) : 0) * 100)
+    return Math.round((venta != 0 ? (1- (this.costoGordita / venta)) : 0) * 100)
   }
 
 
