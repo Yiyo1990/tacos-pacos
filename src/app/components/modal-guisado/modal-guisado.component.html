@@ -92,10 +92,10 @@
                     <table class="table" style="width: 100%; font-size: 12pt;">
                         <tr class="text-center" style="height: 3rem;"
                             *ngFor="let ingrediente of ingredienteList; let i=index;">
-                            <row-guisado [id]="i" [categories]="categorias" [insumoList]="insumos"
+                            <row-guisado [rowNumber]="i" [id]="ingrediente.id" [categories]="categorias" [insumoList]="insumos"
                                 [ingrediente]="ingrediente"
                                 (onChangeIngredienteValues)="onChangeIngredienteValues($event)"
-                                (onDeleteRow)="onDeleteIngrediente($event)" />
+                                (onDeleteRow)="deleteIngrediente($event)" />
                         </tr>
 
                     </table>

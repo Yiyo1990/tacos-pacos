@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Guisado, GuisadoCalculadora, GuisoCanal, GuisoDetalle, GuisoPresentacion, GuisoVenta, isNumber } from '@util/util';
 import { ToastrService } from 'ngx-toastr';
+import { LoadingService } from '../loading/loading.service';
+import { CostAnalysisService } from 'src/app/pages/cost-analysis/cost-analysis.service';
 
 @Component({
   selector: 'modal-guisado',
@@ -11,6 +13,7 @@ export class ModalGuisadoComponent implements OnInit {
 
   isTabIngrediente: boolean = true
 
+  @Input() branchId!: number
   @Input() insumos: Array<any> = []
   @Input() categorias: Array<any> = []
   @Input() guisoEdit: any = {}
@@ -32,7 +35,7 @@ export class ModalGuisadoComponent implements OnInit {
   calAppGordita: GuisadoCalculadora = new GuisadoCalculadora(GuisoPresentacion.GORDITA, GuisoCanal.CHANNEL_APLICACION)
 
 
-  constructor(private toast: ToastrService) { }
+  constructor(private toast: ToastrService, private loading: LoadingService, private costService: CostAnalysisService) { }
 
   ngOnInit(): void {
     if (Object.keys(this.guisoEdit).length > 0) {
@@ -64,7 +67,6 @@ export class ModalGuisadoComponent implements OnInit {
       guisado.piezas = Number(this.piezasXlitro)
       guisado.guisoDetalle = this.getIngredientes()
       guisado.guisoVenta = this.getVentaData()
-
       this.saveEvent.emit(guisado)
     }
 
@@ -91,24 +93,24 @@ export class ModalGuisadoComponent implements OnInit {
     this.calAppGordita.id = appGor && appGor.id! ? appGor.id : null
 
     let ingredientes: Array<any> = this.guisoEdit.guisoDetalle
-    ingredientes.map((i: any) => {
-      let categoria = this.categorias.find((c: any) => c.id == i.insumos.insumosCatalogo.id)
+    ingredientes.map((ingr: any) => {
+
+      let categoria = this.categorias.find((c: any) => c.id == ingr.insumos.insumosCatalogo.id)
       let insumos = this.insumos.find((insu: any) => insu.name == categoria.name)
-      let ingre = insumos.data.find((ing: any) => ing.id == i.insumos.id)
-      let um = ingre.insumosUnidadMedida
+      let insumo = insumos.data.find((insumo: any) => insumo.id == ingr.insumos.id)
+      let um = insumo.insumosUnidadMedida
 
-      let ingrediente = {
-        id: i.id,
+      let ingredienteEditar = {
+        id: ingr.id,
         categoria: categoria,
-        ingrediente: ingre,
-        kgLt: ingre.costo,
+        ingrediente: insumo,
+        kgLt: insumo.costo,
         unidadM: um,
-        qty: i.cantidad,
-        precio: (ingre.costo * i.cantidad)
+        qty: ingr.cantidad,
+        precio: (insumo.costo * ingr.cantidad)
       }
-      this.ingredienteList.push(ingrediente)
+      this.ingredienteList.push(ingredienteEditar)
     })
-
   }
 
   searchCanalPresentacion(canal: GuisoCanal, prese: GuisoPresentacion) {
@@ -133,16 +135,6 @@ export class ModalGuisadoComponent implements OnInit {
     }
     return success
   }
-
-  /**
- * Evento que recibe cuando se da click en eliminar un row de ingrediente
- * @param e ingrediente a eliminar
- */
-  onDeleteIngrediente(e: any) {
-    let newList = this.ingredienteList.filter((i: any) => i.id != e.id)
-    this.ingredienteList = newList
-  }
-
 
   get totalPriceGuisado() {
     return this.ingredienteList.reduce((total: number, item: any) => total + item.precio, 0)
@@ -170,7 +162,7 @@ export class ModalGuisadoComponent implements OnInit {
   onAddIngrediente() {
     // 
     let ingrediente = {
-      id: 0,
+      //id: 0,
       categoria: {},
       ingrediente: {},
       kgLt: 0,
@@ -212,7 +204,7 @@ export class ModalGuisadoComponent implements OnInit {
 
   get percentGorditaComedor(): number {
     let venta = !this.calComedorGordita.venta ? 0 : this.calComedorGordita.venta
-    return Math.round((venta != 0 ? (1- (this.costoGordita / venta)) : 0) * 100)
+    return Math.round((venta != 0 ? (1 - (this.costoGordita / venta)) : 0) * 100)
   }
 
 
@@ -246,6 +238,9 @@ export class ModalGuisadoComponent implements OnInit {
     let detalles: any[] = []
     this.ingredienteList.map((i: any) => {
       let ingrediente: any = {}
+      if (this.isEdit) {
+        ingrediente.id = i.id
+      }
       ingrediente.insumoId = i.ingrediente.id
       ingrediente.cantidad = i.qty
       detalles.push(ingrediente)
@@ -300,6 +295,23 @@ export class ModalGuisadoComponent implements OnInit {
 
   deleteGuiso() {
     this.deleteEvent.emit(this.guisoEdit)
+  }
+
+
+  deleteIngrediente(e: any) {
+    this.loading.start()
+    this.costService.deleteIngrediente(e.id, this.branchId).subscribe({
+      next: (res: any) => {
+        this.loading.stop()
+        this.toast.success("El ingrediente se ha eliminado correctamente!")
+        let newList = this.ingredienteList.filter((i: any) => i.id != e.id)
+        this.ingredienteList = newList
+      },
+      error: () => {
+        this.loading.stop()
+        this.toast.error("Ha ocurrido un error al eliminar el ingrediente")
+      }
+    })
   }
 }
 

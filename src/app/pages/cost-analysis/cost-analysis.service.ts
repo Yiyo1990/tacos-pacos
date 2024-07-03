@@ -38,4 +38,14 @@ export class CostAnalysisService {
     let url = this.url.concat(`guiso/${id}/${branchId}`)
     return this.http.delete(url)
   }
+  
+  /**
+   * Elimnar cada uno de los ingredientes agregados al guiso
+   * @param id 
+   * @param branchId 
+   */
+  deleteIngrediente(id: number, branchId: number) {
+    let url = this.url.concat(`guiso/detalle/${id}/${branchId}`)
+    return this.http.delete(url)
+  }
 }

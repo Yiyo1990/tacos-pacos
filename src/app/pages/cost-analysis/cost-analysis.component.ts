@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { MainService } from 'src/app/main/main.service';
 import { CostAnalysisService } from './cost-analysis.service';
@@ -6,6 +6,7 @@ import { InsumoService } from '../insumos/insumo.service';
 import { ToastrService } from 'ngx-toastr';
 import { Guisado, GuisoCanal, GuisoPresentacion, convertObjectToArray, groupArrayByKey, isNumber } from '@util/util';
 import { LoadingService } from 'src/app/components/loading/loading.service';
+import { ModalGuisadoComponent } from 'src/app/components/modal-guisado/modal-guisado.component';
 
 @Component({
   selector: 'app-cost-analysis',
@@ -13,6 +14,8 @@ import { LoadingService } from 'src/app/components/loading/loading.service';
   styleUrls: ['./cost-analysis.component.scss']
 })
 export class CostAnalysisComponent implements OnInit {
+  @ViewChild(ModalGuisadoComponent) modalComponent!: ModalGuisadoComponent
+
   showTable: boolean = true;
   modalRef?: BsModalRef;
   currentBranch: any
@@ -59,7 +62,6 @@ export class CostAnalysisComponent implements OnInit {
   }
 
   async getGuisados() {
-
     this.loading.start()
     this.service.getGuisos(this.currentBranch.id).subscribe({
       next: (res: any) => {
@@ -260,4 +262,5 @@ export class CostAnalysisComponent implements OnInit {
       }
     })
   }
+
 } 

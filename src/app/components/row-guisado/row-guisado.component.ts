@@ -17,6 +17,7 @@ export class RowGuisadoComponent implements OnInit {
   public ingredienteList: Array<any> = []
   public precioUni: number = 0
   @Input() id: number = 0
+  @Input() rowNumber: number = 0
   @Input() insumoList: Array<any> = []
   @Input() ingrediente: any = {}
   @Input() categories: Array<any> = []
