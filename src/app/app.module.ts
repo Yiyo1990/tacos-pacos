@@ -56,6 +56,8 @@ import { RowGuisadoComponent } from './components/row-guisado/row-guisado.compon
 import { HeaderTblGuisadoComponent } from './components/header-tbl-guisado/header-tbl-guisado.component';
 import { ModalGuisadoComponent } from './components/modal-guisado/modal-guisado.component';
 import { DecimalOnlyDirective } from './directivas/decimal-only.directive';
+import { LoaderComponent } from './components/loader/loader.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -97,7 +99,9 @@ import { DecimalOnlyDirective } from './directivas/decimal-only.directive';
     RowGuisadoComponent,
     HeaderTblGuisadoComponent,
     ModalGuisadoComponent,
-    DecimalOnlyDirective
+    DecimalOnlyDirective,
+    LoaderComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,

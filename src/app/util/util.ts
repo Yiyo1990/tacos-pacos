@@ -87,7 +87,7 @@ const addPlatafformInData = (sales: any) => {
    * Indicadores de los kpis por categoria 
    *  :::::: TODO: ESTOS DATOS SE MODIFICARAN O SE ENVIARAN DESDE LA BD ::::::
    */
-const kpisIndicators =
+/*const kpisIndicators =
   [
     { code: 'sale', value: 450000, chart: '<$' },
     { code: 'food.alimentos', value: 40, chart: '>%' },
@@ -104,6 +104,7 @@ const kpisIndicators =
     { code: 'profit', value: 15, chart: '<%' },
     { code: 'food.impuestos.1', value: 10000, chart: '>$' },
   ]
+  */
 
 /**
    * Regresa el color que se pinta en la tabla dependiendo a las reglas del kpi
@@ -318,6 +319,6 @@ export class Guisado {
 
 export {
   configDropdown, firstUpperCase, sortByKey, barChartOptions, donutChartOptions, pieChartOptions, lineChartOptions,
-  groupArrayByKey, ReportChannel, fixedData, OperationType, BalanceType, Pages, totalSalesByDelivery, addPlatafformInData, kpisIndicators, 
+  groupArrayByKey, ReportChannel, fixedData, OperationType, BalanceType, Pages, totalSalesByDelivery, addPlatafformInData, 
   getKpiColorAndPercent, foodPercents, TypeModules, PaymentMethod, isNumber, convertObjectToArray
 }

@@ -4,10 +4,12 @@
             <div class="col-12">
                 <accordion>
                     <!-- ********* BALANCE *********-->
-                    <accordion-group [isOpen]="true">
+                    <accordion-group [isOpen]="false">
+                        <loader *ngIf="isLoadingBalance"></loader>
                         <span accordion-heading>
                             <label style="font-size: 13pt; font-weight: bold;">Balance</label> &nbsp; <i
                                 style="float: right;" class='fa fa-chevron-down'></i>
+                                <spinner *ngIf="isLoadingBalance"></spinner>
                         </span>
                         <div class="row">
                             <div class="col-2 sm-12 md-2" style="padding-top: 1rem;">
@@ -129,9 +131,11 @@
 
                     <!-- ********  VENTAS ********-->
                     <accordion-group [isOpen]="false">
+                        <loader *ngIf="isLoadingBalance"></loader>
                         <span accordion-heading>
                             <label style="font-size: 13pt; font-weight: bold;">Ventas</label> &nbsp; <i
                                 style="float: right;" class='fa fa-chevron-down'></i>
+                                <spinner *ngIf="isLoadingBalance"></spinner>
                         </span>
 
                         <ventas-chart [sales]="sales" [isResultadosScreen]="true"
@@ -172,9 +176,11 @@
 
                     <!-- ///////////  GASTOS ////////////-->
                     <accordion-group [isOpen]="false">
+                        <loader *ngIf="isLoadingGastos"></loader>
                         <span accordion-heading>
                             <label style="font-size: 13pt; font-weight: bold;">Gastos</label> &nbsp; <i
                                 style="float: right;" class='fa fa-chevron-down'></i>
+                                <spinner *ngIf="isLoadingGastos"></spinner>
                         </span>
                         <gastos-chart [expenses]="expenses" [foodCategories]="foodCategories"
                             (onChangeCategoryEvent)="onChangeCategory($event)" />
@@ -215,9 +221,11 @@
                     <!--************  CUENTAS POR COBRAR *************-->
 
                     <accordion-group [isOpen]="false">
+                        <loader *ngIf="isLoadingCuentas"></loader>
                         <span accordion-heading>
                             <label style="font-size: 13pt; font-weight: bold;">Cuentas por cobrar</label> &nbsp; <i
                                 style="float: right;" class='fa fa-chevron-down'></i>
+                               <spinner *ngIf="isLoadingCuentas"></spinner>
                         </span>
 
                         <div class="row">

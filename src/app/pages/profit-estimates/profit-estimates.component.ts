@@ -8,7 +8,8 @@ import { Dates } from '@util/Dates';
 import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from 'src/app/components/loading/loading.service';
 import { MainService } from 'src/app/main/main.service';
-import { Pages, firstUpperCase, foodPercents, kpisIndicators } from 'src/app/util/util';
+import { Pages, firstUpperCase, foodPercents } from 'src/app/util/util';
+import { IndicatorService } from '../indicators/indicator.service';
 
 @Component({
   selector: 'app-profit-estimates',
@@ -20,7 +21,7 @@ export class ProfitEstimatesComponent implements OnInit {
   private yearSelected = this.dates.getCurrentYear()
   private monthSelected: any = {}
   private filterDate: any = {}
-  private readonly kpiIndicators = kpisIndicators
+  //private readonly kpiIndicators = kpisIndicators
 
   private foodCategoriesList: Array<any> = []
   foodPercentsList: Array<any> = foodPercents
@@ -31,18 +32,24 @@ export class ProfitEstimatesComponent implements OnInit {
   private expenses: Array<any> = []
   private brandSelected: any
 
+  kpiIndicators : Array<any> = []
+  estimations: Array<any> = []
+
   constructor(private mainService: MainService,
     private activeRouter: ActivatedRoute,
     private loading: LoadingService,
     private salesService: SalesService,
     private expenseService: ExpenseService,
-    private toast: ToastrService) {
+    private toast: ToastrService,
+    private indicatorService: IndicatorService) {
     mainService.setPageName(Pages.ESTIMATES)
   }
 
   ngOnInit(): void {
     this.brandSelected = JSON.parse(this.mainService.currentBranch)
     this.initFilters()
+    this.getStimations()
+    this.getIndicators()
     this.mainService.$foodCategories.subscribe((resp: any) => {
       if (Array.isArray(resp)) {
         this.foodCategoriesList = resp
@@ -92,8 +99,20 @@ export class ProfitEstimatesComponent implements OnInit {
     return Sale.getTotalSalesIncome(this.sales)
   }
 
-  get estimations() {
-    return [400000, 410000, 420000, 430000, 440000, 450000, 450000, 460000, 470000, 480000, 490000, 500000, 510000, 520000, 530000, 540000, 550000, 650000]
+  getStimations() {
+    this.loading.start()
+   // return [400000, 410000, 420000, 430000, 440000, 450000, 450000, 460000, 470000, 480000, 490000, 500000, 510000, 520000, 530000, 540000, 550000, 650000]
+    this.indicatorService.getStimation(this.brandSelected.id).subscribe({
+      next: (data: any) => {
+        this.estimations = data
+      },
+      error: () => {
+        this.toast.error("Ocurrio un error al obtener las estimaciones")
+      },
+      complete: () => {
+        this.loading.stop()
+      }
+    })
   }
 
   onChangePercent(target: any) {
@@ -273,6 +292,23 @@ export class ProfitEstimatesComponent implements OnInit {
   profitPercent(profit: number, totalSales: number) {
     let percent = (profit > 0 && totalSales > 0) ? Math.round((profit / totalSales) * 100) : 0
     return `${percent ? percent : 0}%`
+  }
+
+  getIndicators() {
+    this.loading.start()
+  this.indicatorService.getIndicators(this.brandSelected.id).subscribe({
+    next: (result: any) => {
+      this.kpiIndicators = result
+      console.log(result)
+    },
+    error: () => {
+      this.loading.stop()
+      this.toast.error("Ocurrio un error al obtener los indicadores kpis")
+    },
+    complete: () => {
+      this.loading.stop()
+    }
+  })
   }
 
 }

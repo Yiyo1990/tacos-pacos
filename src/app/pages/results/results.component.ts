@@ -92,6 +92,10 @@ export class ResultsComponent implements OnInit {
   totalCash: number = 0.00
   totalCard: number = 0.00
 
+  isLoadingBalance: boolean = true
+  isLoadingGastos: boolean = true
+  isLoadingCuentas: boolean = true
+
   constructor(private mainService: MainService,
     private activeRouter: ActivatedRoute,
     private salesService: SalesService,
@@ -179,7 +183,8 @@ export class ResultsComponent implements OnInit {
    * ----- SALES -----
   */
   getReportSalesByDateRange(startDate: string, endDate: string) {
-    this.loading.start()
+    //this.loading.start()
+    this.isLoadingBalance = true
     this.salesByDay = []
     this.sales = []
 
@@ -192,10 +197,12 @@ export class ResultsComponent implements OnInit {
       this.loading.stop()
       this.pushDataSalesChart()
       this.fillBarChartDays()
+      this.isLoadingBalance = false
       this.callServiceSearchExpenses(startDate, endDate)
     }).catch((e: string) => {
       this.toast.error(e)
-      this.loading.stop()
+     // this.loading.stop()
+     this.isLoadingBalance = false
     })
   }
 
@@ -316,7 +323,7 @@ export class ResultsComponent implements OnInit {
   }
 
   async serviceTicketTarget() {
-    this.loading.start()
+    //this.loading.start()
     this.service.getTicketTarget(this.brandSelected.id, this.dates.formatDate(this.filterDate.start, 'YYYY-MM-DD'), this.dates.formatDate(this.filterDate.end, 'YYYY-MM-DD')).subscribe({
       next: (res: any) => {
         if (Array.isArray(res)) {
@@ -345,7 +352,8 @@ export class ResultsComponent implements OnInit {
    */
 
   callServiceSearchExpenses(start: string, end: string, search: string = "") {
-    this.loading.start()
+    //this.loading.start()
+    this.isLoadingGastos = true
     this.expenseService.searchExpense(this.brandSelected.id, start, end, search).subscribe({
       next: (res: any) => {
         this.expenses = res
@@ -353,11 +361,13 @@ export class ResultsComponent implements OnInit {
         this.onChangeCategory(0)
       },
       error: (e) => {
-        this.loading.stop()
+       // this.loading.stop()
+       this.isLoadingGastos = false
         this.toast.error("Ha ocurrido un error", "Error")
       },
       complete: () => {
-        this.loading.stop()
+        this.isLoadingGastos = false
+        //this.loading.stop()
       }
     })
   }
@@ -554,7 +564,7 @@ export class ResultsComponent implements OnInit {
           id: this.cuentaPorCobrar.tipoPago.id == 0 ? null : Number(this.cuentaPorCobrar.tipoPago.id)
         }
       }
-      this.loading.start()
+      //this.loading.start()
       this.service.saveCuentasPorCobrar(params).subscribe({
         next: (value) => {
         },
@@ -572,7 +582,8 @@ export class ResultsComponent implements OnInit {
   }
 
   async getCuentasPorCobrar() {
-    this.loading.start()
+    //this.loading.start()
+    this.isLoadingCuentas = true
     this.service.getCuentasPorCobrar(this.brandSelected.id, this.filterDate.start, this.filterDate.end).subscribe({
       next: (res: any) => {
         if (Array.isArray(res)) {
@@ -580,11 +591,13 @@ export class ResultsComponent implements OnInit {
         }
       },
       error: (e) => {
-        this.loading.stop()
+        //this.loading.stop()
+        this.isLoadingCuentas = false
         this.toast.error("Ha ocurrido un error", "Error")
       },
       complete: () => {
-        this.loading.stop()
+       // this.loading.stop()
+       this.isLoadingCuentas = false
       }
     })
   }
@@ -683,7 +696,7 @@ export class ResultsComponent implements OnInit {
   }
 
   async getIncomeForModule() {
-    this.loading.start()
+   // this.loading.start()
     this.service.getIncomeForModule(this.brandSelected.id, this.dates.getFormatDate(this.filterDate.start, 'DD-MM-YYYY') ,  this.dates.getFormatDate(this.filterDate.end, 'DD-MM-YYYY')).subscribe({
       next: (data: any) => {
         this.loading.stop()
@@ -701,7 +714,7 @@ export class ResultsComponent implements OnInit {
 
       },
       error: () => {
-        this.loading.stop()
+       // this.loading.stop()
         this.toast.error("Ocurrio un error al obtener los totales de efectivo y tarjeta")
       }
     })

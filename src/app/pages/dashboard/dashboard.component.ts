@@ -56,6 +56,9 @@ export class DashboardComponent implements OnInit {
   /** CUENTAS POR COBRAR */
   cuentasPorCobrar: Array<any> = []
 
+  isLoadingBalance: boolean = true
+  isLoadingGastos: boolean = true
+  isLoadingCuentas: boolean = true
 
   constructor(private mainService: MainService,
     private activeRouter: ActivatedRoute,
@@ -233,11 +236,12 @@ export class DashboardComponent implements OnInit {
    * @param endDate  fecha fin
    */
   async getReportSalesByDateRange(startDate: string, endDate: string) {
-    this.loading.start()
-
+    //this.loading.start()
+    this.isLoadingBalance = true
     this.sales = []
     this.salesService.getReportSalesByDateRange(this.brandSelected.id, startDate, endDate).subscribe({
       next: (data: any) => {
+        this.isLoadingBalance = false
         if (Array.isArray(data)) {
           let sales = data.map((s: any) => {
             let diningRoom = s.diningRoom.toFixed(2)
@@ -270,11 +274,12 @@ export class DashboardComponent implements OnInit {
         }
       },
       error: (e) => {
-        this.loading.stop()
+        this.isLoadingBalance = false
+       // this.loading.stop()
         this.toast.error("Ocurrio un error al intentar obtener las ventas")
       },
       complete: () => {
-        this.loading.stop()
+        //this.loading.stop()
         // this.mainService.setLoading(false)
       }
     })
@@ -463,7 +468,7 @@ export class DashboardComponent implements OnInit {
 
 
   async serviceTicketTarget(startDate: string, endDate: string) {
-    this.loading.start()
+    //this.loading.start()
     this.resultService.getTicketTarget(this.brandSelected.id, this.dates.formatDate(startDate, 'YYYY-MM-DD'), this.dates.formatDate(endDate, 'YYYY-MM-DD')).subscribe({
       next: (res: any) => {
         if (Array.isArray(res)) {
@@ -494,7 +499,8 @@ export class DashboardComponent implements OnInit {
    * @param search texto filtro
    */
   async callServiceSearchExpenses(start: string, end: string, search: string = "") {
-    this.loading.start()
+    //this.loading.start()
+    this.isLoadingGastos = true
     this.expenseService.searchExpense(this.brandSelected.id, start, end, search).subscribe({
       next: (res: any) => {
         if (Array.isArray(res)) {
@@ -511,11 +517,13 @@ export class DashboardComponent implements OnInit {
         this.onChangeCategory(0)
       },
       error: (e) => {
-        this.loading.stop()
+        //this.loading.stop()
+        this.isLoadingGastos = false
         this.toast.error("Ha ocurrido un error", "Error")
       },
       complete: () => {
-        this.loading.stop()
+       // this.loading.stop()
+       this.isLoadingGastos = false
       }
     })
   }
@@ -616,7 +624,8 @@ export class DashboardComponent implements OnInit {
   /** CUENTAS POR COBRAR */
 
   async getCuentasPorCobrar(startDate: string, endDate: string) {
-    this.loading.start()
+    //this.loading.start()
+    this.isLoadingCuentas = true
     this.resultService.getCuentasPorCobrar(this.brandSelected.id, startDate, endDate).subscribe({
       next: (res: any) => {
         if (Array.isArray(res)) {
@@ -624,11 +633,13 @@ export class DashboardComponent implements OnInit {
         }
       },
       error: (e) => {
-        this.loading.stop()
+       // this.loading.stop()
+       this.isLoadingCuentas = false
         this.toast.error("Ha ocurrido un error", "Error")
       },
       complete: () => {
-        this.loading.stop()
+        this.isLoadingCuentas = false
+        //this.loading.stop()
       }
     })
   }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MainService } from 'src/app/main/main.service';
 import { Dates } from 'src/app/util/Dates';
-import { Pages, ReportChannel, barChartOptions, fixedData, getKpiColorAndPercent, groupArrayByKey, kpisIndicators } from 'src/app/util/util';
+import { Pages, ReportChannel, barChartOptions, fixedData, getKpiColorAndPercent, groupArrayByKey } from 'src/app/util/util';
 import { SalesService } from '../sales/sales-service.service';
 import { ExpenseService } from '../expenses/expenses.service';
 import { LoadingService } from 'src/app/components/loading/loading.service';
@@ -32,6 +32,8 @@ export class IndicatorsComponent implements OnInit {
   readonly chartColors = Charts.chartColors
   barChartData: ChartData<'bar'> = { labels: [], datasets: [] }
 
+  kpisIndicators: Array<any> = [] 
+
   constructor(private mainService: MainService,
     private activeRouter: ActivatedRoute,
     private salesService: SalesService,
@@ -55,6 +57,7 @@ export class IndicatorsComponent implements OnInit {
     this.mainService.$brandSelected.subscribe((result: any) => {
       if (result) {
         this.branchSelected = JSON.parse(result)
+        this.getIndicators()
         this.initFilters()
       }
     })
@@ -89,16 +92,22 @@ export class IndicatorsComponent implements OnInit {
    */
   get categoriesIndicator(): Array<any> {
     let list = this.foodCatforiesList.map((s: any) => {
-      let indicator = kpisIndicators.find((k: any) => k.code == s.code)
-      let kpi = indicator!.chart.includes("$") ? `${this.service.convertToCurrency(indicator!.value)}`
+      let indicator = this.kpisIndicators.find((k: any) => k.code == s.code)
+      let kpi = '0'
+      if(indicator) {
+          kpi = indicator!.chart.includes("$") ? `${this.service.convertToCurrency(indicator!.value)}`
         : `${indicator!.chart.slice(0, 1)}${indicator!.value}${indicator!.chart.slice(1)}`
-
+      }
+    
       return { id: s.id, name: s.name, code: s.code, indicator, kpi, color: Charts.chartColors.gastos }
     })
-    let indicatorSale = kpisIndicators.find((k: any) => k.code == 'sale')
-    let indicatorProfit = kpisIndicators.find((k: any) => k.code == 'profit')
-    list.unshift({ id: 0, name: 'Ventas', code: 'sale', indicator: indicatorSale, kpi: `${this.service.convertToCurrency(indicatorSale!.value)}`, color: Charts.chartColors.ventas})
-    list.push({ id: list.length, name: 'Profit', code: 'profit', indicator: indicatorProfit, kpi: `${indicatorProfit!.chart.slice(0, 1)}${indicatorProfit!.value}${indicatorProfit!.chart.slice(1)}`, color: Charts.chartColors.profit })
+    let indicatorSale = this.kpisIndicators.find((k: any) => k.code == 'sale')
+    let indicatorProfit = this.kpisIndicators.find((k: any) => k.code == 'profit')
+    if(indicatorSale && indicatorProfit) {
+      list.unshift({ id: 0, name: 'Ventas', code: 'sale', indicator: indicatorSale, kpi: `${this.service.convertToCurrency(indicatorSale!.value)}`, color: Charts.chartColors.ventas})
+      list.push({ id: list.length, name: 'Profit', code: 'profit', indicator: indicatorProfit, kpi: `${indicatorProfit!.chart.slice(0, 1)}${indicatorProfit!.value}${indicatorProfit!.chart.slice(1)}`, color: Charts.chartColors.profit })
+    }
+
     return list
   }
 
@@ -227,7 +236,7 @@ export class IndicatorsComponent implements OnInit {
     let totalSalesByMonth: Array<any> = []
     let grouping = groupArrayByKey(this.sales, "monthNumber")
 
-    let profit = kpisIndicators.find(s => s.code == 'sale')
+    let profit = this.kpisIndicators.find(s => s.code == 'sale')
     Object.keys(grouping).map((k: any) => {
       let sales = grouping[k]
       let totalSale = this.getTotalSalesByDelivery(sales)
@@ -275,8 +284,8 @@ export class IndicatorsComponent implements OnInit {
       let totalExpByMonth = expenses[m].reduce((total: number, obj: any) => total + obj.amount, 0)
       expensesByMonth.push({ month: m.replace(".", ""), total: totalExpByMonth })
     })
-    let salesKpi = kpisIndicators.find(s => s.code == 'sale')
-    let profit = kpisIndicators.find(s => s.code == 'profit')
+    let salesKpi = this.kpisIndicators.find(s => s.code == 'sale')
+    let profit = this.kpisIndicators.find(s => s.code == 'profit')
     this.salesByMonth.map((sale: any) => {
       let ex = expensesByMonth.find((s: any) => s.month == sale.month)
       let total = ex ? sale.total - ex.total : 0
@@ -332,6 +341,22 @@ export class IndicatorsComponent implements OnInit {
   }
 
   
+ getIndicators() {
+  this.loading.start()
+  this.service.getIndicators(this.branchSelected.id).subscribe({
+    next: (result: any) => {
+      this.kpisIndicators = result
+      console.log(result)
+    },
+    error: () => {
+      this.loading.stop()
+      this.toast.error("Ocurrio un error al obtener los indicadores kpis")
+    },
+    complete: () => {
+      this.loading.stop()
+    }
+  })
+ }
 
 }
 
